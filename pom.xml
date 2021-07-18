@@ -17,6 +17,17 @@
         <dazzleconf.version>1.2.0-M2</dazzleconf.version>
     </properties>
 
+    <distributionManagement>
+        <repository>
+            <id>solar-repo</id>
+            <url>https://mvn-repo.solarmc.gg/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>solar-repo</id>
+            <url>https://mvn-repo.solarmc.gg/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <dependencies>
         <!-- https://github.com/SolarMC-Dev/SolarPaper-API/blob/master/pom.xml -->
         <dependency>
@@ -30,6 +41,22 @@
             <groupId>gg.solarmc.loader</groupId>
             <artifactId>loader-mod-clans</artifactId>
             <version>${loader.version}</version>
+        </dependency>
+
+        <!-- https://github.com/MilkBowl/VaultAPI -->
+        <dependency>
+            <groupId>com.github.MilkBowl</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.7</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- https://github.com/PlaceholderAPI/PlaceholderAPI -->
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.10.10</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- https://github.com/A248/DazzleConf -->
@@ -59,8 +86,12 @@
             <url>https://mvn-repo.solarmc.gg/releases</url>
         </repository>
         <repository>
-            <id>solar-snapshots</id>
-            <url>https://mvn-repo.solarmc.gg/snapshots</url>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>placeholderapi</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
     </repositories>
 

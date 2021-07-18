@@ -1,0 +1,10 @@
+name: SolarClans
+main: gg.solarmc.clans.SolarClans
+version: ${project.version}
+authors: [ zoneinfinity ]
+commands:
+  clans:
+    aliases: [ c ]
+    description: Clans Command
+    usage: /<command>
+depend: [ Vault, PlaceholderAPI ]
