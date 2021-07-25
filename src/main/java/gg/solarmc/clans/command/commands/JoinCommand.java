@@ -13,15 +13,10 @@ public class JoinCommand implements ClansSubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args, CommandHelper helper) {
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage(ChatColor.RED + "Only players can use this command!!");
-            return;
-        }
-
-        if (args.length == 0) {
-            player.sendMessage(ChatColor.RED + "You need to specify the Name of the Clan you want to Join!!");
-            return;
-        }
+        if (helper.invalidateCommandSender(sender, args)) return;
+        if (helper.invalidateArgs(sender, args,
+                ChatColor.RED + "You need to specify the Name of the Clan you want to Join!!")) return;
+        Player player = (Player) sender;
 
         DataCenter dataCenter = player.getServer().getDataCenter();
         dataCenter.runTransact(transaction -> {

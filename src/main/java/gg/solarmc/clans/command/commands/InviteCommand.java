@@ -5,6 +5,11 @@ import gg.solarmc.clans.command.CommandHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -12,15 +17,10 @@ import org.bukkit.entity.Player;
 public class InviteCommand implements ClansSubCommand {
     @Override
     public void execute(CommandSender sender, String[] args, CommandHelper helper) {
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage(ChatColor.RED + "Only players can use this command!!");
-            return;
-        }
-
-        if (args.length == 0) {
-            player.sendMessage(ChatColor.RED + "You need to specify the Name of the Player you want to Invite!!");
-            return;
-        }
+        if (helper.invalidateCommandSender(sender, args)) return;
+        if (helper.invalidateArgs(sender, args,
+                ChatColor.RED + "You need to specify the Name of the Player you want to Invite!!")) return;
+        Player player = (Player) sender;
 
         Clan clan = player.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
 
@@ -32,7 +32,7 @@ public class InviteCommand implements ClansSubCommand {
         DataCenter dataCenter = player.getServer().getDataCenter();
         dataCenter.runTransact(transaction -> {
             if (clan.getClanSize(transaction) == 5) {
-
+                sender.sendMessage(ChatColor.RED + "There are already 5 players in the Clan!! You cannot invite more people! You can kick players by /clan kick command");
                 return;
             }
 
@@ -46,8 +46,14 @@ public class InviteCommand implements ClansSubCommand {
                 return;
             }
 
-            playerInvited.sendMessage(player.getName() + " invited you to " + clan.getName() + " Clan");
-            // Click To Join
+            TextComponent joinMsg = Component.text("Click to join Clan", NamedTextColor.YELLOW, TextDecoration.ITALIC).
+                    clickEvent(ClickEvent.runCommand("clan join " + clan.getName()));
+            TextComponent inviteMsg = Component.text(player.getName() + " invited you to " + clan.getName() + " Clan", NamedTextColor.GREEN)
+                    .append(Component.newline())
+                    .append(joinMsg);
+
+            player.sendMessage(ChatColor.GREEN + "The player was successfully invited! :D");
+            playerInvited.sendMessage(inviteMsg);
             helper.addInvite(clan, playerInvited);
         }).exceptionally(ex -> {
             player.sendMessage("Something went wrong, Please try again Later!");

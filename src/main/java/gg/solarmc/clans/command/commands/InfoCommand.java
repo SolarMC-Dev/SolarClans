@@ -12,18 +12,21 @@ import org.bukkit.entity.Player;
 public class InfoCommand implements ClansSubCommand {
     @Override
     public void execute(CommandSender sender, String[] args, CommandHelper helper) {
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage(ChatColor.RED + "Only players can use this command");
-            return;
+        if (!(sender instanceof Player)) {
+            if (args.length == 0) {
+                sender.sendMessage(ChatColor.RED + "Only players can use this command, If you want clan info use '/clan info [Clan Name]'!");
+                return;
+            }
         }
 
         if (args.length == 0) {
+            Player player = (Player) sender;
+
             Clan clan = player.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
             if (clan == null) {
                 helper.sendNotInClanMsg(player);
                 return;
             }
-
             sendClanInfo(player, clan);
             return;
         }
@@ -32,15 +35,15 @@ public class InfoCommand implements ClansSubCommand {
         dataCenter.runTransact(transaction -> {
             int name = 0; // Make this args[0]
             Clan clan = dataCenter.getDataManager(ClansKey.INSTANCE).getClan(transaction, name);
-
-            sendClanInfo(player, clan);
+            sendClanInfo(sender, clan);
         }).exceptionally((ex) -> {
-            player.sendMessage(ChatColor.RED + "Something went wrong! Please try again Later");
+            sender.sendMessage(ChatColor.RED + "Something went wrong! Please try again Later");
+            helper.getLogger().error("Something went wrong getting info about a clan", ex);
             return null;
         });
     }
 
-    private void sendClanInfo(Player player, Clan clan) {
+    private void sendClanInfo(CommandSender player, Clan clan) {
         String clanName = clan.getName();
         String allyClanName = clan.currentAllyClan().map(Clan::getName).orElse("No Ally");
         int kills = clan.currentKills();

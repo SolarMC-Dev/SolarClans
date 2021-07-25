@@ -46,7 +46,8 @@ public class KickCommand implements ClansSubCommand {
         dataCenter.runTransact(
                 transaction -> clan.removeClanMember(transaction, playerKicked.getSolarPlayer())
         ).exceptionally(ex -> {
-            player.sendMessage(ChatColor.RED + "Couldn't kick the player! Something went wrong, Please try again!!");
+            player.sendMessage(ChatColor.RED + "Couldn't kick the player! Something went wrong, Please try again later!!");
+            helper.getLogger().error("Something went wrong kicking a player from a clan", ex);
             return null;
         });
     }

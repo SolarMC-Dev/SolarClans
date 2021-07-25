@@ -1,7 +1,7 @@
 package gg.solarmc.clans.command;
 
 import gg.solarmc.clans.SolarClans;
-import gg.solarmc.clans.command.commands.CreateCommand;
+import gg.solarmc.clans.command.commands.*;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,7 +9,6 @@ import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ClansCommand implements CommandExecutor {
@@ -19,7 +18,16 @@ public class ClansCommand implements CommandExecutor {
     public ClansCommand(SolarClans plugin) {
         this.plugin = plugin;
         this.subCommands = List.of(
-                new CreateCommand(plugin)
+                new CreateCommand(plugin),
+                new DisbandCommand(),
+                new InfoCommand(),
+                new InviteCommand(),
+                new JoinCommand(),
+                new KickCommand(),
+                new PvpCommand(),
+                new RenameCommand(),
+                new SetLeaderCommand(),
+                new VaultCommand()
         );
     }
 

@@ -3,7 +3,9 @@ package gg.solarmc.clans.command;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import gg.solarmc.loader.clans.Clan;
+import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +22,36 @@ public class CommandHelper {
 
     public Logger getLogger() {
         return LOGGER;
+    }
+
+    public boolean invalidateCommandSender(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(ChatColor.RED + "Only players can use this command!!");
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean invalidateArgs(CommandSender player, String[] args, String msg) {
+        if (args.length == 0) {
+            player.sendMessage(msg);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean invalidateConfirm(Player player, String[] args, Component msg, int confirmIndex) {
+        if (args.length == confirmIndex + 1) {
+            player.sendMessage(msg);
+            return true;
+        }
+
+        if (!args[confirmIndex].equals("confirm")) {
+            player.sendMessage(msg);
+            return true;
+        }
+        return false;
     }
 
     public boolean hasInvited(Clan clan, Player player) {

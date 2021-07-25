@@ -6,6 +6,8 @@ import gg.solarmc.clans.command.CommandHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.ClanManager;
 import gg.solarmc.loader.clans.ClansKey;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -15,15 +17,14 @@ public record CreateCommand(SolarClans plugin) implements ClansSubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args, CommandHelper helper) {
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage(ChatColor.RED + "Only players can use this command!!");
-            return;
-        }
-
-        if (args.length == 0) {
-            player.sendMessage(ChatColor.RED + "You need to specify the Name of the Clan!!");
-            return;
-        }
+        Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)
+                .append(Component.text("/clan create [Clan Name] confirm", NamedTextColor.GOLD))
+                .append(Component.text(" to create a Clan :)"));
+        if (helper.invalidateCommandSender(sender, args)) return;
+        if (helper.invalidateArgs(sender, args,
+                ChatColor.RED + "You need to specify the Name of the Clan!!")) return;
+        Player player = (Player) sender;
+        if (helper.invalidateConfirm(player, args, confirmMsg, 1)) return;
 
         EconomyResponse response = plugin.getEconomy().withdrawPlayer(player, 1000);
 
@@ -37,7 +38,6 @@ public record CreateCommand(SolarClans plugin) implements ClansSubCommand {
             ClanManager manager = dataCenter.getDataManager(ClansKey.INSTANCE);
 
             // TODO: Check if clan exist
-            // TODO: Confirmation Msg
 
             manager.createClan(transaction, args[0], player.getSolarPlayer());
         })
