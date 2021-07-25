@@ -14,7 +14,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public record CreateCommand(SolarClans plugin) implements ClansSubCommand {
-
     @Override
     public void execute(CommandSender sender, String[] args, CommandHelper helper) {
         Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)
@@ -56,7 +55,7 @@ public record CreateCommand(SolarClans plugin) implements ClansSubCommand {
 
     @Override
     public String getArgs() {
-        return "[Clan Name]";
+        return "[Clan Name] [confirm]";
     }
 
     @Override

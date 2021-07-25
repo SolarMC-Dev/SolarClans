@@ -12,15 +12,10 @@ import org.bukkit.entity.Player;
 public class KickCommand implements ClansSubCommand {
     @Override
     public void execute(CommandSender sender, String[] args, CommandHelper helper) {
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage(ChatColor.RED + "Only players can use this command!!");
-            return;
-        }
-
-        if (args.length == 0) {
-            player.sendMessage(ChatColor.RED + "You need to specify the Name of the Player you want to Invite!!");
-            return;
-        }
+        if (helper.invalidateCommandSender(sender, args)) return;
+        Player player = (Player) sender;
+        if (helper.invalidateArgs(sender, args,
+                ChatColor.RED + "You need to specify the Name of the Player you want to Invite!!")) return;
 
         Clan clan = player.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
 

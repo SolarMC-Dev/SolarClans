@@ -58,6 +58,7 @@ public class CommandHelper {
         return invites.computeIfAbsent(clan.getID(), id -> getCache()
                 .evictionListener((solarPlayer, solarClan, cause) -> {
                     String name = ((Clan) solarClan).getName();
+                    // TODO: sendMsg -> leader -> Clan invitation to solarPlayer has expired
                     ((Player) solarPlayer).sendMessage(ChatColor.YELLOW + "Clan invitation from " + name + " has expired");
                 })
                 .build())
