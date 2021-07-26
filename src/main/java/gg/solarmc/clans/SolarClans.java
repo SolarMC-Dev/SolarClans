@@ -1,5 +1,6 @@
 package gg.solarmc.clans;
 
+import gg.solarmc.clans.command.ClansCommand;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -11,16 +12,18 @@ public class SolarClans extends JavaPlugin {
     private static Economy econ = null;
 
     @Override
-    public void onDisable() {
-        LOGGER.info(String.format("[%s] Disabled Version %s", getDescription().getName(), getDescription().getVersion()));
-    }
-
-    @Override
     public void onEnable() {
         if (!setupEconomy()) {
             LOGGER.error(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
             getServer().getPluginManager().disablePlugin(this);
         }
+
+        getServer().getPluginCommand("clans").setExecutor(new ClansCommand(this));
+    }
+
+    @Override
+    public void onDisable() {
+        LOGGER.info(String.format("[%s] Disabled Version %s", getDescription().getName(), getDescription().getVersion()));
     }
 
     private boolean setupEconomy() {

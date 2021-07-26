@@ -4,7 +4,7 @@ version: ${project.version}
 authors: [ zoneinfinity ]
 commands:
   clans:
-    aliases: [ c ]
+    aliases: [ c,clan ]
     description: Clans Command
     usage: /<command>
 depend: [ Vault, PlaceholderAPI ]

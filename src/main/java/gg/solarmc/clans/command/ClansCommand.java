@@ -18,6 +18,8 @@ public class ClansCommand implements CommandExecutor {
     public ClansCommand(SolarClans plugin) {
         this.plugin = plugin;
         this.subCommands = List.of(
+                new AllyCommand(),
+                new AllyRemoveCommand(),
                 new CreateCommand(plugin),
                 new DisbandCommand(),
                 new InfoCommand(),
