@@ -7,4 +7,8 @@ commands:
     aliases: [ c,clan ]
     description: Clans Command
     usage: /<command>
+  ally:
+    aliases: [a]
+    description: Ally Command
+    usage: /<command>
 depend: [ Vault, PlaceholderAPI ]

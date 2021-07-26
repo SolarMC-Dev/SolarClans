@@ -1,6 +1,7 @@
 package gg.solarmc.clans;
 
-import gg.solarmc.clans.command.ClansCommand;
+import gg.solarmc.clans.command.commands.ally.AllyCommand;
+import gg.solarmc.clans.command.commands.clans.ClansCommand;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,6 +20,7 @@ public class SolarClans extends JavaPlugin {
         }
 
         getServer().getPluginCommand("clans").setExecutor(new ClansCommand(this));
+        getServer().getPluginCommand("ally").setExecutor(new AllyCommand(this));
     }
 
     @Override

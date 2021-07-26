@@ -1,6 +1,6 @@
-package gg.solarmc.clans.command.commands;
+package gg.solarmc.clans.command.commands.clans;
 
-import gg.solarmc.clans.command.ClansSubCommand;
+import gg.solarmc.clans.command.SubCommand;
 import gg.solarmc.clans.command.CommandHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
@@ -9,7 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class JoinCommand implements ClansSubCommand {
+public class JoinCommand implements SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args, CommandHelper helper) {

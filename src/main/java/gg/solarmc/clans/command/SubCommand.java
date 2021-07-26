@@ -2,7 +2,7 @@ package gg.solarmc.clans.command;
 
 import org.bukkit.command.CommandSender;
 
-public interface ClansSubCommand {
+public interface SubCommand {
 
     void execute(CommandSender sender, String[] args, CommandHelper helper);
 

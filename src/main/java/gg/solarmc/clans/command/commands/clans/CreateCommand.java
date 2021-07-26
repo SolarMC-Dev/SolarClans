@@ -1,7 +1,7 @@
-package gg.solarmc.clans.command.commands;
+package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.SolarClans;
-import gg.solarmc.clans.command.ClansSubCommand;
+import gg.solarmc.clans.command.SubCommand;
 import gg.solarmc.clans.command.CommandHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.ClanManager;
@@ -13,7 +13,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public record CreateCommand(SolarClans plugin) implements ClansSubCommand {
+public record CreateCommand(SolarClans plugin) implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args, CommandHelper helper) {
         Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)

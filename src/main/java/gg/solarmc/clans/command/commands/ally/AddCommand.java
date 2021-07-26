@@ -1,6 +1,6 @@
-package gg.solarmc.clans.command.commands;
+package gg.solarmc.clans.command.commands.ally;
 
-import gg.solarmc.clans.command.ClansSubCommand;
+import gg.solarmc.clans.command.SubCommand;
 import gg.solarmc.clans.command.CommandHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
@@ -13,7 +13,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class AllyCommand implements ClansSubCommand {
+public class AddCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args, CommandHelper helper) {
         if (helper.invalidateCommandSender(sender, args)) return;
@@ -48,6 +48,11 @@ public class AllyCommand implements ClansSubCommand {
         dataCenter.runTransact(transaction -> {
             int name = 0; // Make this args[0]
             Clan allyClan = dataCenter.getDataManager(ClansKey.INSTANCE).getClan(transaction, name);
+
+            if (allyClan.currentAllyClan().orElse(null) != null) {
+                sender.sendMessage(ChatColor.RED + "The Clan " + allyClan.getName() + " already have a ally clan");
+                return;
+            }
 
             if (helper.hasAllyInvited(allyClan, clan)) {
                 clan.addClanAsAlly(transaction, allyClan);
