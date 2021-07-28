@@ -1,7 +1,7 @@
 package gg.solarmc.clans.command.commands.clans;
 
-import gg.solarmc.clans.command.SubCommand;
 import gg.solarmc.clans.command.CommandHelper;
+import gg.solarmc.clans.command.SubCommand;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
@@ -43,7 +43,7 @@ public class PvpCommand implements SubCommand {
                 .append(Component.text(getOnOrOff(helper.isPvpOn(clan)), NamedTextColor.GOLD)));
     }
 
-    public String getOnOrOff(boolean b) {
+    private String getOnOrOff(boolean b) {
         return b ? "on" : "off";
     }
 

@@ -12,15 +12,17 @@ import org.slf4j.LoggerFactory;
 import space.arim.omnibus.util.ThisClass;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings({"ConstantConditions", "NullableProblems"})
 public class CommandHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ThisClass.get());
     private final Map<Integer, Cache<Player, Clan>> invites = new HashMap<>();
+    private final List<Integer> disabledPVP = new ArrayList<>();
     private final Cache<Clan, Clan> allyInvites;
-    private final Map<Integer, Boolean> pvp = new HashMap<>();
 
     public CommandHelper() {
         allyInvites = getCache()
@@ -125,11 +127,12 @@ public class CommandHelper {
     // Pvp handling Methods
 
     public boolean isPvpOn(Clan clan) {
-        return pvp.computeIfAbsent(clan.getID(), id -> true);
+        return !disabledPVP.contains(clan.getID());
     }
 
     public void setPvp(Clan clan, boolean pvpOn) {
-        pvp.put(clan.getID(), pvpOn);
+        if (pvpOn) disabledPVP.remove(Integer.valueOf(clan.getID()));
+        else disabledPVP.add(clan.getID());
     }
 
     // Msg methods o:
