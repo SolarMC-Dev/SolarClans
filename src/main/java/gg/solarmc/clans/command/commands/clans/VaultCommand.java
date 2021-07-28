@@ -4,7 +4,7 @@ import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.vaultmanagement.VaultOperations;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.command.CommandHelper;
+import gg.solarmc.clans.PluginHelper;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import org.bukkit.command.CommandSender;
@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 
 public class VaultCommand implements SubCommand {
     @Override
-    public void execute(CommandSender sender, String[] args, CommandHelper helper) {
+    public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         if (helper.invalidateCommandSender(sender, args)) return;
         Player player = (Player) sender;
 

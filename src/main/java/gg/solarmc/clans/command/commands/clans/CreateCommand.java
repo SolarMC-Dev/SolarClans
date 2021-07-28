@@ -2,7 +2,7 @@ package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.command.CommandHelper;
+import gg.solarmc.clans.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.ClanManager;
 import gg.solarmc.loader.clans.ClansKey;
@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 
 public record CreateCommand(SolarClans plugin) implements SubCommand {
     @Override
-    public void execute(CommandSender sender, String[] args, CommandHelper helper) {
+    public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)
                 .append(Component.text("/clan create [Clan Name] confirm", NamedTextColor.GOLD))
                 .append(Component.text(" to create a Clan :)"));

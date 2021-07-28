@@ -1,4 +1,4 @@
-package gg.solarmc.clans.command;
+package gg.solarmc.clans;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -12,18 +12,16 @@ import org.slf4j.LoggerFactory;
 import space.arim.omnibus.util.ThisClass;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings({"ConstantConditions", "NullableProblems"})
-public class CommandHelper {
+public class PluginHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ThisClass.get());
     private final Map<Integer, Cache<Player, Clan>> invites = new HashMap<>();
     private final Cache<Clan, Clan> allyInvites;
 
-    public CommandHelper() {
+    public PluginHelper() {
         allyInvites = getCache()
                 .evictionListener((clan, allyClan, cause) -> {
                     String name = ((Clan) clan).getName();

@@ -1,5 +1,6 @@
 package gg.solarmc.clans.command;
 
+import gg.solarmc.clans.PluginHelper;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,7 +13,7 @@ public interface PluginCommand extends CommandExecutor {
 
     List<SubCommand> getSubCommands();
 
-    CommandHelper getHelper();
+    PluginHelper getHelper();
 
     @Override
     default boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {

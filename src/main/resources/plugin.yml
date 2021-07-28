@@ -8,7 +8,7 @@ commands:
     description: Clans Command
     usage: /<command>
   ally:
-    aliases: [a]
+    aliases: [ a ]
     description: Ally Command
     usage: /<command>
-depend: [ Vault, PlaceholderAPI ]
+depend: [ Vault, PlaceholderAPI, WorldGaurd ]

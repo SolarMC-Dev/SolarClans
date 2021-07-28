@@ -1,10 +1,11 @@
 package gg.solarmc.clans.command;
 
+import gg.solarmc.clans.PluginHelper;
 import org.bukkit.command.CommandSender;
 
 public interface SubCommand {
 
-    void execute(CommandSender sender, String[] args, CommandHelper helper);
+    void execute(CommandSender sender, String[] args, PluginHelper helper);
 
     String getName();
 

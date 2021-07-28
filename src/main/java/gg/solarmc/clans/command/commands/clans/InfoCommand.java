@@ -1,7 +1,7 @@
 package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.command.CommandHelper;
+import gg.solarmc.clans.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 public class InfoCommand implements SubCommand {
     @Override
-    public void execute(CommandSender sender, String[] args, CommandHelper helper) {
+    public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         if (!(sender instanceof Player)) {
             if (args.length == 0) {
                 sender.sendMessage(ChatColor.RED + "Only players can use this command, If you want clan info use '/clan info [Clan Name]'!");

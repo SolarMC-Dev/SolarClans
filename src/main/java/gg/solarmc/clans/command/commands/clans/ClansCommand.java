@@ -2,7 +2,7 @@ package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.PVPHelper;
 import gg.solarmc.clans.SolarClans;
-import gg.solarmc.clans.command.CommandHelper;
+import gg.solarmc.clans.PluginHelper;
 import gg.solarmc.clans.command.PluginCommand;
 import gg.solarmc.clans.command.SubCommand;
 
@@ -10,9 +10,9 @@ import java.util.List;
 
 public class ClansCommand implements PluginCommand {
     private final List<SubCommand> subCommands;
-    private final CommandHelper commandHelper;
+    private final PluginHelper commandHelper;
 
-    public ClansCommand(SolarClans plugin, CommandHelper commandHelper, PVPHelper pvpHelper) {
+    public ClansCommand(SolarClans plugin, PluginHelper commandHelper, PVPHelper pvpHelper) {
         this.commandHelper = commandHelper;
         this.subCommands = List.of(
                 new CreateCommand(plugin),
@@ -34,7 +34,7 @@ public class ClansCommand implements PluginCommand {
     }
 
     @Override
-    public CommandHelper getHelper() {
+    public PluginHelper getHelper() {
         return commandHelper;
     }
 }

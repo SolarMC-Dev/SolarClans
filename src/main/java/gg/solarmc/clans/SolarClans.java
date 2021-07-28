@@ -1,6 +1,6 @@
 package gg.solarmc.clans;
 
-import gg.solarmc.clans.command.CommandHelper;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import gg.solarmc.clans.command.commands.ally.AllyCommand;
 import gg.solarmc.clans.command.commands.clans.ClansCommand;
 import gg.solarmc.clans.events.HitEvent;
@@ -13,7 +13,8 @@ import org.slf4j.LoggerFactory;
 
 public class SolarClans extends JavaPlugin {
     private static final Logger LOGGER = LoggerFactory.getLogger(SolarClans.class);
-    private static Economy econ = null;
+    private static Economy econ;
+    private WorldGuardPlugin worldGuard;
 
     @Override
     public void onEnable() {
@@ -21,8 +22,9 @@ public class SolarClans extends JavaPlugin {
             LOGGER.error(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
             getServer().getPluginManager().disablePlugin(this);
         }
+        worldGuard = (WorldGuardPlugin) getServer().getPluginManager().getPlugin("WorldGuard");
 
-        CommandHelper helper = new CommandHelper();
+        PluginHelper helper = new PluginHelper();
         PVPHelper clanPvpHelper = new PVPHelper();
         PVPHelper allyPvpHelper = new PVPHelper();
 
@@ -31,7 +33,7 @@ public class SolarClans extends JavaPlugin {
         getServer().getPluginCommand("ally").setExecutor(new AllyCommand(this, helper, allyPvpHelper));
 
         // Events
-        getServer().getPluginManager().registerEvents(new HitEvent(helper, clanPvpHelper, allyPvpHelper), this);
+        getServer().getPluginManager().registerEvents(new HitEvent(this, helper, clanPvpHelper, allyPvpHelper), this);
         getServer().getPluginManager().registerEvents(new StatsEvent(), this);
     }
 
@@ -54,5 +56,9 @@ public class SolarClans extends JavaPlugin {
 
     public Economy getEconomy() {
         return econ;
+    }
+
+    public WorldGuardPlugin getWorldGuardManager() {
+        return worldGuard;
     }
 }

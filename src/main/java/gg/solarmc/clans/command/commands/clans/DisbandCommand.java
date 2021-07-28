@@ -1,7 +1,7 @@
 package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.command.CommandHelper;
+import gg.solarmc.clans.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 
 public class DisbandCommand implements SubCommand {
     @Override
-    public void execute(CommandSender sender, String[] args, CommandHelper helper) {
+    public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)
                 .append(Component.text("/clan disband confirm", NamedTextColor.GOLD))
                 .append(Component.text(" to disband the Clan :)"));

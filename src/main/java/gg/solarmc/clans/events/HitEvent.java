@@ -1,7 +1,13 @@
 package gg.solarmc.clans.events;
 
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.domains.Association;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import gg.solarmc.clans.PVPHelper;
-import gg.solarmc.clans.command.CommandHelper;
+import gg.solarmc.clans.PluginHelper;
+import gg.solarmc.clans.SolarClans;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
@@ -13,14 +19,21 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-public record HitEvent(CommandHelper helper, PVPHelper clanPvp, PVPHelper allyPvp) implements Listener {
+public record HitEvent(SolarClans plugin, PluginHelper helper,
+                       PVPHelper clanPvp, PVPHelper allyPvp) implements Listener {
 
     @EventHandler
     public void onPlayerHitPlayer(EntityDamageByEntityEvent event) {
         if (!(event.getEntity() instanceof Player damagedPlayer) || !(event.getDamager() instanceof Player damager))
             return;
 
-        // TODO: return , If global pvp is disabled at that location
+        WorldGuardPlugin wgManager = plugin.getWorldGuardManager();
+        ApplicableRegionSet damagerRegions = wgManager.getRegionManager(damager.getWorld()).getApplicableRegions(damager.getLocation());
+        ApplicableRegionSet damagedRegions = wgManager.getRegionManager(damagedPlayer.getWorld()).getApplicableRegions(damagedPlayer.getLocation());
+
+        if (damagerRegions.queryState(r -> Association.NON_MEMBER, DefaultFlag.PVP) == StateFlag.State.DENY
+                || damagedRegions.queryState(r -> Association.NON_MEMBER, DefaultFlag.PVP) == StateFlag.State.DENY)
+            return;
 
         Clan damagerClan = damager.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
         Clan damagedPlayerClan = damagedPlayer.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
@@ -36,8 +49,8 @@ public record HitEvent(CommandHelper helper, PVPHelper clanPvp, PVPHelper allyPv
         Clan allyClan = damagerClan.currentAllyClan().orElse(null);
         if (allyClan == null) return;
 
-        if(damagedPlayerClan.equals(allyClan))
-            if(!allyPvp.isPvpOn(damagerClan) || !allyPvp().isPvpOn(damagedPlayerClan)){
+        if (damagedPlayerClan.equals(allyClan))
+            if (!allyPvp.isPvpOn(damagerClan) || !allyPvp().isPvpOn(damagedPlayerClan)) {
                 damager.sendMessage(getPvPDisabledMsg("ally"));
                 event.setCancelled(true);
             }
