@@ -1,7 +1,10 @@
 package gg.solarmc.clans;
 
+import gg.solarmc.clans.command.CommandHelper;
 import gg.solarmc.clans.command.commands.ally.AllyCommand;
 import gg.solarmc.clans.command.commands.clans.ClansCommand;
+import gg.solarmc.clans.events.HitEvent;
+import gg.solarmc.clans.events.StatsEvent;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,8 +22,17 @@ public class SolarClans extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
         }
 
-        getServer().getPluginCommand("clans").setExecutor(new ClansCommand(this));
-        getServer().getPluginCommand("ally").setExecutor(new AllyCommand(this));
+        CommandHelper helper = new CommandHelper();
+        PVPHelper clanPvpHelper = new PVPHelper();
+        PVPHelper allyPvpHelper = new PVPHelper();
+
+        // Commands
+        getServer().getPluginCommand("clans").setExecutor(new ClansCommand(this, helper, clanPvpHelper));
+        getServer().getPluginCommand("ally").setExecutor(new AllyCommand(this, helper, allyPvpHelper));
+
+        // Events
+        getServer().getPluginManager().registerEvents(new HitEvent(helper, clanPvpHelper, allyPvpHelper), this);
+        getServer().getPluginManager().registerEvents(new StatsEvent(), this);
     }
 
     @Override

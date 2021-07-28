@@ -21,7 +21,6 @@ import java.util.Map;
 public class CommandHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ThisClass.get());
     private final Map<Integer, Cache<Player, Clan>> invites = new HashMap<>();
-    private final List<Integer> disabledPVP = new ArrayList<>();
     private final Cache<Clan, Clan> allyInvites;
 
     public CommandHelper() {
@@ -122,17 +121,6 @@ public class CommandHelper {
 
     private Caffeine<Object, Object> getCache() {
         return Caffeine.newBuilder().expireAfterAccess(Duration.ofSeconds(60));
-    }
-
-    // Pvp handling Methods
-
-    public boolean isPvpOn(Clan clan) {
-        return !disabledPVP.contains(clan.getID());
-    }
-
-    public void setPvp(Clan clan, boolean pvpOn) {
-        if (pvpOn) disabledPVP.remove(Integer.valueOf(clan.getID()));
-        else disabledPVP.add(clan.getID());
     }
 
     // Msg methods o:

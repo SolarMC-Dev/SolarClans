@@ -12,6 +12,8 @@ public interface PluginCommand extends CommandExecutor {
 
     List<SubCommand> getSubCommands();
 
+    CommandHelper getHelper();
+
     @Override
     default boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
         if (args.length == 0) {
@@ -31,7 +33,7 @@ public interface PluginCommand extends CommandExecutor {
         if (subCommand != null) {
             List<String> subArgs = Arrays.asList(args).subList(1, args.length);
 
-            subCommand.execute(sender, subArgs.toArray(String[]::new), new CommandHelper());
+            subCommand.execute(sender, subArgs.toArray(String[]::new), getHelper());
             return true;
         } else
             sender.sendMessage("No Command for " + arg + " in credits");

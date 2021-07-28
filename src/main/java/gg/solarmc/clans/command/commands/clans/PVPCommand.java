@@ -1,5 +1,6 @@
 package gg.solarmc.clans.command.commands.clans;
 
+import gg.solarmc.clans.PVPHelper;
 import gg.solarmc.clans.command.CommandHelper;
 import gg.solarmc.clans.command.SubCommand;
 import gg.solarmc.loader.clans.Clan;
@@ -9,7 +10,13 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class PvpCommand implements SubCommand {
+public class PVPCommand implements SubCommand {
+    private final PVPHelper pvpHelper;
+
+    public PVPCommand(PVPHelper pvpHelper) {
+        this.pvpHelper = pvpHelper;
+    }
+
     @Override
     public void execute(CommandSender sender, String[] args, CommandHelper helper) {
         if (helper.invalidateCommandSender(sender, args)) return;
@@ -24,23 +31,23 @@ public class PvpCommand implements SubCommand {
         }
 
         if (args.length == 0) {
-            helper.setPvp(clan, !helper.isPvpOn(clan));
+            pvpHelper.setPvp(clan, !pvpHelper.isPvpOn(clan));
             player.sendMessage(Component.text("PVP has been toggle to ", NamedTextColor.GREEN)
-                    .append(Component.text(getOnOrOff(helper.isPvpOn(clan)), NamedTextColor.GOLD)));
+                    .append(Component.text(getOnOrOff(pvpHelper.isPvpOn(clan)), NamedTextColor.GOLD)));
             return;
         }
 
         args[0] = args[0].toLowerCase();
 
-        if (args[0].equals("on") || args[0].equals("true")) helper.setPvp(clan, true);
-        else if (args[0].equals("off") || args[0].equals("false")) helper.setPvp(clan, false);
+        if (args[0].equals("on") || args[0].equals("true")) pvpHelper.setPvp(clan, true);
+        else if (args[0].equals("off") || args[0].equals("false")) pvpHelper.setPvp(clan, false);
         else {
             player.sendMessage(Component.text("You need to specify on/off!!", NamedTextColor.RED));
             return;
         }
 
         player.sendMessage(Component.text("PVP has been set to ", NamedTextColor.GREEN)
-                .append(Component.text(getOnOrOff(helper.isPvpOn(clan)), NamedTextColor.GOLD)));
+                .append(Component.text(getOnOrOff(pvpHelper.isPvpOn(clan)), NamedTextColor.GOLD)));
     }
 
     private String getOnOrOff(boolean b) {
