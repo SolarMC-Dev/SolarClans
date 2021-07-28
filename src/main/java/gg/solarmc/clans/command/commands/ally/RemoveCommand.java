@@ -24,7 +24,7 @@ public class RemoveCommand implements SubCommand {
 
         Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)
                 .append(Component.text("/clan allyremove confirm", NamedTextColor.GOLD))
-                .append(Component.text(" to remove the Ally :)"));
+                .append(Component.text(" to remove the Ally :)",NamedTextColor.YELLOW));
 
         if (helper.invalidateConfirm(player, args, confirmMsg, 0)) return;
 
