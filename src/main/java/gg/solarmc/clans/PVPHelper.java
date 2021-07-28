@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PVPHelper {
-    private final List<Integer> disabledPVP = new ArrayList<>();
+    private final List<Integer> enabledPvp = new ArrayList<>();
 
     public boolean isPvpOn(Clan clan) {
-        return !disabledPVP.contains(clan.getID());
+        return enabledPvp.contains(clan.getID());
     }
 
     public void setPvp(Clan clan, boolean pvpOn) {
-        if (pvpOn) disabledPVP.remove(Integer.valueOf(clan.getID()));
-        else disabledPVP.add(clan.getID());
+        if (pvpOn) enabledPvp.add(clan.getID());
+        else enabledPvp.remove(Integer.valueOf(clan.getID()));
     }
 }
