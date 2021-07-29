@@ -1,8 +1,8 @@
 package gg.solarmc.clans.command.commands.clans;
 
+import gg.solarmc.clans.command.SubCommand;
 import gg.solarmc.clans.helper.PVPHelper;
 import gg.solarmc.clans.helper.PluginHelper;
-import gg.solarmc.clans.command.SubCommand;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
@@ -29,7 +29,7 @@ public class PVPCommand implements SubCommand {
             return;
         }
 
-        if(!helper.isLeader(clan, player)){
+        if (!helper.isLeader(clan, player)) {
             player.sendMessage(Component.text("Only Clan Leader can use this Command", NamedTextColor.RED));
             return;
         }
@@ -50,8 +50,9 @@ public class PVPCommand implements SubCommand {
             return;
         }
 
-        player.sendMessage(Component.text("PVP has been set to ", NamedTextColor.GREEN)
-                .append(Component.text(getOnOrOff(pvpHelper.isPvpOn(clan)), NamedTextColor.GOLD)));
+        helper.sendClanMsg(player.getServer(), clan,
+                Component.text(player.getName() + " set the PVP ", NamedTextColor.GREEN)
+                        .append(Component.text(getOnOrOff(pvpHelper.isPvpOn(clan)), NamedTextColor.GOLD)));
     }
 
     private String getOnOrOff(boolean b) {

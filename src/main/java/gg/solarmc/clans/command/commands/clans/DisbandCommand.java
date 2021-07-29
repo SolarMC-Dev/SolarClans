@@ -8,6 +8,7 @@ import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -28,14 +29,15 @@ public class DisbandCommand implements SubCommand {
             return;
         }
 
-        if(!helper.isLeader(clan, player)){
+        if (!helper.isLeader(clan, player)) {
             player.sendMessage(Component.text("Only Clan Leader can use this Command", NamedTextColor.RED));
             return;
         }
 
-        // Send Clan Disbanded message to Clan Members
+        Server server = player.getServer();
+        helper.sendClanMsg(server, clan, Component.text(player.getName() + " disbanded the clan", NamedTextColor.YELLOW));
 
-        DataCenter dataCenter = player.getServer().getDataCenter();
+        DataCenter dataCenter = server.getDataCenter();
 
         dataCenter.runTransact(transaction -> dataCenter.getDataManager(ClansKey.INSTANCE).deleteClan(transaction, clan)).exceptionally(ex -> {
             player.sendMessage(ChatColor.RED + "Couldn't disband the clan! Something went wrong, Please try again later!!");

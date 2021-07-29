@@ -5,7 +5,10 @@ import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -18,7 +21,9 @@ public class JoinCommand implements SubCommand {
                 ChatColor.RED + "You need to specify the Name of the Clan you want to Join!!")) return;
         Player player = (Player) sender;
 
-        DataCenter dataCenter = player.getServer().getDataCenter();
+        Server server = player.getServer();
+
+        DataCenter dataCenter = server.getDataCenter();
         dataCenter.runTransact(transaction -> {
             Clan clan = dataCenter.getDataManager(ClansKey.INSTANCE).getClanByName(transaction, args[0]).orElse(null);
 
@@ -32,9 +37,10 @@ public class JoinCommand implements SubCommand {
                 return;
             }
 
-            // Send Join message to Clan Members
-            // clan.getClanMembers(transaction).forEach();
             clan.addClanMember(transaction, player.getSolarPlayer());
+
+            clan = dataCenter.getDataManager(ClansKey.INSTANCE).getClanByName(transaction, args[0]).orElse(null);
+            helper.sendClanMsg(server, clan, Component.text(player.getName() + " joined the clan", NamedTextColor.YELLOW));
         }).exceptionally((ex) -> {
             player.sendMessage(ChatColor.RED + "Something went wrong! Please try again Later");
             return null;

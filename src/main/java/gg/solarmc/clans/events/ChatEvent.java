@@ -31,7 +31,7 @@ public class ChatEvent implements Listener {
         event.setCancelled(true);
 
         if (chatHelper.getChatMode(player) == ChatMode.CLAN) {
-            pluginHelper.sendClanMsg(player.getServer(), clan, "clan", event.getMessage());
+            pluginHelper.sendPlayerClanMsg(player.getServer(), player, clan, "clan", event.getMessage());
             return;
         }
 
@@ -44,8 +44,8 @@ public class ChatEvent implements Listener {
         }
 
         // ChatMode.ALLY
-        pluginHelper.sendClanMsg(player.getServer(), clan, "ally", event.getMessage());
-        pluginHelper.sendClanMsg(player.getServer(), allyClan, "ally", event.getMessage());
+        pluginHelper.sendPlayerClanMsg(player.getServer(), player, clan, "ally", event.getMessage());
+        pluginHelper.sendPlayerClanMsg(player.getServer(), player, allyClan, "ally", event.getMessage());
     }
 
 }

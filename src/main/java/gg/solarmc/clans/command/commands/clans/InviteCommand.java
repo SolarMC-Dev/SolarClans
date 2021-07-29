@@ -11,6 +11,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -29,25 +30,28 @@ public class InviteCommand implements SubCommand {
             return;
         }
 
-        DataCenter dataCenter = player.getServer().getDataCenter();
+        Server server = player.getServer();
+
+        DataCenter dataCenter = server.getDataCenter();
         dataCenter.runTransact(transaction -> {
             if (clan.getClanSize(transaction) == 5) {
                 sender.sendMessage(ChatColor.RED + "There are already 5 players in the Clan!! You cannot invite more people! You can kick players by /clan kick command");
                 return;
             }
 
-            if(!helper.isLeader(clan, player)){
+            if (!helper.isLeader(clan, player)) {
                 player.sendMessage(Component.text("Only Clan Leader can use this Command", NamedTextColor.RED));
                 return;
             }
 
-            // Send Player Invited message to Clan Members
             Player playerInvited = player.getServer().getPlayer(args[0]);
 
             if (playerInvited == null) {
                 player.sendMessage("The player is offline!");
                 return;
             }
+
+            helper.sendClanMsg(server, clan, Component.text(player.getName() + " invited " + playerInvited.getName() + " to the clan", NamedTextColor.YELLOW));
 
             TextComponent inviteMsg = Component.text(player.getName() + " invited you to " + clan.currentClanName() + " Clan", NamedTextColor.GREEN)
                     .append(Component.newline())
