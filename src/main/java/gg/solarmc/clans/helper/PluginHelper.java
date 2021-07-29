@@ -2,9 +2,13 @@ package gg.solarmc.clans.helper;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import gg.solarmc.loader.DataCenter;
+import gg.solarmc.loader.SolarPlayer;
 import gg.solarmc.loader.clans.Clan;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.slf4j.Logger;
@@ -131,5 +135,22 @@ public class PluginHelper {
         };
 
         player.sendMessage(msg);
+    }
+
+    public void sendClanMsg(Server server, Clan clan, String prefix, String msg) {
+        DataCenter dataCenter = server.getDataCenter();
+
+        dataCenter.runTransact(transaction ->
+                clan.currentMembers().forEach(it -> {
+                    SolarPlayer solarPlayer = dataCenter.lookupPlayerUsing(transaction, it.userId()).orElse(null);
+                    if (solarPlayer == null) return;
+                    Player player = server.getPlayer(solarPlayer.getMcUuid());
+                    if (player == null) return;
+
+                    if (player.isOnline())
+                        player.sendMessage(Component.text(prefix + "> ", prefix.equals("clan") ? NamedTextColor.GOLD : NamedTextColor.LIGHT_PURPLE)
+                                .append(player.displayName())
+                                .append(Component.text(" " + msg)));
+                }));
     }
 }
