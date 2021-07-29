@@ -28,7 +28,10 @@ public class AddCommand implements SubCommand {
             return;
         }
 
-        // TODO: check if sender is Clan Leader;
+        if(!helper.isLeader(clan, player)){
+            player.sendMessage(Component.text("Only Clan Leader can use this Command", NamedTextColor.RED));
+            return;
+        }
 
         if (clan.currentAllyClan().orElse(null) != null) {
             String[] msg = {

@@ -22,6 +22,11 @@ public class RemoveCommand implements SubCommand {
             return;
         }
 
+        if(!helper.isLeader(clan, player)){
+            player.sendMessage(Component.text("Only Clan Leader can use this Command", NamedTextColor.RED));
+            return;
+        }
+
         Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)
                 .append(Component.text("/clan allyremove confirm", NamedTextColor.GOLD))
                 .append(Component.text(" to remove the Ally :)",NamedTextColor.YELLOW));

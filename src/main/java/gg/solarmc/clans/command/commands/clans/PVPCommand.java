@@ -21,12 +21,16 @@ public class PVPCommand implements SubCommand {
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         if (helper.invalidateCommandSender(sender, args)) return;
 
-        // TODO : Check if the sender is clan leader.
         Player player = (Player) sender;
         final Clan clan = player.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
 
         if (clan == null) {
             helper.sendNotInClanMsg(player);
+            return;
+        }
+
+        if(!helper.isLeader(clan, player)){
+            player.sendMessage(Component.text("Only Clan Leader can use this Command", NamedTextColor.RED));
             return;
         }
 

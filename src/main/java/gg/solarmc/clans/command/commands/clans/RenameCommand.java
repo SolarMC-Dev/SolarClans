@@ -5,6 +5,8 @@ import gg.solarmc.clans.command.SubCommand;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -24,7 +26,10 @@ public class RenameCommand implements SubCommand {
             return;
         }
 
-        // TODO: check if player is clan's leader
+        if(!helper.isLeader(clan, player)){
+            player.sendMessage(Component.text("Only Clan Leader can use this Command", NamedTextColor.RED));
+            return;
+        }
 
         // Send Clan renamed message to Clan Members
 

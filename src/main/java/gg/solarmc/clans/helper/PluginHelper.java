@@ -5,6 +5,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.SolarPlayer;
 import gg.solarmc.loader.clans.Clan;
+import gg.solarmc.loader.clans.ClanMember;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
@@ -68,6 +69,12 @@ public class PluginHelper {
             return true;
         }
         return false;
+    }
+
+    // Clan Methods
+
+    public boolean isLeader(Clan clan, Player player) {
+        return player.getSolarPlayer().getUserId() == clan.currentLeader().userId();
     }
 
     // Clan Invites to Player Methods

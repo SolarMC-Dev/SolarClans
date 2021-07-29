@@ -28,7 +28,10 @@ public class DisbandCommand implements SubCommand {
             return;
         }
 
-        // TODO: check if player is clan's leader
+        if(!helper.isLeader(clan, player)){
+            player.sendMessage(Component.text("Only Clan Leader can use this Command", NamedTextColor.RED));
+            return;
+        }
 
         // Send Clan Disbanded message to Clan Members
 
