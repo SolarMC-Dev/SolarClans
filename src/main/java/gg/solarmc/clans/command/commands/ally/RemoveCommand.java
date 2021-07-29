@@ -1,7 +1,7 @@
 package gg.solarmc.clans.command.commands.ally;
 
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.PluginHelper;
+import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;

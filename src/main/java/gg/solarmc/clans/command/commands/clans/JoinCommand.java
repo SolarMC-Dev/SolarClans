@@ -1,7 +1,7 @@
 package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.PluginHelper;
+import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
@@ -20,8 +20,12 @@ public class JoinCommand implements SubCommand {
 
         DataCenter dataCenter = player.getServer().getDataCenter();
         dataCenter.runTransact(transaction -> {
-            int name = 0; // Make this args[0]
-            Clan clan = dataCenter.getDataManager(ClansKey.INSTANCE).getClan(transaction, name);
+            Clan clan = dataCenter.getDataManager(ClansKey.INSTANCE).getClanByName(transaction, args[0]).orElse(null);
+
+            if(clan == null){
+                sender.sendMessage("Clan does not exist!");
+                return;
+            }
 
             if (!helper.hasInvited(clan, player)) {
                 player.sendMessage("You are not invited to this clan!!");

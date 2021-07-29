@@ -1,7 +1,7 @@
 package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.PluginHelper;
+import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
@@ -33,8 +33,13 @@ public class InfoCommand implements SubCommand {
 
         DataCenter dataCenter = sender.getServer().getDataCenter();
         dataCenter.runTransact(transaction -> {
-            int name = 0; // Make this args[0]
-            Clan clan = dataCenter.getDataManager(ClansKey.INSTANCE).getClan(transaction, name);
+            Clan clan = dataCenter.getDataManager(ClansKey.INSTANCE).getClanByName(transaction, args[0]).orElse(null);
+
+            if (clan == null) {
+                sender.sendMessage(ChatColor.RED + "Clan does not exist!");
+                return;
+            }
+
             sendClanInfo(sender, clan);
         }).exceptionally((ex) -> {
             sender.sendMessage(ChatColor.RED + "Something went wrong! Please try again Later");
@@ -44,8 +49,8 @@ public class InfoCommand implements SubCommand {
     }
 
     private void sendClanInfo(CommandSender player, Clan clan) {
-        String clanName = clan.getName();
-        String allyClanName = clan.currentAllyClan().map(Clan::getName).orElse("No Ally");
+        String clanName = clan.currentClanName();
+        String allyClanName = clan.currentAllyClan().map(Clan::currentClanName).orElse("No Ally");
         int kills = clan.currentKills();
         int assists = clan.currentAssists();
         int deaths = clan.currentDeaths();

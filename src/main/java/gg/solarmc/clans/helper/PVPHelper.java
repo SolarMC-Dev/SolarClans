@@ -1,4 +1,4 @@
-package gg.solarmc.clans;
+package gg.solarmc.clans.helper;
 
 import gg.solarmc.loader.clans.Clan;
 
@@ -9,11 +9,11 @@ public class PVPHelper {
     private final List<Integer> enabledPvp = new ArrayList<>();
 
     public boolean isPvpOn(Clan clan) {
-        return enabledPvp.contains(clan.getID());
+        return enabledPvp.contains(clan.getClanId());
     }
 
     public void setPvp(Clan clan, boolean pvpOn) {
-        if (pvpOn) enabledPvp.add(clan.getID());
-        else enabledPvp.remove(Integer.valueOf(clan.getID()));
+        if (pvpOn) enabledPvp.add(clan.getClanId());
+        else enabledPvp.remove(Integer.valueOf(clan.getClanId()));
     }
 }

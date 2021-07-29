@@ -1,6 +1,6 @@
 package gg.solarmc.clans.command;
 
-import gg.solarmc.clans.PluginHelper;
+import gg.solarmc.clans.helper.PluginHelper;
 import org.bukkit.command.CommandSender;
 
 public interface SubCommand {

@@ -1,7 +1,7 @@
 package gg.solarmc.clans.command.commands.ally;
 
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.PluginHelper;
+import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
@@ -40,17 +40,21 @@ public class AddCommand implements SubCommand {
         }
 
         if (!helper.isClanPresentInAlly(clan)) {
-            sender.sendMessage(ChatColor.RED + "You already have ongoing request to " + helper.getAllyInvite(clan).getName());
+            sender.sendMessage(ChatColor.RED + "You already have ongoing request to " + helper.getAllyInvite(clan).currentClanName());
             return;
         }
 
         DataCenter dataCenter = sender.getServer().getDataCenter();
         dataCenter.runTransact(transaction -> {
-            int name = 0; // Make this args[0]
-            Clan allyClan = dataCenter.getDataManager(ClansKey.INSTANCE).getClan(transaction, name);
+            Clan allyClan = dataCenter.getDataManager(ClansKey.INSTANCE).getClanByName(transaction, args[0]).orElse(null);
+
+            if (allyClan == null) {
+                sender.sendMessage(ChatColor.RED + "Clan does not exist!");
+                return;
+            }
 
             if (allyClan.currentAllyClan().orElse(null) != null) {
-                sender.sendMessage(ChatColor.RED + "The Clan " + allyClan.getName() + " already have a ally clan");
+                sender.sendMessage(ChatColor.RED + "The Clan " + allyClan.currentClanName()+ " already have a ally clan");
                 return;
             }
 
@@ -66,9 +70,10 @@ public class AddCommand implements SubCommand {
 
             helper.addAllyInvite(clan, allyClan);
 
-            TextComponent requestMsg = Component.text(sender.getName() + " has requested a Clan ally to " + clan.getName(), NamedTextColor.GREEN)
+             String clanName = clan.currentClanName();
+            TextComponent requestMsg = Component.text(sender.getName() + " has requested a Clan ally to " + clanName, NamedTextColor.GREEN)
                     .append(Component.text("Click to Ally")
-                            .clickEvent(ClickEvent.runCommand("clan ally " + clan.getName())));
+                            .clickEvent(ClickEvent.runCommand("clan ally " + clanName)));
             // Send requestMsg to allyClan.currentLeader();
         });
     }

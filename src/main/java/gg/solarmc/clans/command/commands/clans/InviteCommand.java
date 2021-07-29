@@ -1,7 +1,7 @@
 package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.PluginHelper;
+import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
@@ -46,10 +46,10 @@ public class InviteCommand implements SubCommand {
                 return;
             }
 
-            TextComponent inviteMsg = Component.text(player.getName() + " invited you to " + clan.getName() + " Clan", NamedTextColor.GREEN)
+            TextComponent inviteMsg = Component.text(player.getName() + " invited you to " + clan.currentClanName() + " Clan", NamedTextColor.GREEN)
                     .append(Component.newline())
                     .append(Component.text("Click to join Clan", NamedTextColor.YELLOW, TextDecoration.ITALIC).
-                            clickEvent(ClickEvent.runCommand("clan join " + clan.getName())));
+                            clickEvent(ClickEvent.runCommand("clan join " + clan.currentClanName())));
 
             player.sendMessage(ChatColor.GREEN + "The player was successfully invited! :D");
             playerInvited.sendMessage(inviteMsg);

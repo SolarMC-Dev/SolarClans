@@ -1,4 +1,4 @@
-package gg.solarmc.clans;
+package gg.solarmc.clans.helper;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -24,7 +24,7 @@ public class PluginHelper {
     public PluginHelper() {
         allyInvites = getCache()
                 .evictionListener((clan, allyClan, cause) -> {
-                    String name = ((Clan) clan).getName();
+                    String name = ((Clan) clan).currentClanName();
                     // TODO: sendMsg -> leader -> Clan invitation to solarPlayer has expired
                     // ((Clan)allyClan).currentLeader().sendMessage(ChatColor.YELLOW + "Ally invitation from " + name + " has expired");
                 }).build();
@@ -69,20 +69,20 @@ public class PluginHelper {
     // Clan Invites to Player Methods
 
     public boolean hasInvited(Clan clan, Player player) {
-        return invites.computeIfAbsent(clan.getID(), id -> getPlayerInviteCache())
+        return invites.computeIfAbsent(clan.getClanId(), id -> getPlayerInviteCache())
                 .getIfPresent(player) != null;
     }
 
     public void addInvite(Clan clan, Player player) {
-        Cache<Player, Clan> playersInvited = invites.computeIfAbsent(clan.getID(), id -> getPlayerInviteCache());
+        Cache<Player, Clan> playersInvited = invites.computeIfAbsent(clan.getClanId(), id -> getPlayerInviteCache());
         playersInvited.put(player, clan);
-        invites.put(clan.getID(), playersInvited);
+        invites.put(clan.getClanId(), playersInvited);
     }
 
     public void removeInvite(Clan clan, Player player) {
-        Cache<Player, Clan> playersInvited = invites.computeIfAbsent(clan.getID(), id -> getPlayerInviteCache());
+        Cache<Player, Clan> playersInvited = invites.computeIfAbsent(clan.getClanId(), id -> getPlayerInviteCache());
         playersInvited.invalidate(player);
-        invites.put(clan.getID(), playersInvited);
+        invites.put(clan.getClanId(), playersInvited);
     }
 
     // Clan Ally Invites Methods
@@ -111,7 +111,7 @@ public class PluginHelper {
 
     private Cache<Player, Clan> getPlayerInviteCache() {
         return getCache().evictionListener((solarPlayer, solarClan, cause) -> {
-            String name = ((Clan) solarClan).getName();
+            String name = ((Clan) solarClan).currentClanName();
             // TODO: sendMsg -> leader -> Clan invitation to solarPlayer has expired
             ((Player) solarPlayer).sendMessage(ChatColor.YELLOW + "Clan invitation from " + name + " has expired");
         }).build();

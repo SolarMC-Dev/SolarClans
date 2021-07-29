@@ -4,7 +4,7 @@ import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.vaultmanagement.VaultOperations;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.PluginHelper;
+import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import org.bukkit.command.CommandSender;
@@ -26,7 +26,7 @@ public class VaultCommand implements SubCommand {
         if (PlayerVaults.getInstance().getInVault().containsKey(player.getUniqueId().toString()))
             return; // Already in a vault so they must be trying to dupe.
 
-        String vaultName = "clan_vault:" + clan.getID();
+        String vaultName = "clan_vault:" + clan.getClanId();
 
         if (VaultOperations.openOtherVault(player, vaultName, String.valueOf(0))) {
             // Success

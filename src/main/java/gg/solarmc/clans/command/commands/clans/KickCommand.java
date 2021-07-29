@@ -1,7 +1,7 @@
 package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.PluginHelper;
+import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
@@ -35,7 +35,7 @@ public class KickCommand implements SubCommand {
             return;
         }
 
-        playerKicked.sendMessage(player.getName() + " kicked you from " + clan.getName() + " Clan");
+        playerKicked.sendMessage(player.getName() + " kicked you from " + clan.currentClanName() + " Clan");
 
         DataCenter dataCenter = player.getServer().getDataCenter();
         dataCenter.runTransact(

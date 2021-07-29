@@ -18,7 +18,7 @@
         <maven.compiler.target>16</maven.compiler.target>
         <junit.version>5.7.0</junit.version>
         <solarapi.version>1.2.0-SNAPSHOT</solarapi.version>
-        <loader.version>0.5.1</loader.version>
+        <loader.version>0.5.2</loader.version>
         <dazzleconf.version>1.2.0-M2</dazzleconf.version>
     </properties>
 
@@ -45,7 +45,14 @@
         <dependency>
             <groupId>gg.solarmc.loader</groupId>
             <artifactId>loader-mod-clans</artifactId>
-            <version>${loader.version}</version>
+            <version>${loader.version}-SNAPSHOT</version>
+        </dependency>
+
+        <!-- https://github.com/SolarMC-Dev/DataLoader/tree/master/mod-credits -->
+        <dependency>
+            <groupId>gg.solarmc.loader</groupId>
+            <artifactId>loader-core</artifactId>
+            <version>${loader.version}-SNAPSHOT</version>
         </dependency>
 
         <!-- https://github.com/MilkBowl/VaultAPI -->
@@ -104,6 +111,10 @@
         <repository>
             <id>solar-releases</id>
             <url>https://mvn-repo.solarmc.gg/releases</url>
+        </repository>
+        <repository>
+            <id>solar-snapshots</id>
+            <url>https://mvn-repo.solarmc.gg/snapshots</url>
         </repository>
         <repository>
             <id>jitpack.io</id>
