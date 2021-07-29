@@ -33,11 +33,12 @@ public class RenameCommand implements SubCommand {
 
         final Server server = player.getServer();
 
-        server.getDataCenter().runTransact(transaction -> clan.setName(transaction, args[0])
-        ).thenRunAsync(() -> helper.sendClanMsg(server, clan,
-                Component.text(player.getName() + " renamed the clan to ", NamedTextColor.GREEN)
-                        .append(Component.text(args[0], NamedTextColor.GOLD)))
-        ).exceptionally(ex -> {
+        server.getDataCenter().runTransact(transaction -> {
+            clan.setName(transaction, args[0]);
+            helper.sendClanMsg(server, clan,
+                    Component.text(player.getName() + " renamed the clan to ", NamedTextColor.GREEN)
+                            .append(Component.text(args[0], NamedTextColor.GOLD)));
+        }).exceptionally(ex -> {
             player.sendMessage(ChatColor.RED + "Couldn't rename the clan! Something went wrong, Please try again later!!");
             helper.getLogger().error("Something went wrong renaming a clan", ex);
             return null;

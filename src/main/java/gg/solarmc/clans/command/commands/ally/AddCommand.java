@@ -10,6 +10,7 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -28,7 +29,7 @@ public class AddCommand implements SubCommand {
             return;
         }
 
-        if(!helper.isLeader(clan, player)){
+        if (!helper.isLeader(clan, player)) {
             player.sendMessage(Component.text("Only Clan Leader can use this Command", NamedTextColor.RED));
             return;
         }
@@ -47,7 +48,8 @@ public class AddCommand implements SubCommand {
             return;
         }
 
-        DataCenter dataCenter = sender.getServer().getDataCenter();
+        Server server = sender.getServer();
+        DataCenter dataCenter = server.getDataCenter();
         dataCenter.runTransact(transaction -> {
             Clan allyClan = dataCenter.getDataManager(ClansKey.INSTANCE).getClanByName(transaction, args[0]).orElse(null);
 
@@ -57,15 +59,17 @@ public class AddCommand implements SubCommand {
             }
 
             if (allyClan.currentAllyClan().orElse(null) != null) {
-                sender.sendMessage(ChatColor.RED + "The Clan " + allyClan.currentClanName()+ " already have a ally clan");
+                sender.sendMessage(ChatColor.RED + "The Clan " + allyClan.currentClanName() + " already has an ally clan");
                 return;
             }
 
             if (helper.hasAllyInvited(allyClan, clan)) {
                 clan.addClanAsAlly(transaction, allyClan);
-                final TextComponent alliedMsg = Component.text("You are been allied to ", NamedTextColor.GREEN);
-                // Send alliedMsg to clan members
-                // Send alliedMsg to AllyClan members
+                TextComponent alliedMsg = Component.text("You have been allied to ", NamedTextColor.GREEN);
+
+                helper.sendClanMsg(server, clan, alliedMsg.append(Component.text(allyClan.getClanName(transaction), NamedTextColor.GOLD)));
+                helper.sendClanMsg(server, allyClan, alliedMsg.append(Component.text(clan.getClanName(transaction), NamedTextColor.GOLD)));
+
                 helper.removeAllyInvite(clan);
                 helper.removeAllyInvite(allyClan);
                 return;
@@ -73,7 +77,7 @@ public class AddCommand implements SubCommand {
 
             helper.addAllyInvite(clan, allyClan);
 
-             String clanName = clan.currentClanName();
+            String clanName = clan.currentClanName();
             TextComponent requestMsg = Component.text(sender.getName() + " has requested a Clan ally to " + clanName, NamedTextColor.GREEN)
                     .append(Component.text("Click to Ally")
                             .clickEvent(ClickEvent.runCommand("clan ally " + clanName)));

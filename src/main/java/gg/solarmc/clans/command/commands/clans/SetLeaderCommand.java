@@ -57,10 +57,10 @@ public class SetLeaderCommand implements SubCommand {
             }
 
             clan.setLeader(transaction, playerTransferred);
-        }).thenRunAsync(() -> helper.sendClanMsg(server, clan,
-                Component.text(player.getName() + " transferred the clan to ", NamedTextColor.GREEN)
-                        .append(Component.text(args[0], NamedTextColor.GOLD)))
-        ).exceptionally(ex -> {
+            helper.sendClanMsg(server, clan,
+                    Component.text(player.getName() + " transferred the clan to ", NamedTextColor.GREEN)
+                            .append(Component.text(args[0], NamedTextColor.GOLD)));
+        }).exceptionally(ex -> {
             player.sendMessage(ChatColor.RED + "Couldn't transfer the clan! Something went wrong, Please try again later!!");
             helper.getLogger().error("Something went wrong transferring a clan to another player", ex);
             return null;

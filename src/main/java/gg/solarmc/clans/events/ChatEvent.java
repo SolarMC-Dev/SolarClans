@@ -12,6 +12,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import static gg.solarmc.clans.ChatMode.NORMAL;
+
 public class ChatEvent implements Listener {
     private final ChatHelper chatHelper;
     private final PluginHelper pluginHelper;
@@ -27,25 +29,24 @@ public class ChatEvent implements Listener {
         Clan clan = player.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
         if (clan == null) return;
 
-        if (chatHelper.getChatMode(player) == ChatMode.NORMAL) return;
+        ChatMode chatMode = chatHelper.getChatMode(player);
+        if (chatMode == NORMAL) return;
         event.setCancelled(true);
 
-        if (chatHelper.getChatMode(player) == ChatMode.CLAN) {
-            pluginHelper.sendPlayerClanMsg(player.getServer(), player, clan, "clan", event.getMessage());
-            return;
-        }
+        switch (chatMode) {
+            case CLAN -> pluginHelper.sendPlayerClanMsg(player.getServer(), player, clan, "clan", event.getMessage());
+            case ALLY -> {
+                Clan allyClan = clan.currentAllyClan().orElse(null);
+                if (allyClan == null) {
+                    player.sendMessage(Component.text("Your clan doesn't have a ally", NamedTextColor.RED)
+                            .append(Component.text("Switching your Chat to NORMAL")));
+                    chatHelper.setChatMode(player, NORMAL);
+                    return;
+                }
 
-        Clan allyClan = clan.currentAllyClan().orElse(null);
-        if (allyClan == null) {
-            player.sendMessage(Component.text("Your clan doesn't have a ally", NamedTextColor.RED)
-                    .append(Component.text("Switching your Chat to NORMAL")));
-            chatHelper.setChatMode(player, ChatMode.NORMAL);
-            return;
+                pluginHelper.sendPlayerClanMsg(player.getServer(), player, clan, "ally", event.getMessage());
+                pluginHelper.sendPlayerClanMsg(player.getServer(), player, allyClan, "ally", event.getMessage());
+            }
         }
-
-        // ChatMode.ALLY
-        pluginHelper.sendPlayerClanMsg(player.getServer(), player, clan, "ally", event.getMessage());
-        pluginHelper.sendPlayerClanMsg(player.getServer(), player, allyClan, "ally", event.getMessage());
     }
-
 }

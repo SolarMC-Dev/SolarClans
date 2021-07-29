@@ -37,26 +37,24 @@ public class KickCommand implements SubCommand {
         Server server = player.getServer();
         DataCenter dataCenter = server.getDataCenter();
 
-        dataCenter.runTransact(
-                transaction -> {
-                    SolarPlayer solarPlayerKicked = dataCenter.lookupPlayerUsing(transaction, args[0]).orElse(null);
+        dataCenter.runTransact(transaction -> {
+            SolarPlayer solarPlayerKicked = dataCenter.lookupPlayerUsing(transaction, args[0]).orElse(null);
 
-                    if (solarPlayerKicked == null) {
-                        player.sendMessage(ChatColor.RED + "Cannot find the player!");
-                        return;
-                    }
+            if (solarPlayerKicked == null) {
+                player.sendMessage(ChatColor.RED + "Cannot find the player!");
+                return;
+            }
 
-                    if (clan.currentMembers().contains(new ClanMember(solarPlayerKicked.getUserId()))) {
-                        player.sendMessage(ChatColor.RED + "Player is not in your clan!!");
-                        return;
-                    }
+            if (clan.currentMembers().contains(new ClanMember(solarPlayerKicked.getUserId()))) {
+                player.sendMessage(ChatColor.RED + "Player is not in your clan!!");
+                return;
+            }
 
-                    Player playerKicked = server.getPlayer(solarPlayerKicked.getMcUuid());
+            Player playerKicked = server.getPlayer(solarPlayerKicked.getMcUuid());
 
-                    helper.sendClanMsg(server, clan, Component.text(player.getName() + " kicked " + playerKicked.getName() + " from the clan", NamedTextColor.YELLOW));
-                    clan.removeClanMember(transaction, solarPlayerKicked);
-                }
-        ).exceptionally(ex -> {
+            helper.sendClanMsg(server, clan, Component.text(player.getName() + " kicked " + playerKicked.getName() + " from the clan", NamedTextColor.YELLOW));
+            clan.removeClanMember(transaction, solarPlayerKicked);
+        }).exceptionally(ex -> {
             player.sendMessage(ChatColor.RED + "Couldn't kick the player! Something went wrong, Please try again later!!");
             helper.getLogger().error("Something went wrong kicking a player from a clan", ex);
             return null;

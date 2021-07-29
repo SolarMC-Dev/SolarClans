@@ -5,9 +5,9 @@ import com.sk89q.worldguard.domains.Association;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
+import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.helper.PVPHelper;
 import gg.solarmc.clans.helper.PluginHelper;
-import gg.solarmc.clans.SolarClans;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
@@ -40,20 +40,22 @@ public record HitEvent(SolarClans plugin, PluginHelper helper,
 
         if (damagerClan == null || damagedPlayerClan == null) return;
 
-        if (damagerClan.equals(damagedPlayerClan))
+        if (damagerClan.equals(damagedPlayerClan)) {
             if (!clanPvp.isPvpOn(damagerClan)) {
                 damager.sendMessage(getPvPDisabledMsg("clan"));
                 event.setCancelled(true);
             }
+        }
 
         Clan allyClan = damagerClan.currentAllyClan().orElse(null);
         if (allyClan == null) return;
 
-        if (damagedPlayerClan.equals(allyClan))
+        if (damagedPlayerClan.equals(allyClan)) {
             if (!allyPvp.isPvpOn(damagerClan) || !allyPvp().isPvpOn(damagedPlayerClan)) {
                 damager.sendMessage(getPvPDisabledMsg("ally"));
                 event.setCancelled(true);
             }
+        }
     }
 
     private TextComponent getPvPDisabledMsg(String clanOrAlly) {

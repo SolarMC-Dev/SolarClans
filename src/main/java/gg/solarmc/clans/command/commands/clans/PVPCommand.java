@@ -10,6 +10,8 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Locale;
+
 public class PVPCommand implements SubCommand {
     private final PVPHelper pvpHelper;
 
@@ -41,13 +43,13 @@ public class PVPCommand implements SubCommand {
             return;
         }
 
-        args[0] = args[0].toLowerCase();
-
-        if (args[0].equals("on") || args[0].equals("true")) pvpHelper.setPvp(clan, true);
-        else if (args[0].equals("off") || args[0].equals("false")) pvpHelper.setPvp(clan, false);
-        else {
-            player.sendMessage(Component.text("You need to specify on/off!!", NamedTextColor.RED));
-            return;
+        switch (args[0].toLowerCase(Locale.ROOT)) {
+            case "on", "true", "enable" -> pvpHelper.setPvp(clan, true);
+            case "off", "false", "disable" -> pvpHelper.setPvp(clan, false);
+            default -> {
+                player.sendMessage(Component.text("You need to specify on/off!!", NamedTextColor.RED));
+                return;
+            }
         }
 
         helper.sendClanMsg(player.getServer(), clan,

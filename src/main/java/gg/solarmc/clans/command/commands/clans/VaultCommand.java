@@ -33,8 +33,6 @@ public class VaultCommand implements SubCommand {
             PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(),
                     new VaultViewInfo(vaultName, 0));
         }
-
-        // IS THIS ENOUGH ??? do we have to store the yaml conf >.<
     }
 
     @Override

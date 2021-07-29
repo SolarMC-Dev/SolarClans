@@ -153,15 +153,20 @@ public class PluginHelper {
     public void sendClanMsg(Server server, Clan clan, Component msg) {
         DataCenter dataCenter = server.getDataCenter();
 
-        dataCenter.runTransact(transaction ->
-                clan.currentMembers().forEach(it -> {
-                    SolarPlayer solarPlayer = dataCenter.lookupPlayerUsing(transaction, it.userId()).orElse(null);
-                    if (solarPlayer == null) return;
-                    Player player = server.getPlayer(solarPlayer.getMcUuid());
-                    if (player == null) return;
+        dataCenter.runTransact(transaction -> {
+            clan.currentMembers().forEach(it -> {
+                SolarPlayer solarPlayer = dataCenter.lookupPlayerUsing(transaction, it.userId()).orElse(null);
+                if (solarPlayer == null) return;
+                Player player = server.getPlayer(solarPlayer.getMcUuid());
+                if (player == null) return;
 
-                    if (player.isOnline())
-                        player.sendMessage(msg);
-                }));
+                if (player.isOnline())
+                    player.sendMessage(msg);
+
+            });
+        }).exceptionally(e -> {
+            LOGGER.error("Exception in looking up a player", e);
+            return null;
+        });
     }
 }

@@ -30,21 +30,20 @@ public class InviteCommand implements SubCommand {
             return;
         }
 
-        Server server = player.getServer();
+        if (!helper.isLeader(clan, player)) {
+            player.sendMessage(Component.text("Only Clan Leader can use this Command", NamedTextColor.RED));
+            return;
+        }
 
+        Server server = player.getServer();
+        Player playerInvited = server.getPlayer(args[0]);
         DataCenter dataCenter = server.getDataCenter();
+
         dataCenter.runTransact(transaction -> {
             if (clan.getClanSize(transaction) == 5) {
                 sender.sendMessage(ChatColor.RED + "There are already 5 players in the Clan!! You cannot invite more people! You can kick players by /clan kick command");
                 return;
             }
-
-            if (!helper.isLeader(clan, player)) {
-                player.sendMessage(Component.text("Only Clan Leader can use this Command", NamedTextColor.RED));
-                return;
-            }
-
-            Player playerInvited = player.getServer().getPlayer(args[0]);
 
             if (playerInvited == null) {
                 player.sendMessage("The player is offline!");

@@ -36,16 +36,18 @@ public record CreateCommand(SolarClans plugin) implements SubCommand {
         dataCenter.runTransact(transaction -> {
             ClanManager manager = dataCenter.getDataManager(ClansKey.INSTANCE);
 
-            // TODO: Check if clan exist
+            if (manager.getClanByName(transaction, args[0]).orElse(null) != null) {
+                sender.sendMessage(ChatColor.RED + "Clan already exist!!");
+                return;
+            }
 
             manager.createClan(transaction, args[0], player.getSolarPlayer());
-        })
-                .thenRunAsync(() -> player.sendMessage(ChatColor.GREEN + "Clan Created : " + args[0]))
-                .exceptionally((ex) -> {
-                    player.sendMessage(ChatColor.DARK_RED + "Something went wrong, Please try again Later!");
-                    helper.getLogger().error("Couldn't make a clan, command used by " + player.getName());
-                    return null;
-                });
+            player.sendMessage(ChatColor.GREEN + "Clan Created : " + args[0]);
+        }).exceptionally((ex) -> {
+            player.sendMessage(ChatColor.DARK_RED + "Something went wrong, Please try again Later!");
+            helper.getLogger().error("Couldn't make a clan, command used by " + player.getName());
+            return null;
+        });
     }
 
     @Override

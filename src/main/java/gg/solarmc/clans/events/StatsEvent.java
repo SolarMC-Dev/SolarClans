@@ -10,6 +10,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +19,7 @@ import java.util.UUID;
 
 public class StatsEvent implements Listener {
     private final Map<UUID, UUID> assists = new HashMap<>();
+    private final Logger LOGGER = LoggerFactory.getLogger(StatsEvent.class);
 
     @EventHandler
     public void onPlayerDamage(EntityDamageByEntityEvent event) {
@@ -40,6 +43,9 @@ public class StatsEvent implements Listener {
             if (playerClan != null) playerClan.addDeaths(transaction, 1);
             if (killerClan != null) killerClan.addKills(transaction, 1);
             if (assisterClan != null) assisterClan.addAssists(transaction, 1);
+        }).exceptionally(e -> {
+            LOGGER.error("Cannot either add death or add kills or add assist");
+            return null;
         });
     }
 
