@@ -93,6 +93,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- https://github.com/filoghost/HolographicDisplays/wiki/Basic-tutorial -->
+        <dependency>
+            <groupId>com.gmail.filoghost.holographicdisplays</groupId>
+            <artifactId>holographicdisplays-api</artifactId>
+            <version>2.4.9-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>

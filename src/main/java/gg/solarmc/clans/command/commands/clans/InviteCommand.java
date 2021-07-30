@@ -4,6 +4,7 @@ import gg.solarmc.clans.command.SubCommand;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
+import gg.solarmc.loader.clans.ClanMember;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -18,7 +19,7 @@ import org.bukkit.entity.Player;
 public class InviteCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
-        if (helper.invalidateCommandSender(sender, args)) return;
+        if (helper.invalidateCommandSender(sender)) return;
         if (helper.invalidateArgs(sender, args,
                 ChatColor.RED + "You need to specify the Name of the Player you want to Invite!!")) return;
         Player player = (Player) sender;
@@ -45,6 +46,11 @@ public class InviteCommand implements SubCommand {
                 return;
             }
 
+            if (playerInvited != null && clan.currentMembers().contains(new ClanMember(playerInvited.getSolarPlayer().getUserId()))) {
+                sender.sendMessage(ChatColor.YELLOW + "Player is already in your Cla");
+                return;
+            }
+
             if (playerInvited == null) {
                 player.sendMessage("The player is offline!");
                 return;
@@ -57,7 +63,6 @@ public class InviteCommand implements SubCommand {
                     .append(Component.text("Click to join Clan", NamedTextColor.YELLOW, TextDecoration.ITALIC).
                             clickEvent(ClickEvent.runCommand("clan join " + clan.currentClanName())));
 
-            player.sendMessage(ChatColor.GREEN + "The player was successfully invited! :D");
             playerInvited.sendMessage(inviteMsg);
             helper.addInvite(clan, playerInvited);
         }).exceptionally(ex -> {

@@ -23,6 +23,7 @@ public class ChatEvent implements Listener {
         this.pluginHelper = pluginHelper;
     }
 
+    // If you use DeluxeChat , it uses HIGHEST priority :D
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();

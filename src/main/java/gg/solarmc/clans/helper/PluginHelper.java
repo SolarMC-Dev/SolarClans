@@ -2,7 +2,6 @@ package gg.solarmc.clans.helper;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.SolarPlayer;
 import gg.solarmc.loader.clans.Clan;
 import net.kyori.adventure.text.Component;
@@ -25,12 +24,13 @@ public class PluginHelper {
     private final Map<Integer, Cache<Player, Clan>> invites = new HashMap<>();
     private final Cache<Clan, Clan> allyInvites;
 
-    public PluginHelper() {
+    public PluginHelper(Server server) {
         allyInvites = getCache()
                 .evictionListener((clan, allyClan, cause) -> {
-                    String name = ((Clan) clan).currentClanName();
-                    // TODO: sendMsg -> leader -> Clan invitation to solarPlayer has expired
-                    // ((Clan)allyClan).currentLeader().sendMessage(ChatColor.YELLOW + "Ally invitation from " + name + " has expired");
+                    final Clan solarClan = (Clan) clan;
+                    Player leader = getPlayerBy(server, ((Clan) allyClan).currentLeader().userId());
+                    if (leader == null) return;
+                    leader.sendMessage(ChatColor.YELLOW + "Ally invitation from " + solarClan.currentClanName() + " has expired");
                 }).build();
     }
 
@@ -40,8 +40,8 @@ public class PluginHelper {
 
     // Validate Methods
 
-    public boolean invalidateCommandSender(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player player)) {
+    public boolean invalidateCommandSender(CommandSender sender) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Only players can use this command!!");
             return true;
         }
@@ -121,9 +121,13 @@ public class PluginHelper {
 
     private Cache<Player, Clan> getPlayerInviteCache() {
         return getCache().evictionListener((solarPlayer, solarClan, cause) -> {
-            String name = ((Clan) solarClan).currentClanName();
-            // TODO: sendMsg -> leader -> Clan invitation to solarPlayer has expired
-            ((Player) solarPlayer).sendMessage(ChatColor.YELLOW + "Clan invitation from " + name + " has expired");
+            Clan clan = (Clan) solarClan;
+            Player player = (Player) solarPlayer;
+
+            (player).sendMessage(ChatColor.YELLOW + "Clan invitation from " + clan.currentClanName() + " has expired");
+            Player leader = getPlayerBy(player.getServer(), clan.currentLeader().userId());
+            if (leader == null) return;
+            leader.sendMessage(ChatColor.YELLOW + "Invitation to " + player.getName() + " has expired");
         }).build();
     }
 
@@ -151,22 +155,25 @@ public class PluginHelper {
     }
 
     public void sendClanMsg(Server server, Clan clan, Component msg) {
-        DataCenter dataCenter = server.getDataCenter();
+        clan.currentMembers().forEach(it -> {
+            Player player = getPlayerBy(server, it.userId());
+            if (player == null) return;
 
-        dataCenter.runTransact(transaction -> {
-            clan.currentMembers().forEach(it -> {
-                SolarPlayer solarPlayer = dataCenter.lookupPlayerUsing(transaction, it.userId()).orElse(null);
-                if (solarPlayer == null) return;
-                Player player = server.getPlayer(solarPlayer.getMcUuid());
-                if (player == null) return;
-
-                if (player.isOnline())
-                    player.sendMessage(msg);
-
-            });
-        }).exceptionally(e -> {
-            LOGGER.error("Exception in looking up a player", e);
-            return null;
+            if (player.isOnline())
+                player.sendMessage(msg);
         });
+    }
+
+    public Player getPlayerBy(Server server, int id) {
+        SolarPlayer sPlayer = server.getDataCenter().lookupPlayer(id)
+                .thenApplyAsync(o -> o.orElse(null))
+                .exceptionally(e -> {
+                    getLogger().error("Cannot lookup player", e);
+                    return null;
+                }).getNow(null);
+
+        if (sPlayer == null) return null;
+
+        return server.getPlayer(sPlayer.getMcUuid());
     }
 }

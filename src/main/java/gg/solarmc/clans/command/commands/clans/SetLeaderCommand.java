@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
 public class SetLeaderCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
-        if (helper.invalidateCommandSender(sender, args)) return;
+        if (helper.invalidateCommandSender(sender)) return;
         Player player = (Player) sender;
         if (helper.invalidateArgs(sender, args,
                 ChatColor.RED + "You need to specify the Name of the Player you want to transfer this Clan!!")) return;

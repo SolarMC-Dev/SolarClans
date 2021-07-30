@@ -18,7 +18,7 @@ public class DisbandCommand implements SubCommand {
         Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)
                 .append(Component.text("/clan disband confirm", NamedTextColor.GOLD))
                 .append(Component.text(" to disband the Clan :)"));
-        if (helper.invalidateCommandSender(sender, args)) return;
+        if (helper.invalidateCommandSender(sender)) return;
         Player player = (Player) sender;
         if (helper.invalidateConfirm(player, args, confirmMsg, 0)) return;
 

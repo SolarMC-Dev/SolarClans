@@ -19,7 +19,7 @@ public record CreateCommand(SolarClans plugin) implements SubCommand {
         Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)
                 .append(Component.text("/clan create [Clan Name] confirm", NamedTextColor.GOLD))
                 .append(Component.text(" to create a Clan :)"));
-        if (helper.invalidateCommandSender(sender, args)) return;
+        if (helper.invalidateCommandSender(sender)) return;
         if (helper.invalidateArgs(sender, args,
                 ChatColor.RED + "You need to specify the Name of the Clan!!")) return;
         Player player = (Player) sender;

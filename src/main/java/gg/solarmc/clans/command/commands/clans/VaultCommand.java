@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 public class VaultCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
-        if (helper.invalidateCommandSender(sender, args)) return;
+        if (helper.invalidateCommandSender(sender)) return;
         Player player = (Player) sender;
 
         Clan clan = player.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);

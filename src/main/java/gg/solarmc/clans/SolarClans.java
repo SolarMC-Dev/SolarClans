@@ -9,8 +9,6 @@ import gg.solarmc.clans.helper.ChatHelper;
 import gg.solarmc.clans.helper.PVPHelper;
 import gg.solarmc.clans.helper.PluginHelper;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.plugin.RegisteredListener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
@@ -23,18 +21,21 @@ public class SolarClans extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        System.out.println("ZoNe CoDiNg - Just temp Thing ");
-        for (RegisteredListener registeredListener : AsyncPlayerChatEvent.getHandlerList().getRegisteredListeners()) {
-            System.out.println(registeredListener);
-        }
-
         if (!setupEconomy()) {
             LOGGER.error(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
-            getServer().getPluginManager().disablePlugin(this);
+            setEnabled(false);
+            return;
         }
         worldGuard = (WorldGuardPlugin) getServer().getPluginManager().getPlugin("WorldGuard");
 
-        PluginHelper helper = new PluginHelper();
+        if (!getServer().getPluginManager().isPluginEnabled("HolographicDisplays")) {
+            getLogger().severe("*** HolographicDisplays is not installed or not enabled. ***");
+            getLogger().severe("*** This plugin will be disabled. ***");
+            setEnabled(false);
+            return;
+        }
+
+        PluginHelper helper = new PluginHelper(getServer());
         PVPHelper clanPvpHelper = new PVPHelper();
         PVPHelper allyPvpHelper = new PVPHelper();
         ChatHelper chatHelper = new ChatHelper();

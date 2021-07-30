@@ -11,4 +11,4 @@ commands:
     aliases: [ a ]
     description: Ally Command
     usage: /<command>
-depend: [ Vault, PlaceholderAPI, WorldGuard ]
+depend: [ Vault, PlaceholderAPI, WorldGuard ,HolographicDisplays ]

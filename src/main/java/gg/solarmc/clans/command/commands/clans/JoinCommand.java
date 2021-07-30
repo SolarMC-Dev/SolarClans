@@ -16,7 +16,7 @@ public class JoinCommand implements SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
-        if (helper.invalidateCommandSender(sender, args)) return;
+        if (helper.invalidateCommandSender(sender)) return;
         if (helper.invalidateArgs(sender, args,
                 ChatColor.RED + "You need to specify the Name of the Clan you want to Join!!")) return;
         Player player = (Player) sender;
@@ -40,7 +40,9 @@ public class JoinCommand implements SubCommand {
             clan.addClanMember(transaction, player.getSolarPlayer());
 
             clan = dataCenter.getDataManager(ClansKey.INSTANCE).getClanByName(transaction, args[0]).orElse(null);
+
             helper.sendClanMsg(server, clan, Component.text(player.getName() + " joined the clan", NamedTextColor.YELLOW));
+            helper.removeInvite(clan, player);
         }).exceptionally((ex) -> {
             player.sendMessage(ChatColor.RED + "Something went wrong! Please try again Later");
             return null;

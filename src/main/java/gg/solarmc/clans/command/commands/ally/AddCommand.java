@@ -14,10 +14,13 @@ import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class AddCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
-        if (helper.invalidateCommandSender(sender, args)) return;
+        if (helper.invalidateCommandSender(sender)) return;
         Player player = (Player) sender;
         if (helper.invalidateArgs(sender, args,
                 ChatColor.RED + "You have to specify the name of the Clan you have to ally!!")) return;
@@ -50,6 +53,10 @@ public class AddCommand implements SubCommand {
 
         Server server = sender.getServer();
         DataCenter dataCenter = server.getDataCenter();
+
+        AtomicBoolean sendRequest = new AtomicBoolean(false);
+        AtomicInteger allyLeaderId = new AtomicInteger();
+
         dataCenter.runTransact(transaction -> {
             Clan allyClan = dataCenter.getDataManager(ClansKey.INSTANCE).getClanByName(transaction, args[0]).orElse(null);
 
@@ -76,13 +83,24 @@ public class AddCommand implements SubCommand {
             }
 
             helper.addAllyInvite(clan, allyClan);
+            sendRequest.set(true);
+            allyLeaderId.set(allyClan.currentLeader().userId());
+        });
 
+        if (allyLeaderId.get() == 0) return;
+
+        if (sendRequest.get()) {
             String clanName = clan.currentClanName();
             TextComponent requestMsg = Component.text(sender.getName() + " has requested a Clan ally to " + clanName, NamedTextColor.GREEN)
                     .append(Component.text("Click to Ally")
                             .clickEvent(ClickEvent.runCommand("clan ally " + clanName)));
-            // Send requestMsg to allyClan.currentLeader();
-        });
+            Player allyLeader = helper.getPlayerBy(server, allyLeaderId.get());
+            if (allyLeader == null) {
+                player.sendMessage(ChatColor.RED + "The Clan Leader is not online!");
+                return;
+            }
+            allyLeader.sendMessage(requestMsg);
+        }
     }
 
     @Override
