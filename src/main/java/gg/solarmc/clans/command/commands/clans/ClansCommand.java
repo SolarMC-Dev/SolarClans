@@ -27,6 +27,7 @@ public class ClansCommand implements PluginCommand {
                 new PVPCommand(pvpHelper),
                 new RenameCommand(),
                 new SetLeaderCommand(),
+                new TopCommand(plugin),
                 new VaultCommand()
         );
     }
