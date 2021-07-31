@@ -28,12 +28,21 @@ public class SolarClans extends JavaPlugin {
         }
         worldGuard = (WorldGuardPlugin) getServer().getPluginManager().getPlugin("WorldGuard");
 
+        if (!getServer().getPluginManager().isPluginEnabled("PlayerVaults")) {
+            getLogger().severe("PlayerVaults is not installed or not enabled. Disabling this Plugin :(");
+            setEnabled(false);
+            return;
+        }
+
         if (!getServer().getPluginManager().isPluginEnabled("HolographicDisplays")) {
             getLogger().severe("*** HolographicDisplays is not installed or not enabled. ***");
             getLogger().severe("*** This plugin will be disabled. ***");
             setEnabled(false);
             return;
         }
+
+        HDPlaceholders placeholders = new HDPlaceholders(this);
+        placeholders.registerPlaceHolders();
 
         PluginHelper helper = new PluginHelper(getServer());
         PVPHelper clanPvpHelper = new PVPHelper();
