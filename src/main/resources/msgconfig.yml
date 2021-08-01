@@ -1,0 +1,21 @@
+ # When some error occurs
+error: 'Something went wrong, Please try again Later!!'
+ # When a clan is not found or it doesn't exist
+clanNotExist: 'Clan does not exist!'
+ # When a normal player uses Leader Command
+leaderCommand: 'Only Clan Leader can use this Command'
+ # When a Player Toggles their Chat
+chatToggled: 'You chat has been Toggled to {chatmode}'
+
+ally:
+   # When a Clan removes their ally
+  revoked: 'You revoked your ally'
+   # When a Clan is allied to another
+  allied: 'You have been allied to {clan}'
+
+clan:
+   # When a Player Creates a Clan
+  create: 'Your clan has been Created!'
+   # When a player Disbands the Clan
+  disband: '{player} disbanded the clan!'
+

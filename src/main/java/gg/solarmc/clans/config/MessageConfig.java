@@ -17,6 +17,7 @@ public interface MessageConfig {
 
     @ConfKey("clanNotExist")
     @ConfComments("When a clan is not found or it doesn't exist")
+    @ConfDefault.DefaultString("Clan does not exist!")
     String clanNotExist();
 
     @ConfKey("leaderCommand")
