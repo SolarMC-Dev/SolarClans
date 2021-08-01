@@ -1,6 +1,8 @@
 package gg.solarmc.clans.command.commands.clans;
 
+import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
+import gg.solarmc.clans.config.MessageConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
@@ -17,6 +19,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class InviteCommand implements SubCommand {
+    private final SolarClans plugin;
+
+    public InviteCommand(SolarClans plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         if (helper.invalidateCommandSender(sender)) return;
@@ -31,8 +39,10 @@ public class InviteCommand implements SubCommand {
             return;
         }
 
+        MessageConfig config = plugin.getPluginConfig();
+
         if (!helper.isLeader(clan, player)) {
-            player.sendMessage(Component.text("Only Clan Leader can use this Command", NamedTextColor.RED));
+            player.sendMessage(helper.translateColorCode(config.leaderCommand()));
             return;
         }
 
@@ -47,7 +57,7 @@ public class InviteCommand implements SubCommand {
             }
 
             if (playerInvited != null && clan.currentMembers().contains(new ClanMember(playerInvited.getSolarPlayer().getUserId()))) {
-                sender.sendMessage(ChatColor.YELLOW + "Player is already in your Cla");
+                sender.sendMessage(ChatColor.YELLOW + "Player is already in your Clan");
                 return;
             }
 

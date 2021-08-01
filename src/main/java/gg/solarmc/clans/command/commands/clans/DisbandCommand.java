@@ -1,6 +1,8 @@
 package gg.solarmc.clans.command.commands.clans;
 
+import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
+import gg.solarmc.clans.config.MessageConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
@@ -13,6 +15,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class DisbandCommand implements SubCommand {
+
+    private final SolarClans plugin;
+
+    public DisbandCommand(SolarClans plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)
@@ -29,13 +38,15 @@ public class DisbandCommand implements SubCommand {
             return;
         }
 
+        MessageConfig config = plugin.getPluginConfig();
+
         if (!helper.isLeader(clan, player)) {
-            player.sendMessage(Component.text("Only Clan Leader can use this Command", NamedTextColor.RED));
+            player.sendMessage(helper.translateColorCode(config.leaderCommand()));
             return;
         }
 
         Server server = player.getServer();
-        helper.sendClanMsg(server, clan, Component.text(player.getName() + " disbanded the clan", NamedTextColor.YELLOW));
+        helper.sendClanMsg(server, clan, helper.translateColorCode(config.clanDisbanded().replace("{player}", player.getName())));
 
         DataCenter dataCenter = server.getDataCenter();
 

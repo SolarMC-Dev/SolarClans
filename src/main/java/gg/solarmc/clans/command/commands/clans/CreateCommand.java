@@ -42,7 +42,7 @@ public record CreateCommand(SolarClans plugin) implements SubCommand {
             }
 
             manager.createClan(transaction, args[0], player.getSolarPlayer());
-            player.sendMessage(ChatColor.GREEN + "Clan Created : " + args[0]);
+            player.sendMessage(helper.translateColorCode(plugin.getPluginConfig().clanCreated().replace("{clan}", args[0])));
         }).exceptionally((ex) -> {
             player.sendMessage(ChatColor.DARK_RED + "Something went wrong, Please try again Later!");
             helper.getLogger().error("Couldn't make a clan, command used by " + player.getName());

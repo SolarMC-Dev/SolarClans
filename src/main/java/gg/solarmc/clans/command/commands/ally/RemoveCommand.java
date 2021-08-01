@@ -1,5 +1,6 @@
 package gg.solarmc.clans.command.commands.ally;
 
+import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.clans.Clan;
@@ -10,6 +11,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class RemoveCommand implements SubCommand {
+
+    private final SolarClans plugin;
+
+    public RemoveCommand(SolarClans plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         if (helper.invalidateCommandSender(sender)) return;
@@ -22,18 +30,24 @@ public class RemoveCommand implements SubCommand {
             return;
         }
 
-        if(!helper.isLeader(clan, player)){
+        if (!helper.isLeader(clan, player)) {
             player.sendMessage(Component.text("Only Clan Leader can use this Command", NamedTextColor.RED));
             return;
         }
 
         Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)
-                .append(Component.text("/clan allyremove confirm", NamedTextColor.GOLD))
-                .append(Component.text(" to remove the Ally :)",NamedTextColor.YELLOW));
+                .append(Component.text("/ally remove confirm", NamedTextColor.GOLD))
+                .append(Component.text(" to remove the Ally :)", NamedTextColor.YELLOW));
 
         if (helper.invalidateConfirm(player, args, confirmMsg, 0)) return;
 
-        player.getServer().getDataCenter().runTransact(clan::revokeAlly);
+        player.getServer().getDataCenter().runTransact(clan::revokeAlly)
+                .thenRunSync(() -> sender.sendMessage(helper.translateColorCode(plugin.getPluginConfig().allyRevoked())))
+                .exceptionally(e -> {
+            sender.sendMessage("Something went wrong. Please Try Again Later!");
+            helper.getLogger().error("Cannot revoke a Ally", e);
+            return null;
+        });
     }
 
     @Override

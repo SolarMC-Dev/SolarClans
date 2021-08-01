@@ -3,6 +3,8 @@ package gg.solarmc.clans;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import gg.solarmc.clans.command.commands.ally.AllyCommand;
 import gg.solarmc.clans.command.commands.clans.ClansCommand;
+import gg.solarmc.clans.config.ConfigManager;
+import gg.solarmc.clans.config.MessageConfig;
 import gg.solarmc.clans.events.HitEvent;
 import gg.solarmc.clans.events.StatsEvent;
 import gg.solarmc.clans.helper.ChatHelper;
@@ -18,6 +20,7 @@ public class SolarClans extends JavaPlugin {
     private static final Logger LOGGER = LoggerFactory.getLogger(SolarClans.class);
     private Economy econ;
     private WorldGuardPlugin worldGuard;
+    private ConfigManager<MessageConfig> config;
 
     @Override
     public void onEnable() {
@@ -49,6 +52,8 @@ public class SolarClans extends JavaPlugin {
         PVPHelper allyPvpHelper = new PVPHelper();
         ChatHelper chatHelper = new ChatHelper();
 
+        config = ConfigManager.create(this.getDataFolder().toPath(), "msgconfig.yml", MessageConfig.class);
+
         // Commands
         getServer().getPluginCommand("clans").setExecutor(new ClansCommand(this, helper, clanPvpHelper, chatHelper));
         getServer().getPluginCommand("ally").setExecutor(new AllyCommand(this, helper, allyPvpHelper, chatHelper));
@@ -61,6 +66,11 @@ public class SolarClans extends JavaPlugin {
     @Override
     public void onDisable() {
         LOGGER.info(String.format("[%s] Disabled Version %s", getDescription().getName(), getDescription().getVersion()));
+    }
+
+    public MessageConfig getPluginConfig() {
+        config.reloadConfig();
+        return config.getConfigData();
     }
 
     private boolean setupEconomy() {

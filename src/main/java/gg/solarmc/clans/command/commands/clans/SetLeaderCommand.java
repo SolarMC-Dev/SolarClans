@@ -1,6 +1,8 @@
 package gg.solarmc.clans.command.commands.clans;
 
+import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
+import gg.solarmc.clans.config.MessageConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.SolarPlayer;
@@ -15,6 +17,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class SetLeaderCommand implements SubCommand {
+    private final SolarClans plugin;
+
+    public SetLeaderCommand(SolarClans plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         if (helper.invalidateCommandSender(sender)) return;
@@ -35,8 +43,10 @@ public class SetLeaderCommand implements SubCommand {
             return;
         }
 
+        MessageConfig config = plugin.getPluginConfig();
+
         if (!helper.isLeader(clan, player)) {
-            player.sendMessage(Component.text("Only Clan Leader can use this Command", NamedTextColor.RED));
+            player.sendMessage(helper.translateColorCode(config.leaderCommand()));
             return;
         }
 

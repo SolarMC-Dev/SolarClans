@@ -1,5 +1,6 @@
 package gg.solarmc.clans.command.commands.ally;
 
+import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
@@ -18,6 +19,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AddCommand implements SubCommand {
+
+    private final SolarClans plugin;
+
+    public AddCommand(SolarClans plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         if (helper.invalidateCommandSender(sender)) return;
@@ -40,7 +48,7 @@ public class AddCommand implements SubCommand {
         if (clan.currentAllyClan().orElse(null) != null) {
             String[] msg = {
                     ChatColor.RED + "You already have a ally clan",
-                    ChatColor.YELLOW + "You can use /clan [allyremove|allyr] to remove your current ally"
+                    ChatColor.YELLOW + "You can use /ally remove to remove your current ally"
             };
             sender.sendMessage(msg);
             return;
@@ -61,7 +69,7 @@ public class AddCommand implements SubCommand {
             Clan allyClan = dataCenter.getDataManager(ClansKey.INSTANCE).getClanByName(transaction, args[0]).orElse(null);
 
             if (allyClan == null) {
-                sender.sendMessage(ChatColor.RED + "Clan does not exist!");
+                sender.sendMessage(helper.translateColorCode(plugin.getPluginConfig().clanNotExist()));
                 return;
             }
 
@@ -72,7 +80,7 @@ public class AddCommand implements SubCommand {
 
             if (helper.hasAllyInvited(allyClan, clan)) {
                 clan.addClanAsAlly(transaction, allyClan);
-                TextComponent alliedMsg = Component.text("You have been allied to ", NamedTextColor.GREEN);
+                Component alliedMsg = helper.translateColorCode(plugin.getPluginConfig().allyAllied().replace("{clan}", allyClan.getClanName(transaction)));
 
                 helper.sendClanMsg(server, clan, alliedMsg.append(Component.text(allyClan.getClanName(transaction), NamedTextColor.GOLD)));
                 helper.sendClanMsg(server, allyClan, alliedMsg.append(Component.text(clan.getClanName(transaction), NamedTextColor.GOLD)));
@@ -91,7 +99,7 @@ public class AddCommand implements SubCommand {
 
         if (sendRequest.get()) {
             String clanName = clan.currentClanName();
-            TextComponent requestMsg = Component.text(sender.getName() + " has requested a Clan ally to " + clanName, NamedTextColor.GREEN)
+            TextComponent requestMsg = Component.text(sender.getName() + " has requested a Clan Ally to " + clanName, NamedTextColor.GREEN)
                     .append(Component.text("Click to Ally")
                             .clickEvent(ClickEvent.runCommand("clan ally " + clanName)));
             Player allyLeader = helper.getPlayerBy(server, allyLeaderId.get());

@@ -6,6 +6,7 @@ import gg.solarmc.loader.SolarPlayer;
 import gg.solarmc.loader.clans.Clan;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
@@ -175,5 +176,9 @@ public class PluginHelper {
         if (sPlayer == null) return null;
 
         return server.getPlayer(sPlayer.getMcUuid());
+    }
+
+    public Component translateColorCode(String s) {
+        return LegacyComponentSerializer.legacy('&').deserialize(s);
     }
 }

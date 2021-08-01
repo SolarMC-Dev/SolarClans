@@ -1,6 +1,8 @@
 package gg.solarmc.clans.command.commands.clans;
 
+import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
+import gg.solarmc.clans.config.MessageConfig;
 import gg.solarmc.clans.helper.PVPHelper;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.clans.Clan;
@@ -13,9 +15,11 @@ import org.bukkit.entity.Player;
 import java.util.Locale;
 
 public class PVPCommand implements SubCommand {
+    private final SolarClans plugin;
     private final PVPHelper pvpHelper;
 
-    public PVPCommand(PVPHelper pvpHelper) {
+    public PVPCommand(SolarClans plugin, PVPHelper pvpHelper) {
+        this.plugin = plugin;
         this.pvpHelper = pvpHelper;
     }
 
@@ -30,9 +34,10 @@ public class PVPCommand implements SubCommand {
             helper.sendNotInClanMsg(player);
             return;
         }
+        MessageConfig config = plugin.getPluginConfig();
 
         if (!helper.isLeader(clan, player)) {
-            player.sendMessage(Component.text("Only Clan Leader can use this Command", NamedTextColor.RED));
+            player.sendMessage(helper.translateColorCode(config.leaderCommand()));
             return;
         }
 
@@ -46,10 +51,6 @@ public class PVPCommand implements SubCommand {
         switch (args[0].toLowerCase(Locale.ROOT)) {
             case "on", "true", "enable" -> pvpHelper.setPvp(clan, true);
             case "off", "false", "disable" -> pvpHelper.setPvp(clan, false);
-            default -> {
-                player.sendMessage(Component.text("You need to specify on/off!!", NamedTextColor.RED));
-                return;
-            }
         }
 
         helper.sendClanMsg(player.getServer(), clan,

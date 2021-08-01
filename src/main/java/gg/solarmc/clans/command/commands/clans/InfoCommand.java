@@ -1,15 +1,30 @@
 package gg.solarmc.clans.command.commands.clans;
 
+import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
+import gg.solarmc.loader.SolarPlayer;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class InfoCommand implements SubCommand {
+    private final Logger LOGGER = LoggerFactory.getLogger(InfoCommand.class);
+    private final SolarClans plugin;
+
+    public InfoCommand(SolarClans plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         if (!(sender instanceof Player)) {
@@ -36,14 +51,14 @@ public class InfoCommand implements SubCommand {
             Clan clan = dataCenter.getDataManager(ClansKey.INSTANCE).getClanByName(transaction, args[0]).orElse(null);
 
             if (clan == null) {
-                sender.sendMessage(ChatColor.RED + "Clan does not exist!");
+                sender.sendMessage(helper.translateColorCode(plugin.getPluginConfig().clanNotExist()));
                 return;
             }
 
             sendClanInfo(sender, clan);
         }).exceptionally((ex) -> {
             sender.sendMessage(ChatColor.RED + "Something went wrong! Please try again Later");
-            helper.getLogger().error("Something went wrong getting info about a clan", ex);
+            LOGGER.error("Something went wrong getting info about a clan", ex);
             return null;
         });
     }
@@ -54,8 +69,7 @@ public class InfoCommand implements SubCommand {
         int kills = clan.currentKills();
         int assists = clan.currentAssists();
         int deaths = clan.currentDeaths();
-        // TODO
-        // final Set<ClanMember> clanMembers = clan.currentMembers();
+        String members = clan.currentMembers().stream().map(it -> getPlayerNameById(player.getServer(), it.userId())).collect(Collectors.joining(","));
 
         String[] info = {
                 "Information about " + clanName,
@@ -63,10 +77,21 @@ public class InfoCommand implements SubCommand {
                 "Assists : " + assists,
                 "Deaths : " + deaths,
                 "Ally : " + allyClanName,
-                // "Members : "
+                "Members : " + members
         };
-        // TODO : make it look good
         player.sendMessage(info);
+    }
+
+    private String getPlayerNameById(Server server, int id) {
+        SolarPlayer solarPlayer = server.getDataCenter().lookupPlayer(id)
+                .exceptionally(e -> {
+                    LOGGER.error("Cannot lookup player by id", e);
+                    return Optional.empty();
+                }).getNow(Optional.empty()).orElse(null);
+
+        if (solarPlayer == null) return null;
+
+        return server.getOfflinePlayer(solarPlayer.getMcUuid()).getName();
     }
 
     @Override

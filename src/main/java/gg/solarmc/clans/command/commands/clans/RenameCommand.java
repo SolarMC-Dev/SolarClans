@@ -1,6 +1,8 @@
 package gg.solarmc.clans.command.commands.clans;
 
+import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
+import gg.solarmc.clans.config.MessageConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
@@ -12,6 +14,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class RenameCommand implements SubCommand {
+    private final SolarClans plugin;
+
+    public RenameCommand(SolarClans plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         if (helper.invalidateCommandSender(sender)) return;
@@ -26,8 +34,10 @@ public class RenameCommand implements SubCommand {
             return;
         }
 
+        MessageConfig config = plugin.getPluginConfig();
+
         if (!helper.isLeader(clan, player)) {
-            player.sendMessage(Component.text("Only Clan Leader can use this Command", NamedTextColor.RED));
+            player.sendMessage(helper.translateColorCode(config.leaderCommand()));
             return;
         }
 
