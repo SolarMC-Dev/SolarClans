@@ -7,6 +7,7 @@ import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.ClanManager;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.ChatColor;
@@ -16,13 +17,18 @@ import org.bukkit.entity.Player;
 public record CreateCommand(SolarClans plugin) implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
-        Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)
-                .append(Component.text("/clan create [Clan Name] confirm", NamedTextColor.GOLD))
-                .append(Component.text(" to create a Clan :)"));
         if (helper.invalidateCommandSender(sender)) return;
         if (helper.invalidateArgs(sender, args,
                 ChatColor.RED + "You need to specify the Name of the Clan!!")) return;
         Player player = (Player) sender;
+
+        Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)
+                .append(Component.text("/clan create [Clan Name] confirm", NamedTextColor.GOLD))
+                .append(Component.text(" to create a Clan :)"))
+                .append(Component.newline())
+                .append(Component.text("Click to Confirm")
+                        .clickEvent(ClickEvent.runCommand("clan create " + args[0] + " confirm")));
+
         if (helper.invalidateConfirm(player, args, confirmMsg, 1)) return;
 
         EconomyResponse response = plugin.getEconomy().withdrawPlayer(player, 1000);

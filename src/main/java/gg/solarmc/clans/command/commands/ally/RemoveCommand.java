@@ -6,6 +6,7 @@ import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -37,17 +38,20 @@ public class RemoveCommand implements SubCommand {
 
         Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)
                 .append(Component.text("/ally remove confirm", NamedTextColor.GOLD))
-                .append(Component.text(" to remove the Ally :)", NamedTextColor.YELLOW));
+                .append(Component.text(" to remove the Ally :)", NamedTextColor.YELLOW))
+                .append(Component.newline())
+                .append(Component.text("Click to Confirm")
+                        .clickEvent(ClickEvent.runCommand("clan disband confirm")));
 
         if (helper.invalidateConfirm(player, args, confirmMsg, 0)) return;
 
         player.getServer().getDataCenter().runTransact(clan::revokeAlly)
                 .thenRunSync(() -> sender.sendMessage(helper.translateColorCode(plugin.getPluginConfig().allyRevoked())))
                 .exceptionally(e -> {
-            sender.sendMessage("Something went wrong. Please Try Again Later!");
-            helper.getLogger().error("Cannot revoke a Ally", e);
-            return null;
-        });
+                    sender.sendMessage("Something went wrong. Please Try Again Later!");
+                    helper.getLogger().error("Cannot revoke a Ally", e);
+                    return null;
+                });
     }
 
     @Override

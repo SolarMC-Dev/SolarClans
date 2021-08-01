@@ -8,6 +8,7 @@ import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
@@ -24,11 +25,16 @@ public class DisbandCommand implements SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
-        Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)
-                .append(Component.text("/clan disband confirm", NamedTextColor.GOLD))
-                .append(Component.text(" to disband the Clan :)"));
         if (helper.invalidateCommandSender(sender)) return;
         Player player = (Player) sender;
+
+        Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)
+                .append(Component.text("/clan disband confirm", NamedTextColor.GOLD))
+                .append(Component.text(" to disband the Clan :)"))
+                .append(Component.newline())
+                .append(Component.text("Click to Confirm")
+                        .clickEvent(ClickEvent.runCommand("clan disband confirm")));
+
         if (helper.invalidateConfirm(player, args, confirmMsg, 0)) return;
 
         Clan clan = player.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
