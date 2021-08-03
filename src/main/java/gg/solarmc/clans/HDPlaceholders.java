@@ -21,7 +21,7 @@ public class HDPlaceholders {
 
     public void registerPlaceHolders() {
         for (int i = 1; i <= 10; i++) {
-            int index = i;
+            int index = i - 1;
             HologramsAPI.registerPlaceholder(plugin, "topclan_" + i, 1, () -> getPlaceHolder(index));
         }
     }
@@ -32,7 +32,9 @@ public class HDPlaceholders {
         dataCenter.runTransact(transaction -> {
             List<ClanManager.TopClanResult> results = dataCenter.getDataManager(ClansKey.INSTANCE).getTopClanKills(transaction, 10);
 
-            final ClanManager.TopClanResult clan = results.get(i - 1);
+            if (results.size() <= i) value.set("No Clan");
+
+            final ClanManager.TopClanResult clan = results.get(i);
             value.set(i + ". " + clan.clanName() + " - " + clan.statisticValue());
         }).exceptionally(e -> {
             LOGGER.error("Failed to get Top clan kills", e);
