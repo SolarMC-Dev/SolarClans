@@ -8,6 +8,7 @@ import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -49,7 +50,7 @@ public class RemoveCommand implements SubCommand {
 
         player.getServer().getDataCenter().runTransact(transaction -> {
             if (!clan.revokeAlly(transaction)) {
-                sender.sendMessage(errorMsg);
+                sender.sendMessage(ChatColor.RED + "You don't have a ally!!");
                 return;
             }
             sender.sendMessage(plugin.getPluginConfig().allyRevoked());

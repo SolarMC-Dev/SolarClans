@@ -73,13 +73,11 @@ public class AddCommand implements SubCommand {
                 return;
             }
 
-            if (allyClan.currentAllyClan().orElse(null) != null) {
-                sender.sendMessage(ChatColor.RED + "The Clan " + allyClan.currentClanName() + " already has an ally clan");
-                return;
-            }
-
             if (helper.hasAllyInvited(allyClan, clan)) {
-                clan.addClanAsAlly(transaction, allyClan);
+                if (!clan.addClanAsAlly(transaction, allyClan)) {
+                    sender.sendMessage(ChatColor.RED + "The Clan " + allyClan.currentClanName() + " already has an ally clan");
+                    return;
+                }
                 Component alliedMsg = helper.replaceText(plugin.getPluginConfig().allyAllied(), "{clan}", allyClan.getClanName(transaction));
 
                 helper.sendClanMsg(server, clan, alliedMsg.append(Component.text(allyClan.getClanName(transaction), NamedTextColor.GOLD)));
