@@ -45,13 +45,19 @@ public class RemoveCommand implements SubCommand {
 
         if (helper.invalidateConfirm(player, args, confirmMsg, 0)) return;
 
-        player.getServer().getDataCenter().runTransact(clan::revokeAlly)
-                .thenRunSync(() -> sender.sendMessage(helper.translateColorCode(plugin.getPluginConfig().allyRevoked())))
-                .exceptionally(e -> {
-                    sender.sendMessage("Something went wrong. Please Try Again Later!");
-                    helper.getLogger().error("Cannot revoke a Ally", e);
-                    return null;
-                });
+        Component errorMsg = plugin.getPluginConfig().error();
+
+        player.getServer().getDataCenter().runTransact(transaction -> {
+            if (!clan.revokeAlly(transaction)) {
+                sender.sendMessage(errorMsg);
+                return;
+            }
+            sender.sendMessage(plugin.getPluginConfig().allyRevoked());
+        }).exceptionally(e -> {
+            sender.sendMessage(errorMsg);
+            helper.getLogger().error("Cannot revoke a Ally", e);
+            return null;
+        });
     }
 
     @Override

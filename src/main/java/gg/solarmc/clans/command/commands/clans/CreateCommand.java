@@ -9,12 +9,17 @@ import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public record CreateCommand(SolarClans plugin) implements SubCommand {
+public class CreateCommand implements SubCommand {
+    private final SolarClans plugin;
+
+    public CreateCommand(SolarClans plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         if (helper.invalidateCommandSender(sender)) return;
@@ -31,12 +36,12 @@ public record CreateCommand(SolarClans plugin) implements SubCommand {
 
         if (helper.invalidateConfirm(player, args, confirmMsg, 1)) return;
 
-        EconomyResponse response = plugin.getEconomy().withdrawPlayer(player, 1000);
+        /*EconomyResponse response = plugin.getEconomy().withdrawPlayer(player, 1000);
 
         if (!response.transactionSuccess()) {
             player.sendMessage(ChatColor.RED + "You don't have enough money to Create a Clan!!");
             return;
-        }
+        }*/
 
         DataCenter dataCenter = player.getServer().getDataCenter();
         dataCenter.runTransact(transaction -> {
@@ -48,10 +53,10 @@ public record CreateCommand(SolarClans plugin) implements SubCommand {
             }
 
             manager.createClan(transaction, args[0], player.getSolarPlayer());
-            player.sendMessage(helper.translateColorCode(plugin.getPluginConfig().clanCreated().replace("{clan}", args[0])));
+            player.sendMessage(helper.replaceText(plugin.getPluginConfig().clanCreated(), "{clan}", args[0]));
         }).exceptionally((ex) -> {
             player.sendMessage(ChatColor.DARK_RED + "Something went wrong, Please try again Later!");
-            helper.getLogger().error("Couldn't make a clan, command used by " + player.getName());
+            helper.getLogger().error("Couldn't make a clan, command used by " + player.getName(), ex);
             return null;
         });
     }

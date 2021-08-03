@@ -6,13 +6,13 @@ import gg.solarmc.loader.SolarPlayer;
 import gg.solarmc.loader.clans.Clan;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import space.arim.api.jsonchat.adventure.util.ComponentText;
 import space.arim.omnibus.util.ThisClass;
 
 import java.time.Duration;
@@ -59,7 +59,7 @@ public class PluginHelper {
     }
 
     public boolean invalidateConfirm(Player player, String[] args, Component msg, int confirmIndex) {
-        if (args.length == confirmIndex + 1) {
+        if (args.length != confirmIndex + 1) {
             player.sendMessage(msg);
             return true;
         }
@@ -178,7 +178,7 @@ public class PluginHelper {
         return server.getPlayer(sPlayer.getMcUuid());
     }
 
-    public Component translateColorCode(String s) {
-        return LegacyComponentSerializer.legacy('&').deserialize(s);
+    public Component replaceText(Component component, String target, String replacement) {
+        return ComponentText.create(component).replaceText(target, replacement).asComponent();
     }
 }

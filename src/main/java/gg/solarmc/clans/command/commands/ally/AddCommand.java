@@ -69,7 +69,7 @@ public class AddCommand implements SubCommand {
             Clan allyClan = dataCenter.getDataManager(ClansKey.INSTANCE).getClanByName(transaction, args[0]).orElse(null);
 
             if (allyClan == null) {
-                sender.sendMessage(helper.translateColorCode(plugin.getPluginConfig().clanNotExist()));
+                sender.sendMessage(plugin.getPluginConfig().clanNotExist());
                 return;
             }
 
@@ -80,7 +80,7 @@ public class AddCommand implements SubCommand {
 
             if (helper.hasAllyInvited(allyClan, clan)) {
                 clan.addClanAsAlly(transaction, allyClan);
-                Component alliedMsg = helper.translateColorCode(plugin.getPluginConfig().allyAllied().replace("{clan}", allyClan.getClanName(transaction)));
+                Component alliedMsg = helper.replaceText(plugin.getPluginConfig().allyAllied(), "{clan}", allyClan.getClanName(transaction));
 
                 helper.sendClanMsg(server, clan, alliedMsg.append(Component.text(allyClan.getClanName(transaction), NamedTextColor.GOLD)));
                 helper.sendClanMsg(server, allyClan, alliedMsg.append(Component.text(clan.getClanName(transaction), NamedTextColor.GOLD)));

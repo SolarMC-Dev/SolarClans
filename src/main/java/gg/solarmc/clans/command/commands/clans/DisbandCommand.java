@@ -47,12 +47,13 @@ public class DisbandCommand implements SubCommand {
         MessageConfig config = plugin.getPluginConfig();
 
         if (!helper.isLeader(clan, player)) {
-            player.sendMessage(helper.translateColorCode(config.leaderCommand()));
+            player.sendMessage(config.leaderCommand());
             return;
         }
 
         Server server = player.getServer();
-        helper.sendClanMsg(server, clan, helper.translateColorCode(config.clanDisbanded().replace("{player}", player.getName())));
+        helper.sendClanMsg(server, clan,
+                helper.replaceText(config.clanDisbanded(), "{player}", player.getName()));
 
         DataCenter dataCenter = server.getDataCenter();
 

@@ -51,7 +51,7 @@ public class InfoCommand implements SubCommand {
             Clan clan = dataCenter.getDataManager(ClansKey.INSTANCE).getClanByName(transaction, args[0]).orElse(null);
 
             if (clan == null) {
-                sender.sendMessage(helper.translateColorCode(plugin.getPluginConfig().clanNotExist()));
+                sender.sendMessage(plugin.getPluginConfig().clanNotExist());
                 return;
             }
 

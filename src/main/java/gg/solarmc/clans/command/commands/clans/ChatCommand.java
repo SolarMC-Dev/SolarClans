@@ -36,8 +36,7 @@ public class ChatCommand implements SubCommand {
             chatHelper.setChatMode(player, mode);
         else chatHelper.setChatMode(player, ChatMode.NORMAL);
 
-        player.sendMessage(helper.translateColorCode(plugin.getPluginConfig().chatToggled()
-                .replace("{chatmode}", chatHelper.getChatMode(player).name())));
+        player.sendMessage(helper.replaceText(plugin.getPluginConfig().chatToggled(), "{chatmode}", chatHelper.getChatMode(player).name()));
     }
 
     @Override

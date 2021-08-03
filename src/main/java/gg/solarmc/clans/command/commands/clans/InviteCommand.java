@@ -42,7 +42,7 @@ public class InviteCommand implements SubCommand {
         MessageConfig config = plugin.getPluginConfig();
 
         if (!helper.isLeader(clan, player)) {
-            player.sendMessage(helper.translateColorCode(config.leaderCommand()));
+            player.sendMessage(config.leaderCommand());
             return;
         }
 

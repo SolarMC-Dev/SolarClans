@@ -79,6 +79,12 @@
         </dependency>
 
         <dependency>
+            <groupId>space.arim.api</groupId>
+            <artifactId>arimapi-env-bukkit</artifactId>
+            <version>0.24.3</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.drtshock</groupId>
             <artifactId>PlayerVaultsX</artifactId>
             <version>4.2.0</version>
@@ -131,6 +137,10 @@
         <repository>
             <id>sk89q-repo</id>
             <url>https://maven.enginehub.org/repo</url>
+        </repository>
+        <repository>
+            <id>arim-mvn-gpl3</id>
+            <url>https://mvn-repo.arim.space/gpl3</url>
         </repository>
     </repositories>
 
