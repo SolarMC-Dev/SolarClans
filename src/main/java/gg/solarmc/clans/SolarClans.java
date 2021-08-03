@@ -24,11 +24,11 @@ public class SolarClans extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        /*if (!setupEconomy()) {
+        if (!setupEconomy()) {
             LOGGER.error(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
             setEnabled(false);
             return;
-        }*/
+        }
         worldGuard = (WorldGuardPlugin) getServer().getPluginManager().getPlugin("WorldGuard");
 
         if (!getServer().getPluginManager().isPluginEnabled("PlayerVaults")) {
@@ -44,8 +44,8 @@ public class SolarClans extends JavaPlugin {
             return;
         }
 
-        //HDPlaceholders placeholders = new HDPlaceholders(this);
-        //placeholders.registerPlaceHolders();
+        HDPlaceholders placeholders = new HDPlaceholders(this);
+        placeholders.registerPlaceHolders();
 
         PluginHelper helper = new PluginHelper(getServer());
         PVPHelper clanPvpHelper = new PVPHelper();
