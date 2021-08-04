@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import subside.plugins.koth.gamemodes.RunningKoth;
 
 public record HitEvent(SolarClans plugin, PluginHelper helper,
                        PVPHelper clanPvp, PVPHelper allyPvp) implements Listener {
@@ -46,6 +47,9 @@ public record HitEvent(SolarClans plugin, PluginHelper helper,
                 event.setCancelled(true);
             }
         }
+
+        RunningKoth rKoth = plugin.getKoth().getKothHandler().getRunningKoth();
+        if (rKoth != null) return;
 
         Clan allyClan = damagerClan.currentAllyClan().orElse(null);
         if (allyClan == null) return;

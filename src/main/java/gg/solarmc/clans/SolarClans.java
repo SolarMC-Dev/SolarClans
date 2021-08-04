@@ -11,16 +11,19 @@ import gg.solarmc.clans.helper.ChatHelper;
 import gg.solarmc.clans.helper.PVPHelper;
 import gg.solarmc.clans.helper.PluginHelper;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import subside.plugins.koth.KothPlugin;
 
 public class SolarClans extends JavaPlugin {
     private static final Logger LOGGER = LoggerFactory.getLogger(SolarClans.class);
     private Economy econ;
     private WorldGuardPlugin worldGuard;
     private ConfigManager<MessageConfig> config;
+    private KothPlugin koth;
 
     @Override
     public void onEnable() {
@@ -29,20 +32,15 @@ public class SolarClans extends JavaPlugin {
             setEnabled(false);
             return;
         }
-        worldGuard = (WorldGuardPlugin) getServer().getPluginManager().getPlugin("WorldGuard");
 
-        if (!getServer().getPluginManager().isPluginEnabled("PlayerVaults")) {
-            getLogger().severe("PlayerVaults is not installed or not enabled. Disabling this Plugin :(");
-            setEnabled(false);
-            return;
-        }
+        Plugin worldGuardPlugin = setupPlugin("WorldGuard");
+        this.worldGuard = (WorldGuardPlugin) worldGuardPlugin;
 
-        if (!getServer().getPluginManager().isPluginEnabled("HolographicDisplays")) {
-            getLogger().severe("*** HolographicDisplays is not installed or not enabled. ***");
-            getLogger().severe("*** This plugin will be disabled. ***");
-            setEnabled(false);
-            return;
-        }
+        setupPlugin("PlayerVaults");
+        setupPlugin("HolographicDisplays");
+
+        Plugin kothPlugin = setupPlugin("KoTH");
+        this.koth = (KothPlugin) kothPlugin;
 
         HDPlaceholders placeholders = new HDPlaceholders(this);
         placeholders.registerPlaceHolders();
@@ -69,14 +67,28 @@ public class SolarClans extends JavaPlugin {
         LOGGER.info(String.format("[%s] Disabled Version %s", getDescription().getName(), getDescription().getVersion()));
     }
 
+    private Plugin setupPlugin(String name) {
+        Plugin plugin = getServer().getPluginManager().getPlugin(name);
+        if (plugin == null) {
+            LOGGER.warn("*** {} is not installed or not enabled. ***", name);
+            throw new IllegalStateException("*** This plugin will be disabled. ***");
+        }
+
+        return plugin;
+    }
+
     public MessageConfig getPluginConfig() {
         return config.getConfigData();
     }
 
+    public KothPlugin getKoth() {
+        return koth;
+    }
+
     private boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+        if (setupPlugin("Vault") == null)
             return false;
-        }
+
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
             return false;

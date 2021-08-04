@@ -107,6 +107,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- htt -->
+        <dependency>
+            <groupId>gg.solarmc.koth</groupId>
+            <artifactId>koth</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
