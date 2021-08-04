@@ -2,7 +2,6 @@ package gg.solarmc.clans.helper;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import gg.solarmc.loader.SolarPlayer;
 import gg.solarmc.loader.clans.Clan;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -18,6 +17,7 @@ import space.arim.omnibus.util.ThisClass;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 @SuppressWarnings({"ConstantConditions", "NullableProblems"})
 public class PluginHelper {
@@ -165,20 +165,24 @@ public class PluginHelper {
         });
     }
 
-    public Player getPlayerBy(Server server, int id) {
-        SolarPlayer sPlayer = server.getDataCenter().lookupPlayer(id)
-                .thenApplyAsync(o -> o.orElse(null))
-                .exceptionally(e -> {
-                    getLogger().error("Cannot lookup player", e);
-                    return null;
-                }).getNow(null);
-
-        if (sPlayer == null) return null;
-
-        return server.getPlayer(sPlayer.getMcUuid());
-    }
-
     public Component replaceText(Component component, String target, String replacement) {
         return ComponentText.create(component).replaceText(target, replacement).asComponent();
     }
+
+    public Player getPlayerBy(Server server, int id) {
+        AtomicReference<Player> player = new AtomicReference<>();
+        server.getDataCenter().lookupPlayer(id)
+                .thenApplyAsync(o -> o.orElse(null))
+                .thenApplySync(sPlayer -> {
+                    if (sPlayer == null) player.set(null);
+                    player.set(server.getPlayer(sPlayer.getMcUuid()));
+                    return null;
+                })
+                .exceptionally(e -> {
+                    getLogger().error("Cannot lookup player", e);
+                    return null;
+                });
+        return player.get();
+    }
+
 }

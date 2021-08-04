@@ -32,10 +32,10 @@ public class HDPlaceholders {
         dataCenter.runTransact(transaction -> {
             List<ClanManager.TopClanResult> results = dataCenter.getDataManager(ClansKey.INSTANCE).getTopClanKills(transaction, 10);
 
-            if (results.size() <= i) value.set("No Clan");
+            if (results.size() <= i) value.set("???");
 
             final ClanManager.TopClanResult clan = results.get(i);
-            value.set(i + ". " + clan.clanName() + " - " + clan.statisticValue());
+            value.set(clan.clanName() + " - " + clan.statisticValue());
         }).exceptionally(e -> {
             LOGGER.error("Failed to get Top clan kills", e);
             return null;

@@ -57,12 +57,17 @@ public class InviteCommand implements SubCommand {
             }
 
             if (playerInvited != null && clan.currentMembers().contains(new ClanMember(playerInvited.getSolarPlayer().getUserId()))) {
-                sender.sendMessage(ChatColor.YELLOW + "Player is already in your Clan");
+                sender.sendMessage(ChatColor.YELLOW + "Player is already in your Clan!");
                 return;
             }
 
             if (playerInvited == null) {
-                player.sendMessage("The player is offline!");
+                player.sendMessage(ChatColor.RED + "The player is offline!");
+                return;
+            }
+
+            if (playerInvited.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().isPresent()) {
+                sender.sendMessage(ChatColor.RED + "Player is already in other Clan!");
                 return;
             }
 

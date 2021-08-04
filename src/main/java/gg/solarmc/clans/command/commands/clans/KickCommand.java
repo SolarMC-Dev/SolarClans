@@ -5,7 +5,6 @@ import gg.solarmc.clans.command.SubCommand;
 import gg.solarmc.clans.config.MessageConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
-import gg.solarmc.loader.SolarPlayer;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClanMember;
 import gg.solarmc.loader.clans.ClansKey;
@@ -50,33 +49,34 @@ public class KickCommand implements SubCommand {
 
         Logger logger = helper.getLogger();
 
-        SolarPlayer solarPlayerKicked = dataCenter.lookupPlayer(args[0])
+        dataCenter.lookupPlayer(args[0])
                 .thenApplyAsync(o -> o.orElse(null))
+                .thenApplySync(solarPlayerKicked -> {
+                    if (solarPlayerKicked == null) {
+                        player.sendMessage(ChatColor.RED + "Cannot find the player!");
+                        return null;
+                    }
+
+                    if (clan.currentMembers().contains(new ClanMember(solarPlayerKicked.getUserId()))) {
+                        player.sendMessage(ChatColor.RED + "Player is not in your clan!!");
+                        return null;
+                    }
+
+                    dataCenter.runTransact(transaction -> {
+                        helper.sendClanMsg(server, clan, Component.text(player.getName() + " kicked " + solarPlayerKicked.getMcUsername() + " from the clan", NamedTextColor.YELLOW));
+                        clan.removeClanMember(transaction, solarPlayerKicked);
+                    }).exceptionally(ex -> {
+                        player.sendMessage(config.error());
+                        logger.error("Something went wrong kicking a player from a clan", ex);
+                        return null;
+                    });
+
+                    return null;
+                })
                 .exceptionally(e -> {
                     logger.error("Cannot lookup player", e);
                     return null;
-                }).getNow(null);
-
-        if (solarPlayerKicked == null) {
-            player.sendMessage(ChatColor.RED + "Cannot find the player!");
-            return;
-        }
-
-        if (clan.currentMembers().contains(new ClanMember(solarPlayerKicked.getUserId()))) {
-            player.sendMessage(ChatColor.RED + "Player is not in your clan!!");
-            return;
-        }
-
-        Player playerKicked = server.getPlayer(solarPlayerKicked.getMcUuid());
-
-        dataCenter.runTransact(transaction -> {
-            helper.sendClanMsg(server, clan, Component.text(player.getName() + " kicked " + playerKicked.getName() + " from the clan", NamedTextColor.YELLOW));
-            clan.removeClanMember(transaction, solarPlayerKicked);
-        }).exceptionally(ex -> {
-            player.sendMessage(ChatColor.RED + "Couldn't kick the player! Something went wrong, Please try again later!!");
-            logger.error("Something went wrong kicking a player from a clan", ex);
-            return null;
-        });
+                });
     }
 
     @Override
