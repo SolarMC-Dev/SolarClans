@@ -86,8 +86,7 @@ public class SolarClans extends JavaPlugin {
     }
 
     private boolean setupEconomy() {
-        if (setupPlugin("Vault") == null)
-            return false;
+        setupPlugin("Vault");
 
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
