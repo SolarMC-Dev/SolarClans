@@ -1,4 +1,4 @@
-package gg.solarmc.clans.config;
+package gg.solarmc.clans.config.serializer;
 
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;

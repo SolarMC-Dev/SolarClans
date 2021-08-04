@@ -3,7 +3,7 @@ package gg.solarmc.clans;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import gg.solarmc.clans.command.commands.ally.AllyCommand;
 import gg.solarmc.clans.command.commands.clans.ClansCommand;
-import gg.solarmc.clans.config.ConfigManager;
+import gg.solarmc.clans.config.manager.ConfigManager;
 import gg.solarmc.clans.config.MessageConfig;
 import gg.solarmc.clans.events.HitEvent;
 import gg.solarmc.clans.events.StatsEvent;

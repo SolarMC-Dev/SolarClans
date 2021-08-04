@@ -1,5 +1,6 @@
-package gg.solarmc.clans.config;
+package gg.solarmc.clans.config.manager;
 
+import gg.solarmc.clans.config.serializer.TextComponentSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import space.arim.dazzleconf.ConfigurationFactory;
