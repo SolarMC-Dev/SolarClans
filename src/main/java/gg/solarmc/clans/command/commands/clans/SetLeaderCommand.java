@@ -10,6 +10,7 @@ import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClanMember;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
@@ -32,7 +33,10 @@ public class SetLeaderCommand implements SubCommand {
 
         Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)
                 .append(Component.text("/clan setleader [Player Name] confirm", NamedTextColor.GOLD))
-                .append(Component.text(" to create a Clan :)"));
+                .append(Component.text(" to transfer the Clan :)"))
+                .append(Component.newline())
+                .append(Component.text("Click to Confirm")
+                        .clickEvent(ClickEvent.runCommand("/clan setleader " + args[0] + " confirm")));
 
         if (helper.invalidateConfirm(player, args, confirmMsg, 1)) return;
 

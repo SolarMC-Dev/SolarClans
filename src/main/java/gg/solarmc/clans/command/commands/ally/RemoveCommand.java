@@ -42,7 +42,7 @@ public class RemoveCommand implements SubCommand {
                 .append(Component.text(" to remove the Ally :)", NamedTextColor.YELLOW))
                 .append(Component.newline())
                 .append(Component.text("Click to Confirm")
-                        .clickEvent(ClickEvent.runCommand("clan disband confirm")));
+                        .clickEvent(ClickEvent.runCommand("/ally remove confirm")));
 
         if (helper.invalidateConfirm(player, args, confirmMsg, 0)) return;
 
