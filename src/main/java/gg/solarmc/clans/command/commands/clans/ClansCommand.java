@@ -17,13 +17,14 @@ public class ClansCommand implements PluginCommand {
     public ClansCommand(SolarClans plugin, PluginHelper commandHelper, PVPHelper pvpHelper, ChatHelper chatHelper) {
         this.commandHelper = commandHelper;
         this.subCommands = List.of(
-                new ChatCommand(plugin,chatHelper, ChatMode.CLAN),
+                new ChatCommand(plugin, chatHelper, ChatMode.CLAN),
                 new CreateCommand(plugin),
                 new DisbandCommand(plugin),
                 new InfoCommand(plugin),
                 new InviteCommand(plugin),
                 new JoinCommand(),
                 new KickCommand(plugin),
+                new LeaveCommand(plugin),
                 new PVPCommand(plugin, pvpHelper),
                 new RenameCommand(plugin),
                 new SetLeaderCommand(plugin),

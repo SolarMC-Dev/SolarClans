@@ -32,9 +32,10 @@ public class ChatCommand implements SubCommand {
             return;
         }
 
-        if (chatHelper.getChatMode(player) != ChatMode.NORMAL)
+        if (chatHelper.getChatMode(player) == ChatMode.NORMAL)
             chatHelper.setChatMode(player, mode);
-        else chatHelper.setChatMode(player, ChatMode.NORMAL);
+        else
+            chatHelper.setChatMode(player, ChatMode.NORMAL);
 
         player.sendMessage(helper.replaceText(plugin.getPluginConfig().chatToggled(), "{chatmode}", chatHelper.getChatMode(player).name()));
     }

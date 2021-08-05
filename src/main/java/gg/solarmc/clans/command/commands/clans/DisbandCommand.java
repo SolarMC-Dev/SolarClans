@@ -33,7 +33,7 @@ public class DisbandCommand implements SubCommand {
                 .append(Component.text(" to disband the Clan :)"))
                 .append(Component.newline())
                 .append(Component.text("Click to Confirm")
-                        .clickEvent(ClickEvent.runCommand("clan disband confirm")));
+                        .clickEvent(ClickEvent.runCommand("/clan disband confirm")));
 
         if (helper.invalidateConfirm(player, args, confirmMsg, 0)) return;
 

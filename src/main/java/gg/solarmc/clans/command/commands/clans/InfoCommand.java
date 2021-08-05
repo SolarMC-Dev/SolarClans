@@ -4,7 +4,6 @@ import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
-import gg.solarmc.loader.SolarPlayer;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import org.bukkit.ChatColor;
@@ -15,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 public class InfoCommand implements SubCommand {
@@ -83,15 +83,18 @@ public class InfoCommand implements SubCommand {
     }
 
     private String getPlayerNameById(Server server, int id) {
-        SolarPlayer solarPlayer = server.getDataCenter().lookupPlayer(id)
+        AtomicReference<String> name = new AtomicReference<>();
+        server.getDataCenter().lookupPlayer(id).thenApplySync(o -> o.orElse(null))
+                .thenApplySync(solarPlayer -> {
+                    name.set(solarPlayer.getMcUsername());
+                    return null;
+                })
                 .exceptionally(e -> {
                     LOGGER.error("Cannot lookup player by id", e);
                     return Optional.empty();
-                }).getNow(Optional.empty()).orElse(null);
+                });
 
-        if (solarPlayer == null) return null;
-
-        return server.getOfflinePlayer(solarPlayer.getMcUuid()).getName();
+        return name.get();
     }
 
     @Override
