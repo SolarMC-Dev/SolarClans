@@ -79,12 +79,6 @@
         </dependency>
 
         <dependency>
-            <groupId>space.arim.api</groupId>
-            <artifactId>arimapi-env-bukkit</artifactId>
-            <version>0.24.3</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.drtshock</groupId>
             <artifactId>PlayerVaultsX</artifactId>
             <version>4.2.0</version>
@@ -122,6 +116,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- https://github.com/SolarMC-Dev/ProtocolLib -->
+        <!--<dependency>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>4.7.0</version>
+            <scope>provided</scope>
+        </dependency>-->
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -154,8 +156,8 @@
             <url>https://maven.enginehub.org/repo</url>
         </repository>
         <repository>
-            <id>arim-mvn-gpl3</id>
-            <url>https://mvn-repo.arim.space/gpl3</url>
+            <id>dmulloy2-repo</id>
+            <url>https://repo.dmulloy2.net/repository/public/</url>
         </repository>
     </repositories>
 

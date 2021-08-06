@@ -11,7 +11,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import space.arim.api.jsonchat.adventure.util.ComponentText;
 import space.arim.omnibus.util.ThisClass;
 
 import java.time.Duration;
@@ -150,7 +149,7 @@ public class PluginHelper {
 
     public void sendPlayerClanMsg(Server server, Player player, Clan clan, String prefix, String msg) {
         sendClanMsg(server, clan,
-                Component.text(prefix + "> ", prefix.equals("clan") ? NamedTextColor.GOLD : NamedTextColor.LIGHT_PURPLE)
+                Component.text(prefix + "> ", prefix.equalsIgnoreCase("clan") ? NamedTextColor.GOLD : NamedTextColor.LIGHT_PURPLE)
                         .append(player.displayName())
                         .append(Component.text(" " + msg)));
     }
@@ -166,7 +165,7 @@ public class PluginHelper {
     }
 
     public Component replaceText(Component component, String target, String replacement) {
-        return ComponentText.create(component).replaceText(target, replacement).asComponent();
+        return component.replaceText(builder -> builder.matchLiteral(target).replacement(replacement));
     }
 
     public Player getPlayerBy(Server server, int id) {
