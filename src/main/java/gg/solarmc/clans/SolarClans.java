@@ -27,11 +27,11 @@ public class SolarClans extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        /*if (!setupEconomy()) {
+        if (!setupEconomy()) {
             LOGGER.error(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
             setEnabled(false);
             return;
-        }*/
+        }
 
         Plugin worldGuardPlugin = setupPlugin("WorldGuard");
         this.worldGuard = (WorldGuardPlugin) worldGuardPlugin;

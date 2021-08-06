@@ -11,6 +11,7 @@ import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -45,12 +46,12 @@ public class CreateCommand implements SubCommand {
 
         if (helper.invalidateConfirm(player, args, confirmMsg, 1)) return;
 
-        /*EconomyResponse response = plugin.getEconomy().withdrawPlayer(player, 1000);
+        EconomyResponse response = plugin.getEconomy().withdrawPlayer(player, 1000);
 
         if (!response.transactionSuccess()) {
             player.sendMessage(ChatColor.RED + "You don't have enough money to Create a Clan!!");
             return;
-        }*/
+        }
 
         MessageConfig config = plugin.getPluginConfig();
 
