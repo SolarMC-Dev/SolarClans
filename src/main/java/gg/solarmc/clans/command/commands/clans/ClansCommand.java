@@ -39,6 +39,11 @@ public class ClansCommand implements PluginCommand {
     }
 
     @Override
+    public String getName() {
+        return "Clans";
+    }
+
+    @Override
     public PluginHelper getHelper() {
         return commandHelper;
     }

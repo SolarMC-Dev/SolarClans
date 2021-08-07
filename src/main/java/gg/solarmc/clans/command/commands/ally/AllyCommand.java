@@ -32,6 +32,11 @@ public class AllyCommand implements PluginCommand {
     }
 
     @Override
+    public String getName() {
+        return "Ally";
+    }
+
+    @Override
     public PluginHelper getHelper() {
         return commandHelper;
     }

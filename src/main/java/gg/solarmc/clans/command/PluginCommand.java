@@ -13,12 +13,15 @@ public interface PluginCommand extends CommandExecutor {
 
     List<SubCommand> getSubCommands();
 
+    String getName();
+
     PluginHelper getHelper();
 
     @Override
     default boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
+        String name = getName();
         if (args.length == 0) {
-            String commands = "Clans Commands : \n" +
+            String commands = name + " Commands : \n" +
                     getSubCommands().stream()
                             .map(it -> ChatColor.BOLD + it.getName() + ChatColor.RESET
                                     + " " + it.getArgs()
@@ -37,7 +40,7 @@ public interface PluginCommand extends CommandExecutor {
             subCommand.execute(sender, subArgs.toArray(String[]::new), getHelper());
             return true;
         } else
-            sender.sendMessage("No Command for " + arg + " in credits");
+            sender.sendMessage("No Command for " + arg + " in " + name);
 
         return true;
     }

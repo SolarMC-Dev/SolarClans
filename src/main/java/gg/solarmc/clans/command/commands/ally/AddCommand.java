@@ -111,7 +111,7 @@ public class AddCommand implements SubCommand {
 
     @Override
     public String getName() {
-        return "ally";
+        return "add";
     }
 
     @Override
