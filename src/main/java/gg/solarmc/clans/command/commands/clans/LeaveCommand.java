@@ -6,7 +6,9 @@ import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.OnlineSolarPlayer;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
+import gg.solarmc.loader.clans.OnlineClanDataObject;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
@@ -23,11 +25,27 @@ public class LeaveCommand implements SubCommand {
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         if (helper.invalidateCommandSender(sender)) return;
         Player player = (Player) sender;
+
+        Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)
+                .append(Component.text("/clan leave confirm", NamedTextColor.GOLD))
+                .append(Component.text(" to leave the Clan :)"))
+                .append(Component.newline())
+                .append(Component.text("Click to Confirm")
+                        .clickEvent(ClickEvent.runCommand("/clan leave confirm")));
+
+        if (helper.invalidateConfirm(player, args, confirmMsg, 0)) return;
+
         OnlineSolarPlayer solarPlayer = player.getSolarPlayer();
-        Clan clan = solarPlayer.getData(ClansKey.INSTANCE).currentClan().orElse(null);
+         OnlineClanDataObject clanMember = solarPlayer.getData(ClansKey.INSTANCE);
+        Clan clan = clanMember.currentClan().orElse(null);
 
         if (clan == null) {
             helper.sendNotInClanMsg(player);
+            return;
+        }
+
+        if(clan.currentLeader().isSimilar(clanMember)) {
+            player.performCommand("/clan disband confirm");
             return;
         }
 
