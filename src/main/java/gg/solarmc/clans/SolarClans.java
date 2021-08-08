@@ -12,6 +12,7 @@ import gg.solarmc.clans.events.StatsEvent;
 import gg.solarmc.clans.helper.ChatHelper;
 import gg.solarmc.clans.helper.PVPHelper;
 import gg.solarmc.clans.helper.PluginHelper;
+import gg.solarmc.clans.packets.NameTagPacket;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -47,12 +48,17 @@ public class SolarClans extends JavaPlugin {
 
         setupPlugin("PlayerVaults");
         setupPlugin("HolographicDisplays");
+        setupPlugin("ProtocolLib");
 
         Plugin kothPlugin = setupPlugin("KoTH");
         this.koth = (KothPlugin) kothPlugin;
 
         HDPlaceholders placeholders = new HDPlaceholders(this);
         //placeholders.registerPlaceHolders();
+
+        // Packets
+        NameTagPacket nameTagPacket = new NameTagPacket(this);
+        nameTagPacket.addPacket();
 
         PluginHelper helper = new PluginHelper(getServer());
         PVPHelper clanPvpHelper = new PVPHelper();
