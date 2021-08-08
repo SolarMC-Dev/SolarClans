@@ -1,10 +1,12 @@
 package gg.solarmc.clans;
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import gg.solarmc.clans.command.commands.ally.AllyCommand;
 import gg.solarmc.clans.command.commands.clans.ClansCommand;
-import gg.solarmc.clans.config.manager.ConfigManager;
 import gg.solarmc.clans.config.MessageConfig;
+import gg.solarmc.clans.config.manager.ConfigManager;
 import gg.solarmc.clans.events.HitEvent;
 import gg.solarmc.clans.events.StatsEvent;
 import gg.solarmc.clans.helper.ChatHelper;
@@ -20,10 +22,17 @@ import subside.plugins.koth.KothPlugin;
 
 public class SolarClans extends JavaPlugin {
     private static final Logger LOGGER = LoggerFactory.getLogger(SolarClans.class);
-    private Economy econ;
-    private WorldGuardPlugin worldGuard;
     private ConfigManager<MessageConfig> config;
+
+    private Economy economy;
+    private WorldGuardPlugin worldGuard;
     private KothPlugin koth;
+    private ProtocolManager protocolManager;
+
+    @Override
+    public void onLoad() {
+        protocolManager = ProtocolLibrary.getProtocolManager();
+    }
 
     @Override
     public void onEnable() {
@@ -81,10 +90,6 @@ public class SolarClans extends JavaPlugin {
         return config.getConfigData();
     }
 
-    public KothPlugin getKoth() {
-        return koth;
-    }
-
     private boolean setupEconomy() {
         setupPlugin("Vault");
 
@@ -92,15 +97,23 @@ public class SolarClans extends JavaPlugin {
         if (rsp == null) {
             return false;
         }
-        econ = rsp.getProvider();
-        return econ != null;
+        economy = rsp.getProvider();
+        return economy != null;
     }
 
     public Economy getEconomy() {
-        return econ;
+        return economy;
+    }
+
+    public KothPlugin getKoth() {
+        return koth;
     }
 
     public WorldGuardPlugin getWorldGuardManager() {
         return worldGuard;
+    }
+
+    public ProtocolManager getProtocolManager() {
+        return protocolManager;
     }
 }

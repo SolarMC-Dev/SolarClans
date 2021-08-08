@@ -158,6 +158,7 @@ public class PluginHelper {
         clan.currentMembers().forEach(it -> {
             Player player = getPlayerBy(server, it.userId());
             if (player == null) return;
+            System.out.println(player.isOnline());
 
             if (player.isOnline())
                 player.sendMessage(msg);
@@ -171,7 +172,7 @@ public class PluginHelper {
     public Player getPlayerBy(Server server, int id) {
         AtomicReference<Player> player = new AtomicReference<>();
         server.getDataCenter().lookupPlayer(id)
-                .thenApplyAsync(o -> o.orElse(null))
+                .thenApplySync(o -> o.orElse(null))
                 .thenApplySync(sPlayer -> {
                     if (sPlayer == null) player.set(null);
                     player.set(server.getPlayer(sPlayer.getMcUuid()));
