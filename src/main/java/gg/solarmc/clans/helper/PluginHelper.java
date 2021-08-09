@@ -12,11 +12,11 @@ import org.bukkit.entity.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import space.arim.omnibus.util.ThisClass;
+import space.arim.omnibus.util.concurrent.CentralisedFuture;
 
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 @SuppressWarnings({"ConstantConditions", "NullableProblems"})
 public class PluginHelper {
@@ -28,9 +28,10 @@ public class PluginHelper {
         allyInvites = getCache()
                 .evictionListener((clan, allyClan, cause) -> {
                     final Clan solarClan = (Clan) clan;
-                    Player leader = getPlayerBy(server, ((Clan) allyClan).currentLeader().userId());
-                    if (leader == null) return;
-                    leader.sendMessage(ChatColor.YELLOW + "Ally invitation from " + solarClan.currentClanName() + " has expired");
+                    getPlayerBy(server, ((Clan) allyClan).currentLeader().userId()).thenAccept(leader -> {
+                        if (leader == null) return;
+                        leader.sendMessage(ChatColor.YELLOW + "Ally invitation from " + solarClan.currentClanName() + " has expired");
+                    });
                 }).build();
     }
 
@@ -124,10 +125,11 @@ public class PluginHelper {
             Clan clan = (Clan) solarClan;
             Player player = (Player) solarPlayer;
 
-            (player).sendMessage(ChatColor.YELLOW + "Clan invitation from " + clan.currentClanName() + " has expired");
-            Player leader = getPlayerBy(player.getServer(), clan.currentLeader().userId());
-            if (leader == null) return;
-            leader.sendMessage(ChatColor.YELLOW + "Invitation to " + player.getName() + " has expired");
+            player.sendMessage(ChatColor.YELLOW + "Clan invitation from " + clan.currentClanName() + " has expired");
+            getPlayerBy(player.getServer(), clan.currentLeader().userId()).thenAccept(leader -> {
+                if (leader == null) return;
+                leader.sendMessage(ChatColor.YELLOW + "Invitation to " + player.getName() + " has expired");
+            });
         }).build();
     }
 
@@ -156,12 +158,13 @@ public class PluginHelper {
 
     public void sendClanMsg(Server server, Clan clan, Component msg) {
         clan.currentMembers().forEach(it -> {
-            Player player = getPlayerBy(server, it.userId());
-            if (player == null) return;
-            System.out.println(player.isOnline());
+            getPlayerBy(server, it.userId()).thenAccept(player -> {
+                if (player == null) return;
+                System.out.println(player.isOnline());
 
-            if (player.isOnline())
-                player.sendMessage(msg);
+                if (player.isOnline())
+                    player.sendMessage(msg);
+            });
         });
     }
 
@@ -169,20 +172,17 @@ public class PluginHelper {
         return component.replaceText(builder -> builder.matchLiteral(target).replacement(replacement));
     }
 
-    public Player getPlayerBy(Server server, int id) {
-        AtomicReference<Player> player = new AtomicReference<>();
-        server.getDataCenter().lookupPlayer(id)
+    public CentralisedFuture<Player> getPlayerBy(Server server, int id) {
+        return server.getDataCenter().lookupPlayer(id)
                 .thenApplySync(o -> o.orElse(null))
                 .thenApplySync(sPlayer -> {
-                    if (sPlayer == null) player.set(null);
-                    player.set(server.getPlayer(sPlayer.getMcUuid()));
-                    return null;
+                    if (sPlayer == null) return null;
+                    return server.getPlayer(sPlayer.getMcUuid());
                 })
                 .exceptionally(e -> {
                     getLogger().error("Cannot lookup player", e);
                     return null;
                 });
-        return player.get();
     }
 
 }

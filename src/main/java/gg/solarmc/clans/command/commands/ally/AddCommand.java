@@ -100,12 +100,13 @@ public class AddCommand implements SubCommand {
             TextComponent requestMsg = Component.text(sender.getName() + " has requested a Clan Ally to " + clanName, NamedTextColor.GREEN)
                     .append(Component.text("Click to Ally")
                             .clickEvent(ClickEvent.runCommand("clan ally " + clanName)));
-            Player allyLeader = helper.getPlayerBy(server, allyLeaderId.get());
-            if (allyLeader == null) {
-                player.sendMessage(ChatColor.RED + "The Clan Leader is not online!");
-                return;
-            }
-            allyLeader.sendMessage(requestMsg);
+            helper.getPlayerBy(server, allyLeaderId.get()).thenAccept(allyLeader -> {
+                if (allyLeader == null) {
+                    player.sendMessage(ChatColor.RED + "The Clan Leader is not online!");
+                    return;
+                }
+                allyLeader.sendMessage(requestMsg);
+            });
         }
     }
 
