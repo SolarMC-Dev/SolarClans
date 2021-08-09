@@ -1,6 +1,6 @@
 package gg.solarmc.clans.command.commands.clans;
 
-import com.drtshock.playervaults.vaultmanagement.VaultOperations;
+import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
 import gg.solarmc.clans.config.MessageConfig;
@@ -59,9 +59,7 @@ public class DisbandCommand implements SubCommand {
         DataCenter dataCenter = server.getDataCenter();
 
         dataCenter.runTransact(transaction -> dataCenter.getDataManager(ClansKey.INSTANCE).deleteClan(transaction, clan))
-                .thenRunSync(() -> {
-                    VaultOperations.deleteOtherAllVaults(server.getConsoleSender(), "clan_vault:" + clan.getClanId());
-                })
+                .thenRunSync(() -> VaultManager.getInstance().deleteAllVaults(("clan_vault:" + clan.getClanId())))
                 .exceptionally(ex -> {
                     player.sendMessage(ChatColor.RED + "Couldn't disband the clan! Something went wrong, Please try again later!!");
                     helper.getLogger().error("Something went wrong disbanding a clan", ex);
