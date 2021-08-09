@@ -1,7 +1,5 @@
 package gg.solarmc.clans;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import gg.solarmc.clans.command.commands.ally.AllyCommand;
 import gg.solarmc.clans.command.commands.clans.ClansCommand;
@@ -12,7 +10,7 @@ import gg.solarmc.clans.events.StatsEvent;
 import gg.solarmc.clans.helper.ChatHelper;
 import gg.solarmc.clans.helper.PVPHelper;
 import gg.solarmc.clans.helper.PluginHelper;
-import gg.solarmc.clans.packets.NameTagPacket;
+import gg.solarmc.clans.placeholder.ClansRelationColor;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -28,12 +26,6 @@ public class SolarClans extends JavaPlugin {
     private Economy economy;
     private WorldGuardPlugin worldGuard;
     private KothPlugin koth;
-    private ProtocolManager protocolManager;
-
-    @Override
-    public void onLoad() {
-        protocolManager = ProtocolLibrary.getProtocolManager();
-    }
 
     @Override
     public void onEnable() {
@@ -48,7 +40,7 @@ public class SolarClans extends JavaPlugin {
 
         setupPlugin("PlayerVaults");
         setupPlugin("HolographicDisplays");
-        setupPlugin("ProtocolLib");
+        setupPlugin("PlaceholderAPI");
 
         Plugin kothPlugin = setupPlugin("KoTH");
         this.koth = (KothPlugin) kothPlugin;
@@ -56,9 +48,8 @@ public class SolarClans extends JavaPlugin {
         HDPlaceholders placeholders = new HDPlaceholders(this);
         //placeholders.registerPlaceHolders();
 
-        // Packets
-        NameTagPacket nameTagPacket = new NameTagPacket(this);
-        nameTagPacket.addPacket();
+        // Placeholder
+        new ClansRelationColor(this).register();
 
         PluginHelper helper = new PluginHelper(getServer());
         PVPHelper clanPvpHelper = new PVPHelper();
@@ -117,9 +108,5 @@ public class SolarClans extends JavaPlugin {
 
     public WorldGuardPlugin getWorldGuardManager() {
         return worldGuard;
-    }
-
-    public ProtocolManager getProtocolManager() {
-        return protocolManager;
     }
 }

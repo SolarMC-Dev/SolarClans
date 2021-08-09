@@ -116,15 +116,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- https://github.com/SolarMC-Dev/ProtocolLib -->
-        <!-- TODO: Change this to solar repo -->
-        <dependency>
-            <groupId>com.comphenix.protocol</groupId>
-            <artifactId>ProtocolLib</artifactId>
-            <version>4.7.0</version>
-            <scope>provided</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
