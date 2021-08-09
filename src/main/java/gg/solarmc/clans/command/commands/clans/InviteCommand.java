@@ -76,7 +76,7 @@ public class InviteCommand implements SubCommand {
             TextComponent inviteMsg = Component.text(player.getName() + " invited you to " + clan.currentClanName() + " Clan", NamedTextColor.GREEN)
                     .append(Component.newline())
                     .append(Component.text("Click to join Clan", NamedTextColor.YELLOW, TextDecoration.ITALIC).
-                            clickEvent(ClickEvent.runCommand("clan join " + clan.currentClanName())));
+                            clickEvent(ClickEvent.runCommand("/clan join " + clan.currentClanName())));
 
             playerInvited.sendMessage(inviteMsg);
             helper.addInvite(clan, playerInvited);
