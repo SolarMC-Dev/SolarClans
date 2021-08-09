@@ -4,12 +4,12 @@ import gg.solarmc.clans.SolarClans;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.clip.placeholderapi.expansion.Relational;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class ClansRelationColor extends PlaceholderExpansion {
+public class ClansRelationColor extends PlaceholderExpansion implements Relational {
     private final SolarClans plugin;
 
     public ClansRelationColor(SolarClans plugin) {
@@ -42,11 +42,9 @@ public class ClansRelationColor extends PlaceholderExpansion {
     }
 
     @Override
-    public String onRequest(OfflinePlayer p, @NotNull String params) {
-        Player player = p.getPlayer();
-        if (player == null) return null;
-        // TODO
-        Player other = null;
+    public String onPlaceholderRequest(Player player, Player other, String identifier) {
+        if (player == null || other == null)
+            return null;
 
         Clan playerClan = player.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
         Clan otherClan = other.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
