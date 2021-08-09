@@ -28,10 +28,10 @@ public class VaultCommand implements SubCommand {
 
         String vaultName = "clan_vault:" + clan.getClanId();
 
-        if (VaultOperations.openOtherVault(player, vaultName, String.valueOf(0))) {
+        if (VaultOperations.openOtherVault(player, vaultName, String.valueOf(1))) {
             // Success
             PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(),
-                    new VaultViewInfo(vaultName, 0));
+                    new VaultViewInfo(vaultName, 1));
         }
     }
 
