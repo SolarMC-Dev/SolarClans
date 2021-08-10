@@ -54,7 +54,7 @@ public class AddCommand implements SubCommand {
             return;
         }
 
-        if (!helper.isClanPresentInAlly(clan)) {
+        if (helper.isClanPresentInAlly(clan)) {
             sender.sendMessage(ChatColor.RED + "You already have ongoing request to " + helper.getAllyInvite(clan).currentClanName());
             return;
         }
