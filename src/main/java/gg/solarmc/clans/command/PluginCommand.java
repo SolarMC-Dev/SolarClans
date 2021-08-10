@@ -34,7 +34,9 @@ public interface PluginCommand extends CommandExecutor {
         }
 
         String arg = args[0];
-        if (label.equalsIgnoreCase("ally") && !arg.equalsIgnoreCase("add")) {
+        if (label.equalsIgnoreCase("ally")
+                && !arg.equalsIgnoreCase("add")
+                && !arg.equalsIgnoreCase("remove")) {
             if (!(sender instanceof Player player)) {
                 sender.sendMessage(ChatColor.RED + "This command can be only used by Players!");
                 return true;
