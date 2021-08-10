@@ -35,13 +35,13 @@ public interface PluginCommand extends CommandExecutor {
 
         String arg = args[0];
 
-        if (arg.equalsIgnoreCase("add") && label.equals("ally")) { // label==ally not needed but still.
+        if (arg.equalsIgnoreCase("add") && label.equalsIgnoreCase("ally")) { // label==ally not needed but still.
             if (!(sender instanceof Player player)) {
                 sender.sendMessage(ChatColor.RED + "Only players Can use this Command!");
                 return true;
             }
-            if (args[1] == null) player.performCommand("ally add");
-            else player.performCommand("ally add " + args[1]);
+            if (args[1] == null) player.chat("/ally add");
+            else player.chat("/ally add " + args[1]);
             return true;
         }
 
