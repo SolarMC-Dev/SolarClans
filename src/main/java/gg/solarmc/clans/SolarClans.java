@@ -32,12 +32,6 @@ public class SolarClans extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        for (RegisteredListener registeredListener : AsyncPlayerChatEvent.getHandlerList().getRegisteredListeners()) {
-            String name = registeredListener.getListener().getClass().getName();
-            String plugin = registeredListener.getPlugin().getName();
-            LOGGER.info(name + "[" + plugin + "]" + " : " + registeredListener.getPriority());
-        }
-
         if (!setupEconomy()) {
             LOGGER.error(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
             setEnabled(false);
