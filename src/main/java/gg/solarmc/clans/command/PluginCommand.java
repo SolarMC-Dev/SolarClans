@@ -2,8 +2,10 @@ package gg.solarmc.clans.command;
 
 import gg.solarmc.clans.helper.PluginHelper;
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +20,7 @@ public interface PluginCommand extends CommandExecutor {
     PluginHelper getHelper();
 
     @Override
-    default boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
+    default boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String name = getName();
         if (args.length == 0) {
             String commands = name + " Commands : \n" +
@@ -32,6 +34,17 @@ public interface PluginCommand extends CommandExecutor {
         }
 
         String arg = args[0];
+
+        if (arg.equalsIgnoreCase("add") && label.equals("ally")) { // label==ally not needed but still.
+            if (!(sender instanceof Player player)) {
+                sender.sendMessage(ChatColor.RED + "Only players Can use this Command!");
+                return true;
+            }
+            if (args[1] == null) player.performCommand("ally add");
+            else player.performCommand("ally add " + args[1]);
+            return true;
+        }
+
         SubCommand subCommand = getCommand(arg);
 
         if (subCommand != null) {
@@ -47,7 +60,7 @@ public interface PluginCommand extends CommandExecutor {
 
     private SubCommand getCommand(String name) {
         return getSubCommands().stream()
-                .filter(cmd -> cmd.getName().equals(name.toLowerCase()))
+                .filter(cmd -> cmd.getName().equalsIgnoreCase(name))
                 .findFirst()
                 .orElse(null);
     }
