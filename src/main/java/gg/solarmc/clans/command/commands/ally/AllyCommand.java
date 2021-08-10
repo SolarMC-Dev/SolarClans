@@ -31,16 +31,6 @@ public class AllyCommand implements PluginCommand {
     }
 
     @Override
-    public boolean beforeCommand(CommandSender sender, String command, String[] args) {
-        if (command.equalsIgnoreCase("ally") && args[0] != null) {
-            String[] strings = Arrays.stream(args).toList().subList(1, args.length).toArray(String[]::new);
-            addCommand.execute(sender, strings, commandHelper);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public List<SubCommand> getSubCommands() {
         return subCommands;
     }
