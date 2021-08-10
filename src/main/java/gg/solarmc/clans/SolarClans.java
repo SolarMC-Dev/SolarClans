@@ -5,6 +5,7 @@ import gg.solarmc.clans.command.commands.ally.AllyCommand;
 import gg.solarmc.clans.command.commands.clans.ClansCommand;
 import gg.solarmc.clans.config.MessageConfig;
 import gg.solarmc.clans.config.manager.ConfigManager;
+import gg.solarmc.clans.events.ChatEvent;
 import gg.solarmc.clans.events.HitEvent;
 import gg.solarmc.clans.events.StatsEvent;
 import gg.solarmc.clans.helper.ChatHelper;
@@ -12,7 +13,9 @@ import gg.solarmc.clans.helper.PVPHelper;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.clans.placeholder.ClansRelationColor;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredListener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
@@ -29,6 +32,12 @@ public class SolarClans extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        for (RegisteredListener registeredListener : AsyncPlayerChatEvent.getHandlerList().getRegisteredListeners()) {
+            String name = registeredListener.getListener().getClass().getName();
+            String plugin = registeredListener.getPlugin().getName();
+            LOGGER.info(name + "[" + plugin + "]" + " : " + registeredListener.getPriority());
+        }
+
         if (!setupEconomy()) {
             LOGGER.error(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
             setEnabled(false);
@@ -66,6 +75,7 @@ public class SolarClans extends JavaPlugin {
         // Events
         getServer().getPluginManager().registerEvents(new HitEvent(this, helper, clanPvpHelper, allyPvpHelper), this);
         getServer().getPluginManager().registerEvents(new StatsEvent(), this);
+        getServer().getPluginManager().registerEvents(new ChatEvent(helper, chatHelper), this);
     }
 
     @Override
