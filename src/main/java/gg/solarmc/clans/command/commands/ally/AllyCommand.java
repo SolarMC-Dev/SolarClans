@@ -17,13 +17,11 @@ import java.util.List;
 public class AllyCommand implements PluginCommand {
     private final List<SubCommand> subCommands;
     private final PluginHelper commandHelper;
-    private final AddCommand addCommand;
 
     public AllyCommand(SolarClans plugin, PluginHelper commandHelper, PVPHelper pvpHelper, ChatHelper chatHelper) {
-        addCommand = new AddCommand(plugin);
         this.commandHelper = commandHelper;
         this.subCommands = List.of(
-                addCommand,
+                new AddCommand(plugin),
                 new RemoveCommand(plugin),
                 new PVPCommand(plugin, pvpHelper),
                 new ChatCommand(plugin, chatHelper, ChatMode.ALLY)
