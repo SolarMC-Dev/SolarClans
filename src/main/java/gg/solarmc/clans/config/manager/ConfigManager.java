@@ -1,6 +1,7 @@
 package gg.solarmc.clans.config.manager;
 
 import gg.solarmc.clans.config.serializer.TextComponentSerializer;
+import gg.solarmc.clans.config.sorter.MethodNameBasedSorter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import space.arim.dazzleconf.ConfigurationFactory;
@@ -31,6 +32,7 @@ public final class ConfigManager<C> {
     public static <C> ConfigManager<C> create(Path configFolder, String fileName, Class<C> configClass) {
         ConfigurationOptions configOptions = new ConfigurationOptions.Builder()
                 .addSerialiser(new TextComponentSerializer())
+                .sorter(new MethodNameBasedSorter())
                 .build();
         SnakeYamlOptions yamlOptions = new SnakeYamlOptions.Builder()
                 .commentMode(CommentMode.fullComments())

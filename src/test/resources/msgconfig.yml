@@ -1,0 +1,115 @@
+ally:
+  add:
+    # When a Clan is allied to another
+    allied: '&aYou have been allied to {clan}'
+    # When the clan is already allied to other clan
+    allyPresent: |-
+      &cYou already have a ally clan
+      &You can use /ally remove to remove your current ally
+    # When the requested clan already has a ally 
+    clanHasAlly: The Clan {clan} already has an ally clan
+    # When player doesn't specify 1st arg ie. Clan's Name which they want to ally
+    invalidArgs: '&cYou have to specify the name of the Clan you have to ally!!'
+    # When a clan already has a ongoing ally request to other clan
+    onGoingRequest: '&cYou already have ongoing request to {clan}'
+    # When a clan requests ally
+    request: '&a{sender} has requested a Clan Ally to {clan}'
+  remove:
+    # When the clan doesn't have ally
+    noAlly: '&cYou don''t have a ally!!'
+    # When a Clan removes their ally
+    revoked: '&eYou revoked your ally'
+clan:
+  create:
+    # When a clan name is already present
+    clanNamePresent: '&cClan already exists!!'
+    # When the player is already in a clan
+    clanPresent: '&cYou are already in a Clan!!'
+    # When a Player Creates a Clan
+    created: Your clan has been Created!
+    # When player doesn't specify 1st arg ie. Clan's Name
+    invalidArgs: '&cYou need to specify the Name of the Clan!!'
+    # When a player doesn't have enough money to create the clan
+    notEnoughMoney: '&cYou do not have enough money to Create a Clan!!'
+  invite:
+    # When player doesn't specify 1st arg ie. Player's name who he is inviting
+    invalidArgs: '&cYou need to specify the Name of the Player you want to Invite!!'
+    # When the clan's member capacity is full ie. 5 members
+    maxPlayersReached: |-
+      &cThere are already 5 players in the Clan!! You cannot invite more people!
+      &eYou can kick players by /clan kick command
+    # When a player is invited
+    playerInvited: '&e{player} invited {playerInvited} to the clan'
+    # When the player invited is already present in the clan
+    playerPresent: '&ePlayer is already in your Clan!'
+    # When the player is already present in another Clan!
+    playerPresentInClan: '&cPlayer is already in other Clan!'
+  join:
+    # When player doesn't specify 1st arg ie. Clan's name where he wants to join
+    invalidArgs: '&cYou need to specify the Name of the Clan you want to Join!!'
+    # When the player joins the clan
+    joined: '&a{player} joined the Clan'
+    # When the player is not invited and he tries to join the clan
+    notInvited: You are not invited to this clan!!
+  kick:
+    # When player doesn't specify 1st arg ie. player's name where he wants to kick 
+    invalidArgs: '&cYou need to specify the Name of the Player you want to Kick!!'
+    # When the player is kicked
+    kicked: '&e{player} kick {playerKicked} from the clan'
+    # When the player is not in his clan
+    playerAbsent: '&cPlayer is not in your clan!!'
+  rename:
+    # When player doesn't specify 1st arg ie. Clan's Name
+    invalidArgs: '&cYou need to specify the Name of the Clan!!'
+    # When the player renames the clan
+    renamed: '&a{player} renamed the clan to &6{name}'
+  setLeader:
+    # When player doesn't specify 1st arg ie. Clan's Name
+    invalidArgs: '&cYou need to specify the Name of the Player you want to Invite!!'
+    # When the player is not in the clan
+    playerAbsent: '&cThe player should be in your Clan!!'
+    # When the leader is set
+    setLeader: '{player} transferred the clan to &6{newPlayer}'
+  top:
+    # The leaderboard format
+    clanFormat: '{number}. {clan} - {value}'
+    # When player doesn't specify 1st arg ie. Clan's Name
+    invalidArgs: '&cSpecify - kills|assists|deaths|balance'
+    # When the player has put anything instead of kills|assists|deaths|balance
+    invalidOption: '&cNot Valid Option use kills, assists, deaths or balance'
+    # The leaderboard start
+    leaderboard: '&6Leaderboard'
+  disband:
+    # When a player Disbands the Clan
+    disbanded: '{player} disbanded the clan!'
+  # The Information sent :)
+  info: |-
+    Information about {clan}
+    Kills: {kills}
+    Assists: {assists}
+    Deaths: {deaths}
+    Ally: {ally}
+    Members: {members}
+  # When a player leaves the clan
+  leave: '&e{player} left the clan.'
+  # When the leader sets the pvp to on/off
+  pvp: '&aPVP has been toggled to &6{mode}'
+# When a Player Toggles their Chat
+chatToggled: You chat has been Toggled to {chatmode}
+# When a clan is not found or it doesn't exist
+clanNotExist: Clan does not exist!
+# Confirm Messages for create,disband,etc
+confirmMsg: '&eConfirm Message : Use &6{command} &eto {action}'
+# When some error occurs
+error: Something went wrong, Please try again Later!!
+# When a normal player uses Leader Command
+leaderCommand: Only Clan Leader can use this Command
+# When a player is not in a Clan
+notInCLan: |-
+  &cYou are not in a Clan!
+  Join a clan using /clan join [ClanName] if you are invited
+  Create a clan using /clan create [ClanName]
+# When a player is not found
+playerNotFound: '&cCannot find the player!'
+# When a player is offline
+playerOffline: '&cThe player is offline'

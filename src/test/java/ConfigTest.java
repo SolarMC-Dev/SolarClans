@@ -1,3 +1,4 @@
+import gg.solarmc.clans.config.configs.MessageConfig;
 import gg.solarmc.clans.config.manager.ConfigManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -20,6 +21,12 @@ public class ConfigTest {
                 .append(Component.text("BYE", NamedTextColor.RED));
         TextComponent actual = manager.getConfigData().component();
         assertEquals(legacyText(expected), legacyText(actual));
+    }
+
+    @Test
+    void createClansConfig() {
+        ConfigManager<MessageConfig> manager = ConfigManager.create(Path.of("src", "test", "resources"), "msgconfig.yml", MessageConfig.class);
+        manager.reloadConfig();
     }
 
     String legacyText(Component component) {

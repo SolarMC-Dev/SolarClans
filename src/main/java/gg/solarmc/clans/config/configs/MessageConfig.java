@@ -4,9 +4,44 @@ import net.kyori.adventure.text.TextComponent;
 import space.arim.dazzleconf.annote.ConfComments;
 import space.arim.dazzleconf.annote.ConfDefault;
 import space.arim.dazzleconf.annote.ConfKey;
+import space.arim.dazzleconf.annote.SubSection;
 
 public interface MessageConfig {
-    // TODO: Make default functions
+    static @SubSection AllyAddConfig defaultConfig(AllyAddConfig config) {
+        return config;
+    }
+
+    static @SubSection AllyRemoveConfig defaultConfig(AllyRemoveConfig config) {
+        return config;
+    }
+
+    static @SubSection ClanCreateConfig defaultConfig(ClanCreateConfig config) {
+        return config;
+    }
+
+    static @SubSection ClanInviteConfig defaultConfig(ClanInviteConfig config) {
+        return config;
+    }
+
+    static @SubSection ClanJoinConfig defaultConfig(ClanJoinConfig config) {
+        return config;
+    }
+
+    static @SubSection ClanKickConfig defaultConfig(ClanKickConfig config) {
+        return config;
+    }
+
+    static @SubSection ClanRenameConfig defaultConfig(ClanRenameConfig config) {
+        return config;
+    }
+
+    static @SubSection ClanSetLeaderConfig defaultConfig(ClanSetLeaderConfig config) {
+        return config;
+    }
+
+    static @SubSection ClanTopConfig defaultConfig(ClanTopConfig config) {
+        return config;
+    }
 
     @ConfKey("error")
     @ConfComments("When some error occurs")
@@ -25,9 +60,10 @@ public interface MessageConfig {
 
     @ConfKey("notInCLan")
     @ConfComments("When a player is not in a Clan")
-    @ConfDefault.DefaultStrings({"&cYou are not in a Clan!",
-            "Join a clan using /clan join [ClanName] if you are invited :)",
-            "Create a clan using /clan create [ClanName]"})
+    @ConfDefault.DefaultString("""
+            &cYou are not in a Clan!
+            Join a clan using /clan join [ClanName] if you are invited
+            Create a clan using /clan create [ClanName]""")
     TextComponent notInClan();
 
     @ConfKey("leaderCommand")
@@ -51,13 +87,16 @@ public interface MessageConfig {
     TextComponent confirmMsg();
 
     @ConfKey("ally.add")
-    AllyAddConfig allyAdd();
+    @ConfDefault.DefaultObject("defaultConfig")
+    @SubSection AllyAddConfig allyAdd();
 
     @ConfKey("ally.remove")
-    AllyRemoveConfig allyRemove();
+    @ConfDefault.DefaultObject("defaultConfig")
+    @SubSection AllyRemoveConfig allyRemove();
 
     @ConfKey("clan.create")
-    ClanCreateConfig clanCreate();
+    @ConfDefault.DefaultObject("defaultConfig")
+    @SubSection ClanCreateConfig clanCreate();
 
     @ConfKey("clan.disband.disbanded")
     @ConfComments("When a player Disbands the Clan")
@@ -76,13 +115,16 @@ public interface MessageConfig {
     TextComponent clanInfo();
 
     @ConfKey("clan.invite")
-    ClanInviteConfig clanInvite();
+    @ConfDefault.DefaultObject("defaultConfig")
+    @SubSection ClanInviteConfig clanInvite();
 
     @ConfKey("clan.join")
-    ClanJoinConfig clanJoin();
+    @ConfDefault.DefaultObject("defaultConfig")
+    @SubSection ClanJoinConfig clanJoin();
 
     @ConfKey("clan.kick")
-    ClanKickConfig clanKick();
+    @ConfDefault.DefaultObject("defaultConfig")
+    @SubSection ClanKickConfig clanKick();
 
     @ConfKey("clan.leave")
     @ConfComments("When a player leaves the clan")
@@ -95,11 +137,14 @@ public interface MessageConfig {
     TextComponent clanPVP();
 
     @ConfKey("clan.rename")
-    ClanRenameConfig clanRename();
+    @ConfDefault.DefaultObject("defaultConfig")
+    @SubSection ClanRenameConfig clanRename();
 
     @ConfKey("clan.setLeader")
-    ClanSetLeaderConfig clanSetLeader();
+    @ConfDefault.DefaultObject("defaultConfig")
+    @SubSection ClanSetLeaderConfig clanSetLeader();
 
     @ConfKey("clan.top")
-    ClanTopConfig clanTop();
+    @ConfDefault.DefaultObject("defaultConfig")
+    @SubSection ClanTopConfig clanTop();
 }

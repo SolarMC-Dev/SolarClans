@@ -14,8 +14,8 @@ public interface AllyAddConfig {
 
     @ConfKey("allyPresent")
     @ConfComments("When the clan is already allied to other clan")
-    @ConfDefault.DefaultStrings({"&cYou already have a ally clan",
-            "&You can use /ally remove to remove your current ally"})
+    @ConfDefault.DefaultString("&cYou already have a ally clan\n"+
+            "&You can use /ally remove to remove your current ally")
     TextComponent allyPresent();
 
     @ConfKey("onGoingRequest")
