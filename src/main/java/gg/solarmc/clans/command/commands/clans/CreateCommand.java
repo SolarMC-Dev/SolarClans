@@ -2,7 +2,8 @@ package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.config.MessageConfig;
+import gg.solarmc.clans.config.configs.ClanCreateConfig;
+import gg.solarmc.clans.config.configs.MessageConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.OnlineSolarPlayer;
@@ -10,11 +11,11 @@ import gg.solarmc.loader.clans.ClanManager;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.milkbowl.vault.economy.EconomyResponse;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Map;
 
 public class CreateCommand implements SubCommand {
     private final SolarClans plugin;
@@ -28,18 +29,20 @@ public class CreateCommand implements SubCommand {
         if (helper.invalidateCommandSender(sender)) return;
         Player player = (Player) sender;
 
+        MessageConfig pluginConfig = plugin.getPluginConfig();
+        ClanCreateConfig commandConfig = pluginConfig.clanCreate();
+
         OnlineSolarPlayer solarPlayer = player.getSolarPlayer();
         if (solarPlayer.getData(ClansKey.INSTANCE).currentClan().isPresent()) {
-            player.sendMessage(ChatColor.RED + "You are already in a Clan!!");
+            player.sendMessage(commandConfig.clanPresent());
             return;
         }
 
-        if (helper.invalidateArgs(sender, args,
-                ChatColor.RED + "You need to specify the Name of the Clan!!")) return;
+        if (helper.invalidateArgs(sender, args, commandConfig.invalidArgs())) return;
 
-        Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)
-                .append(Component.text("/clan create [Clan Name] confirm", NamedTextColor.GOLD))
-                .append(Component.text(" to create a Clan :)"))
+        Component confirmMsg = helper.replaceText(pluginConfig.confirmMsg(),
+                Map.of("{command}", "/clan create [Clan Name] confirm",
+                        "{action}", "create a Clan"))
                 .append(Component.newline())
                 .append(Component.text("Click to Confirm")
                         .clickEvent(ClickEvent.runCommand("/clan create " + args[0] + " confirm")));
@@ -49,26 +52,24 @@ public class CreateCommand implements SubCommand {
         EconomyResponse response = plugin.getEconomy().withdrawPlayer(player, 1000);
 
         if (!response.transactionSuccess()) {
-            player.sendMessage(ChatColor.RED + "You don't have enough money to Create a Clan!!");
+            player.sendMessage(commandConfig.notEnoughMoney());
             return;
         }
-
-        MessageConfig config = plugin.getPluginConfig();
 
         DataCenter dataCenter = player.getServer().getDataCenter();
         dataCenter.runTransact(transaction -> {
             ClanManager manager = dataCenter.getDataManager(ClansKey.INSTANCE);
 
             if (manager.getClanByName(transaction, args[0]).orElse(null) != null) {
-                sender.sendMessage(ChatColor.RED + "Clan already exist!!");
+                sender.sendMessage(commandConfig.clanNamePresent());
                 return;
             }
 
             manager.createClan(transaction, args[0], solarPlayer)
                     .addClanMember(transaction, solarPlayer);
-            player.sendMessage(helper.replaceText(config.clanCreated(), "{clan}", args[0]));
+            player.sendMessage(helper.replaceText(commandConfig.created(), "{clan}", args[0]));
         }).exceptionally((ex) -> {
-            player.sendMessage(config.error());
+            player.sendMessage(pluginConfig.error());
             helper.getLogger().error("Couldn't make a clan, command used by " + player.getName(), ex);
             return null;
         });

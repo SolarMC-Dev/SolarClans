@@ -2,7 +2,8 @@ package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.config.MessageConfig;
+import gg.solarmc.clans.config.configs.ClanSetLeaderConfig;
+import gg.solarmc.clans.config.configs.MessageConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.SolarPlayer;
@@ -17,6 +18,8 @@ import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Map;
+
 public class SetLeaderCommand implements SubCommand {
     private final SolarClans plugin;
 
@@ -28,12 +31,15 @@ public class SetLeaderCommand implements SubCommand {
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         if (helper.invalidateCommandSender(sender)) return;
         Player player = (Player) sender;
-        if (helper.invalidateArgs(sender, args,
-                ChatColor.RED + "You need to specify the Name of the Player you want to transfer this Clan!!")) return;
 
-        Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)
-                .append(Component.text("/clan setleader [Player Name] confirm", NamedTextColor.GOLD))
-                .append(Component.text(" to transfer the Clan :)"))
+        MessageConfig pluginConfig = plugin.getPluginConfig();
+        ClanSetLeaderConfig commandConfig = pluginConfig.clanSetLeader();
+
+        if (helper.invalidateArgs(sender, args, commandConfig.invalidArgs())) return;
+
+        Component confirmMsg = helper.replaceText(pluginConfig.confirmMsg(),
+                Map.of("{command}", "/clan setleader [Player Name] confirm",
+                        "{action}", "transfer the Clan"))
                 .append(Component.newline())
                 .append(Component.text("Click to Confirm")
                         .clickEvent(ClickEvent.runCommand("/clan setleader " + args[0] + " confirm")));
@@ -47,10 +53,8 @@ public class SetLeaderCommand implements SubCommand {
             return;
         }
 
-        MessageConfig config = plugin.getPluginConfig();
-
         if (!helper.isLeader(clan, player)) {
-            player.sendMessage(config.leaderCommand());
+            player.sendMessage(pluginConfig.leaderCommand());
             return;
         }
 
@@ -61,21 +65,22 @@ public class SetLeaderCommand implements SubCommand {
             SolarPlayer playerTransferred = dataCenter.lookupPlayerUsing(transaction, args[0]).orElse(null);
 
             if (playerTransferred == null) {
-                sender.sendMessage(ChatColor.RED + "Cannot find player!!");
+                sender.sendMessage(pluginConfig.playerNotFound());
                 return;
             }
 
             if (!clan.currentMembers().contains(new ClanMember(playerTransferred.getUserId()))) {
-                sender.sendMessage(ChatColor.RED + "The player should be in your Clan!!");
+                sender.sendMessage(commandConfig.playerAbsent());
                 return;
             }
 
             clan.setLeader(transaction, playerTransferred);
             helper.sendClanMsg(server, clan,
-                    Component.text(player.getName() + " transferred the clan to ", NamedTextColor.GREEN)
-                            .append(Component.text(args[0], NamedTextColor.GOLD)));
+                    helper.replaceText(commandConfig.setLeader(),
+                            Map.of("{player}", player.getName(),
+                                    "{newPlayer}", playerTransferred.getMcUsername())));
         }).exceptionally(ex -> {
-            player.sendMessage(ChatColor.RED + "Couldn't transfer the clan! Something went wrong, Please try again later!!");
+            player.sendMessage(pluginConfig.error());
             helper.getLogger().error("Something went wrong transferring a clan to another player", ex);
             return null;
         });

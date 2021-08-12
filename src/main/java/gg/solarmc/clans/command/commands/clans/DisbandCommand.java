@@ -3,18 +3,18 @@ package gg.solarmc.clans.command.commands.clans;
 import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.config.MessageConfig;
+import gg.solarmc.clans.config.configs.MessageConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Map;
 
 public class DisbandCommand implements SubCommand {
 
@@ -29,9 +29,11 @@ public class DisbandCommand implements SubCommand {
         if (helper.invalidateCommandSender(sender)) return;
         Player player = (Player) sender;
 
-        Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)
-                .append(Component.text("/clan disband confirm", NamedTextColor.GOLD))
-                .append(Component.text(" to disband the Clan :)"))
+        MessageConfig pluginConfig = plugin.getPluginConfig();
+
+        Component confirmMsg = helper.replaceText(pluginConfig.confirmMsg(),
+                Map.of("{command}", "/clan disband confirm",
+                        "{action}", "disband the Clan"))
                 .append(Component.newline())
                 .append(Component.text("Click to Confirm")
                         .clickEvent(ClickEvent.runCommand("/clan disband confirm")));
@@ -45,23 +47,24 @@ public class DisbandCommand implements SubCommand {
             return;
         }
 
-        MessageConfig config = plugin.getPluginConfig();
-
         if (!helper.isLeader(clan, player)) {
-            player.sendMessage(config.leaderCommand());
+            player.sendMessage(pluginConfig.leaderCommand());
             return;
         }
 
         Server server = player.getServer();
         helper.sendClanMsg(server, clan,
-                helper.replaceText(config.clanDisbanded(), "{player}", player.getName()));
+                helper.replaceText(pluginConfig.clanDisbanded(), "{player}", player.getName()));
 
         DataCenter dataCenter = server.getDataCenter();
 
-        dataCenter.runTransact(transaction -> dataCenter.getDataManager(ClansKey.INSTANCE).deleteClan(transaction, clan))
+        dataCenter.runTransact(transaction -> {
+            helper.sendClanMsg(server, clan, pluginConfig.clanDisbanded());
+            dataCenter.getDataManager(ClansKey.INSTANCE).deleteClan(transaction, clan);
+        })
                 .thenRunSync(() -> VaultManager.getInstance().deleteAllVaults(("clan_vault:" + clan.getClanId())))
                 .exceptionally(ex -> {
-                    player.sendMessage(ChatColor.RED + "Couldn't disband the clan! Something went wrong, Please try again later!!");
+                    player.sendMessage(pluginConfig.error());
                     helper.getLogger().error("Something went wrong disbanding a clan", ex);
                     return null;
                 });

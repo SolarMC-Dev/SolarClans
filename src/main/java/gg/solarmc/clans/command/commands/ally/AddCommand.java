@@ -2,12 +2,13 @@ package gg.solarmc.clans.command.commands.ally;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
+import gg.solarmc.clans.config.configs.MessageConfig;
+import gg.solarmc.clans.config.configs.AllyAddConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
@@ -15,6 +16,7 @@ import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -30,8 +32,10 @@ public class AddCommand implements SubCommand {
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         if (helper.invalidateCommandSender(sender)) return;
         Player player = (Player) sender;
-        if (helper.invalidateArgs(sender, args,
-                ChatColor.RED + "You have to specify the name of the Clan you have to ally!!")) return;
+        MessageConfig pluginConfig = plugin.getPluginConfig();
+        AllyAddConfig commandConfig = pluginConfig.allyAdd();
+
+        if (helper.invalidateArgs(sender, args, commandConfig.invalidArgs())) return;
 
         Clan clan = player.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
 
@@ -41,21 +45,17 @@ public class AddCommand implements SubCommand {
         }
 
         if (!helper.isLeader(clan, player)) {
-            player.sendMessage(Component.text("Only Clan Leader can use this Command", NamedTextColor.RED));
+            player.sendMessage(pluginConfig.leaderCommand());
             return;
         }
 
         if (clan.currentAllyClan().orElse(null) != null) {
-            String[] msg = {
-                    ChatColor.RED + "You already have a ally clan",
-                    ChatColor.YELLOW + "You can use /ally remove to remove your current ally"
-            };
-            sender.sendMessage(msg);
+            sender.sendMessage(commandConfig.allyPresent());
             return;
         }
 
         if (helper.isClanPresentInAlly(clan)) {
-            sender.sendMessage(ChatColor.RED + "You already have ongoing request to " + helper.getAllyInvite(clan).currentClanName());
+            sender.sendMessage(helper.replaceText(commandConfig.onGoingRequest(), "{clan}", helper.getAllyInvite(clan).currentClanName()));
             return;
         }
 
@@ -69,16 +69,16 @@ public class AddCommand implements SubCommand {
             Clan allyClan = dataCenter.getDataManager(ClansKey.INSTANCE).getClanByName(transaction, args[0]).orElse(null);
 
             if (allyClan == null) {
-                sender.sendMessage(plugin.getPluginConfig().clanNotExist());
+                sender.sendMessage(pluginConfig.clanNotExist());
                 return;
             }
 
             if (helper.hasAllyInvited(allyClan, clan)) {
                 if (!clan.addClanAsAlly(transaction, allyClan)) {
-                    sender.sendMessage(ChatColor.RED + "The Clan " + allyClan.currentClanName() + " already has an ally clan");
+                    sender.sendMessage(helper.replaceText(commandConfig.clanHasALly(), "{clan}", allyClan.currentClanName()));
                     return;
                 }
-                Component alliedMsg = helper.replaceText(plugin.getPluginConfig().allyAllied(), "{clan}", allyClan.getClanName(transaction));
+                Component alliedMsg = helper.replaceText(commandConfig.allied(), "{clan}", allyClan.currentClanName());
 
                 helper.sendClanMsg(server, clan, alliedMsg.append(Component.text(allyClan.getClanName(transaction), NamedTextColor.GOLD)));
                 helper.sendClanMsg(server, allyClan, alliedMsg.append(Component.text(clan.getClanName(transaction), NamedTextColor.GOLD)));
@@ -96,15 +96,18 @@ public class AddCommand implements SubCommand {
         if (allyLeaderId.get() == 0) return;
 
         if (sendRequest.get()) {
-            String clanName = clan.currentClanName();
-            TextComponent requestMsg = Component.text(sender.getName() + " has requested a Clan Ally to " + clanName, NamedTextColor.GREEN)
-                    .append(Component.text("Click to Ally")
-                            .clickEvent(ClickEvent.runCommand("clan ally " + clanName)));
             helper.getPlayerBy(server, allyLeaderId.get()).thenAccept(allyLeader -> {
                 if (allyLeader == null) {
                     player.sendMessage(ChatColor.RED + "The Clan Leader is not online!");
                     return;
                 }
+                String clanName = clan.currentClanName();
+                Component requestMsg = helper.replaceText(commandConfig.request(),
+                        Map.of("{sender}", sender.getName(),
+                                "{clan}", clanName))
+                        .append(Component.text("Click to Ally")
+                                .clickEvent(ClickEvent.runCommand("clan ally " + clanName)));
+
                 allyLeader.sendMessage(requestMsg);
             });
         }

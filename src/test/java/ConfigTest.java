@@ -15,7 +15,9 @@ public class ConfigTest {
         ConfigManager<Config> manager = ConfigManager.create(Path.of("src", "test", "resources"), "config.yml", Config.class);
         manager.reloadConfig();
 
-        TextComponent expected = Component.text("HELLO ", NamedTextColor.GOLD).append(Component.text("BYE", NamedTextColor.RED));
+        TextComponent expected = Component.text("HELLO", NamedTextColor.GOLD)
+                .append(Component.newline())
+                .append(Component.text("BYE", NamedTextColor.RED));
         TextComponent actual = manager.getConfigData().component();
         assertEquals(legacyText(expected), legacyText(actual));
     }

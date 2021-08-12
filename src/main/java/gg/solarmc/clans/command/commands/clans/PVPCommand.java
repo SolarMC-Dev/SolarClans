@@ -2,13 +2,14 @@ package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.config.MessageConfig;
+import gg.solarmc.clans.config.configs.MessageConfig;
 import gg.solarmc.clans.helper.PVPHelper;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -40,11 +41,11 @@ public class PVPCommand implements SubCommand {
             player.sendMessage(config.leaderCommand());
             return;
         }
+        Server server = player.getServer();
 
         if (args.length == 0) {
             pvpHelper.setPvp(clan, !pvpHelper.isPvpOn(clan));
-            player.sendMessage(Component.text("PVP has been toggle to ", NamedTextColor.GREEN)
-                    .append(Component.text(getOnOrOff(pvpHelper.isPvpOn(clan)), NamedTextColor.GOLD)));
+            helper.sendClanMsg(server, clan, helper.replaceText(config.clanPVP(), "{mode}", getOnOrOff(pvpHelper.isPvpOn(clan))));
             return;
         }
 
@@ -52,10 +53,7 @@ public class PVPCommand implements SubCommand {
             case "on", "true", "enable" -> pvpHelper.setPvp(clan, true);
             case "off", "false", "disable" -> pvpHelper.setPvp(clan, false);
         }
-
-        helper.sendClanMsg(player.getServer(), clan,
-                Component.text(player.getName() + " set the PVP ", NamedTextColor.GREEN)
-                        .append(Component.text(getOnOrOff(pvpHelper.isPvpOn(clan)), NamedTextColor.GOLD)));
+        helper.sendClanMsg(server, clan, helper.replaceText(config.clanPVP(), "{mode}", getOnOrOff(pvpHelper.isPvpOn(clan))));
     }
 
     private String getOnOrOff(boolean b) {

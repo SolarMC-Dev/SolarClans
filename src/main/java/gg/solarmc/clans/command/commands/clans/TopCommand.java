@@ -2,6 +2,8 @@ package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
+import gg.solarmc.clans.config.configs.ClanTopConfig;
+import gg.solarmc.clans.config.configs.MessageConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.ClanManager;
@@ -9,10 +11,10 @@ import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.apache.commons.lang3.StringUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class TopCommand implements SubCommand {
@@ -24,7 +26,10 @@ public class TopCommand implements SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
-        if (helper.invalidateArgs(sender, args, ChatColor.RED + "Specify - kills|assists|deaths|balance")) return;
+        MessageConfig pluginConfig = plugin.getPluginConfig();
+        ClanTopConfig commandConfig = pluginConfig.clanTop();
+
+        if (helper.invalidateArgs(sender, args, commandConfig.invalidArgs())) return;
 
         int amount = 5;
 
@@ -39,12 +44,13 @@ public class TopCommand implements SubCommand {
         ClanManager manager = dataCenter.getDataManager(ClansKey.INSTANCE);
 
         int finalAmount = amount;
-        int count = 1;
-        Component leaderboard = Component.text("Leaderboard - ", NamedTextColor.YELLOW);
-
-        AtomicReference<List<ClanManager.TopClanResult>> result = new AtomicReference<>();
 
         dataCenter.runTransact(transaction -> {
+            int count = 1;
+            Component leaderboard = commandConfig.leaderboard();
+
+            AtomicReference<List<ClanManager.TopClanResult>> result = new AtomicReference<>();
+
             switch (args[0]) {
                 case "kill", "kills" -> result.set(manager.getTopClanKills(transaction, finalAmount));
                 case "assist", "assists" -> result.set(manager.getTopClanAssists(transaction, finalAmount));
@@ -52,21 +58,22 @@ public class TopCommand implements SubCommand {
                 case "bal", "balance" -> {
 
                 }
-                default -> {
-                    sender.sendMessage(ChatColor.RED + "Not Valid Option use kills, assists, deaths or balance");
-                }
+                default -> sender.sendMessage(commandConfig.invalidOption());
             }
+
+            leaderboard = leaderboard.append(Component.text(StringUtils.capitalize(args[0]), NamedTextColor.GOLD));
+
+            for (ClanManager.TopClanResult it : result.get()) {
+                Component component = helper.replaceText(commandConfig.clanFormat(),
+                        Map.of("{number}", String.valueOf(count),
+                                "{clan}", it.clanName(),
+                                "{value}", String.valueOf(it.statisticValue())));
+                leaderboard = leaderboard.append(component).append(Component.newline());
+                count++;
+            }
+
+            sender.sendMessage(leaderboard);
         });
-
-        leaderboard = leaderboard.append(Component.text(StringUtils.capitalize(args[0]), NamedTextColor.GOLD));
-
-        for (ClanManager.TopClanResult it : result.get()) {
-            leaderboard = leaderboard.append(Component.text(String.format("%d. %s - %s", count, it.clanName(), it.statisticValue()), NamedTextColor.WHITE))
-                    .append(Component.newline());
-            count++;
-        }
-
-        sender.sendMessage(leaderboard);
     }
 
     @Override

@@ -2,20 +2,22 @@ package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
+import gg.solarmc.clans.config.configs.MessageConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
+import gg.solarmc.loader.SolarPlayer;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
+import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import space.arim.omnibus.util.concurrent.CentralisedFuture;
 
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 public class InfoCommand implements SubCommand {
     private final Logger LOGGER = LoggerFactory.getLogger(InfoCommand.class);
@@ -42,59 +44,57 @@ public class InfoCommand implements SubCommand {
                 helper.sendNotInClanMsg(player);
                 return;
             }
-            sendClanInfo(player, clan);
+            sendClanInfo(player, clan, helper);
             return;
         }
 
         DataCenter dataCenter = sender.getServer().getDataCenter();
+        MessageConfig pluginConfig = plugin.getPluginConfig();
         dataCenter.runTransact(transaction -> {
             Clan clan = dataCenter.getDataManager(ClansKey.INSTANCE).getClanByName(transaction, args[0]).orElse(null);
 
             if (clan == null) {
-                sender.sendMessage(plugin.getPluginConfig().clanNotExist());
+                sender.sendMessage(pluginConfig.clanNotExist());
                 return;
             }
 
-            sendClanInfo(sender, clan);
+            sendClanInfo(sender, clan, helper);
         }).exceptionally((ex) -> {
-            sender.sendMessage(ChatColor.RED + "Something went wrong! Please try again Later");
+            sender.sendMessage(pluginConfig.error());
             LOGGER.error("Something went wrong getting info about a clan", ex);
             return null;
         });
     }
 
-    private void sendClanInfo(CommandSender player, Clan clan) {
+    private void sendClanInfo(CommandSender player, Clan clan, PluginHelper helper) {
         String clanName = clan.currentClanName();
         String allyClanName = clan.currentAllyClan().map(Clan::currentClanName).orElse("No Ally");
         int kills = clan.currentKills();
         int assists = clan.currentAssists();
         int deaths = clan.currentDeaths();
-        String members = clan.currentMembers().stream().map(it -> getPlayerNameById(player.getServer(), it.userId())).collect(Collectors.joining(","));
+        StringBuilder members = new StringBuilder();
+        clan.currentMembers().forEach(it ->
+                getPlayerNameById(player.getServer(), it.userId())
+                        .thenAccept(members::append));
 
-        String[] info = {
-                "Information about " + clanName,
-                "Kills : " + kills,
-                "Assists : " + assists,
-                "Deaths : " + deaths,
-                "Ally : " + allyClanName,
-                "Members : " + members
-        };
+        Component info = helper.replaceText(plugin.getPluginConfig().clanInfo(),
+                Map.of("{clan}", clanName,
+                        "{kills}", String.valueOf(kills),
+                        "{assists}", String.valueOf(assists),
+                        "{deaths}", String.valueOf(deaths),
+                        "{ally}", allyClanName,
+                        "{members}", members.toString()));
+
         player.sendMessage(info);
     }
 
-    private String getPlayerNameById(Server server, int id) {
-        AtomicReference<String> name = new AtomicReference<>();
-        server.getDataCenter().lookupPlayer(id).thenApplySync(o -> o.orElse(null))
-                .thenApplySync(solarPlayer -> {
-                    name.set(solarPlayer.getMcUsername());
-                    return null;
-                })
+    private CentralisedFuture<String> getPlayerNameById(Server server, int id) {
+        return server.getDataCenter().lookupPlayer(id).thenApplySync(o -> o.orElse(null))
+                .thenApplySync(SolarPlayer::getMcUsername)
                 .exceptionally(e -> {
                     LOGGER.error("Cannot lookup player by id", e);
-                    return Optional.empty();
+                    return null;
                 });
-
-        return name.get();
     }
 
     @Override

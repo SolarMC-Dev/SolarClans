@@ -2,19 +2,19 @@ package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.config.MessageConfig;
+import gg.solarmc.clans.config.configs.ClanKickConfig;
+import gg.solarmc.clans.config.configs.MessageConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClanMember;
 import gg.solarmc.loader.clans.ClansKey;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.slf4j.Logger;
+
+import java.util.Map;
 
 public class KickCommand implements SubCommand {
     private final SolarClans plugin;
@@ -27,8 +27,12 @@ public class KickCommand implements SubCommand {
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         if (helper.invalidateCommandSender(sender)) return;
         Player player = (Player) sender;
-        if (helper.invalidateArgs(sender, args,
-                ChatColor.RED + "You need to specify the Name of the Player you want to Invite!!")) return;
+
+        MessageConfig pluginConfig = plugin.getPluginConfig();
+        ClanKickConfig commandConfig = pluginConfig.clanKick();
+
+
+        if (helper.invalidateArgs(sender, args, commandConfig.invalidArgs())) return;
 
         Clan clan = player.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
 
@@ -37,10 +41,8 @@ public class KickCommand implements SubCommand {
             return;
         }
 
-        MessageConfig config = plugin.getPluginConfig();
-
         if (!helper.isLeader(clan, player)) {
-            player.sendMessage(config.leaderCommand());
+            player.sendMessage(pluginConfig.leaderCommand());
             return;
         }
 
@@ -53,20 +55,23 @@ public class KickCommand implements SubCommand {
                 .thenApplyAsync(o -> o.orElse(null))
                 .thenApplySync(solarPlayerKicked -> {
                     if (solarPlayerKicked == null) {
-                        player.sendMessage(ChatColor.RED + "Cannot find the player!");
+                        player.sendMessage(pluginConfig.playerNotFound());
                         return null;
                     }
 
                     if (clan.currentMembers().contains(new ClanMember(solarPlayerKicked.getUserId()))) {
-                        player.sendMessage(ChatColor.RED + "Player is not in your clan!!");
+                        player.sendMessage(commandConfig.playerAbsent());
                         return null;
                     }
 
                     dataCenter.runTransact(transaction -> {
-                        helper.sendClanMsg(server, clan, Component.text(player.getName() + " kicked " + solarPlayerKicked.getMcUsername() + " from the clan", NamedTextColor.YELLOW));
+                        helper.sendClanMsg(server, clan,
+                                helper.replaceText(commandConfig.kicked(),
+                                        Map.of("{player}", player.getName(),
+                                                "{playerKicked}", solarPlayerKicked.getMcUsername())));
                         clan.removeClanMember(transaction, solarPlayerKicked);
                     }).exceptionally(ex -> {
-                        player.sendMessage(config.error());
+                        player.sendMessage(pluginConfig.error());
                         logger.error("Something went wrong kicking a player from a clan", ex);
                         return null;
                     });

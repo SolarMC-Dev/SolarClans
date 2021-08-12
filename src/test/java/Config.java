@@ -4,6 +4,6 @@ import space.arim.dazzleconf.annote.ConfKey;
 
 interface Config {
     @ConfKey("component")
-    @ConfDefault.DefaultString("&6HELLO &cBYE")
+    @ConfDefault.DefaultString("&6HELLO\n&cBYE")
     TextComponent component();
 }

@@ -3,7 +3,7 @@ package gg.solarmc.clans;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import gg.solarmc.clans.command.commands.ally.AllyCommand;
 import gg.solarmc.clans.command.commands.clans.ClansCommand;
-import gg.solarmc.clans.config.MessageConfig;
+import gg.solarmc.clans.config.configs.MessageConfig;
 import gg.solarmc.clans.config.manager.ConfigManager;
 import gg.solarmc.clans.events.ChatEvent;
 import gg.solarmc.clans.events.HitEvent;
@@ -13,9 +13,7 @@ import gg.solarmc.clans.helper.PVPHelper;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.clans.placeholder.ClansRelationColor;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.RegisteredListener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
@@ -54,12 +52,12 @@ public class SolarClans extends JavaPlugin {
         // Placeholder
         new ClansRelationColor(this).register();
 
-        PluginHelper helper = new PluginHelper(getServer());
+        PluginHelper helper = new PluginHelper(this);
         PVPHelper clanPvpHelper = new PVPHelper();
         PVPHelper allyPvpHelper = new PVPHelper();
         ChatHelper chatHelper = new ChatHelper();
 
-        config = ConfigManager.create(this.getDataFolder().toPath(), "msgconfig.yml", MessageConfig.class);
+        config = ConfigManager.create(this.getDataFolder().toPath(), "config.yml", MessageConfig.class);
         config.reloadConfig();
 
         // Commands

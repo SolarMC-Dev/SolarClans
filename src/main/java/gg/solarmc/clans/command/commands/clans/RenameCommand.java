@@ -2,16 +2,16 @@ package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.config.MessageConfig;
+import gg.solarmc.clans.config.configs.ClanRenameConfig;
+import gg.solarmc.clans.config.configs.MessageConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Map;
 
 public class RenameCommand implements SubCommand {
     private final SolarClans plugin;
@@ -24,8 +24,11 @@ public class RenameCommand implements SubCommand {
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         if (helper.invalidateCommandSender(sender)) return;
         Player player = (Player) sender;
-        if (helper.invalidateArgs(sender, args,
-                ChatColor.RED + "You need to specify the Name of the Clan!!")) return;
+
+        MessageConfig pluginConfig = plugin.getPluginConfig();
+        ClanRenameConfig commandConfig = pluginConfig.clanRename();
+
+        if (helper.invalidateArgs(sender, args, commandConfig.invalidArgs())) return;
 
         Clan clan = player.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
 
@@ -34,10 +37,8 @@ public class RenameCommand implements SubCommand {
             return;
         }
 
-        MessageConfig config = plugin.getPluginConfig();
-
         if (!helper.isLeader(clan, player)) {
-            player.sendMessage(config.leaderCommand());
+            player.sendMessage(pluginConfig.leaderCommand());
             return;
         }
 
@@ -46,10 +47,11 @@ public class RenameCommand implements SubCommand {
         server.getDataCenter().runTransact(transaction -> {
             clan.setName(transaction, args[0]);
             helper.sendClanMsg(server, clan,
-                    Component.text(player.getName() + " renamed the clan to ", NamedTextColor.GREEN)
-                            .append(Component.text(args[0], NamedTextColor.GOLD)));
+                    helper.replaceText(commandConfig.renamed(),
+                            Map.of("{player}", player.getName(),
+                                    "{name}", args[0])));
         }).exceptionally(ex -> {
-            player.sendMessage(ChatColor.RED + "Couldn't rename the clan! Something went wrong, Please try again later!!");
+            player.sendMessage(pluginConfig.error());
             helper.getLogger().error("Something went wrong renaming a clan", ex);
             return null;
         });

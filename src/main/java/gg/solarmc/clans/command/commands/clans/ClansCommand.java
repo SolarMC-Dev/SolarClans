@@ -22,7 +22,7 @@ public class ClansCommand implements PluginCommand {
                 new DisbandCommand(plugin),
                 new InfoCommand(plugin),
                 new InviteCommand(plugin),
-                new JoinCommand(),
+                new JoinCommand(plugin),
                 new KickCommand(plugin),
                 new LeaveCommand(plugin),
                 new PVPCommand(plugin, pvpHelper),

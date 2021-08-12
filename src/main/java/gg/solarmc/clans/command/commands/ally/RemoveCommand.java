@@ -2,15 +2,17 @@ package gg.solarmc.clans.command.commands.ally;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
+import gg.solarmc.clans.config.configs.AllyRemoveConfig;
+import gg.solarmc.clans.config.configs.MessageConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Map;
 
 public class RemoveCommand implements SubCommand {
 
@@ -24,8 +26,10 @@ public class RemoveCommand implements SubCommand {
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         if (helper.invalidateCommandSender(sender)) return;
         Player player = (Player) sender;
-
         Clan clan = player.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
+
+        MessageConfig pluginConfig = plugin.getPluginConfig();
+        AllyRemoveConfig commandConfig = pluginConfig.allyRemove();
 
         if (clan == null) {
             helper.sendNotInClanMsg(player);
@@ -33,27 +37,26 @@ public class RemoveCommand implements SubCommand {
         }
 
         if (!helper.isLeader(clan, player)) {
-            player.sendMessage(Component.text("Only Clan Leader can use this Command", NamedTextColor.RED));
+            player.sendMessage(pluginConfig.leaderCommand());
             return;
         }
 
-        Component confirmMsg = Component.text("Confirm Message : Use ", NamedTextColor.YELLOW)
-                .append(Component.text("/ally remove confirm", NamedTextColor.GOLD))
-                .append(Component.text(" to remove the Ally :)", NamedTextColor.YELLOW))
+        Component confirmMsg = helper.replaceText(pluginConfig.confirmMsg(),
+                Map.of("{command}", "/ally remove confirm",
+                        "{action}", "remove the Ally"))
                 .append(Component.newline())
                 .append(Component.text("Click to Confirm")
                         .clickEvent(ClickEvent.runCommand("/ally remove confirm")));
-
         if (helper.invalidateConfirm(player, args, confirmMsg, 0)) return;
 
-        Component errorMsg = plugin.getPluginConfig().error();
+        Component errorMsg = pluginConfig.error();
 
         player.getServer().getDataCenter().runTransact(transaction -> {
             if (!clan.revokeAlly(transaction)) {
-                sender.sendMessage(ChatColor.RED + "You don't have a ally!!");
+                sender.sendMessage(commandConfig.noAlly());
                 return;
             }
-            sender.sendMessage(plugin.getPluginConfig().allyRevoked());
+            sender.sendMessage(commandConfig.revoked());
         }).exceptionally(e -> {
             sender.sendMessage(errorMsg);
             helper.getLogger().error("Cannot revoke a Ally", e);

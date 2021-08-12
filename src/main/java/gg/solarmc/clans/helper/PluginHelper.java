@@ -2,6 +2,7 @@ package gg.solarmc.clans.helper;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import gg.solarmc.clans.SolarClans;
 import gg.solarmc.loader.clans.Clan;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -21,14 +22,16 @@ import java.util.Map;
 @SuppressWarnings({"ConstantConditions", "NullableProblems"})
 public class PluginHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ThisClass.get());
+    private final SolarClans plugin;
     private final Map<Integer, Cache<Player, Clan>> invites = new HashMap<>();
     private final Cache<Clan, Clan> allyInvites;
 
-    public PluginHelper(Server server) {
-        allyInvites = getCache()
+    public PluginHelper(SolarClans plugin) {
+        this.plugin = plugin;
+        allyInvites = buildCache()
                 .evictionListener((clan, allyClan, cause) -> {
                     final Clan solarClan = (Clan) clan;
-                    getPlayerBy(server, ((Clan) allyClan).currentLeader().userId()).thenAccept(leader -> {
+                    getPlayerBy(plugin.getServer(), ((Clan) allyClan).currentLeader().userId()).thenAccept(leader -> {
                         if (leader == null) return;
                         leader.sendMessage(ChatColor.YELLOW + "Ally invitation from " + solarClan.currentClanName() + " has expired");
                     });
@@ -50,7 +53,7 @@ public class PluginHelper {
         return false;
     }
 
-    public boolean invalidateArgs(CommandSender player, String[] args, String msg) {
+    public boolean invalidateArgs(CommandSender player, String[] args, Component msg) {
         if (args.length == 0) {
             player.sendMessage(msg);
             return true;
@@ -121,7 +124,7 @@ public class PluginHelper {
     // Cache build Methods
 
     private Cache<Player, Clan> getPlayerInviteCache() {
-        return getCache().evictionListener((solarPlayer, solarClan, cause) -> {
+        return buildCache().evictionListener((solarPlayer, solarClan, cause) -> {
             Clan clan = (Clan) solarClan;
             Player player = (Player) solarPlayer;
 
@@ -133,20 +136,14 @@ public class PluginHelper {
         }).build();
     }
 
-    private Caffeine<Object, Object> getCache() {
+    private Caffeine<Object, Object> buildCache() {
         return Caffeine.newBuilder().expireAfterAccess(Duration.ofSeconds(60));
     }
 
     // Msg methods o:
 
     public void sendNotInClanMsg(Player player) {
-        String[] msg = {
-                ChatColor.GOLD + "You are not in a Clan!",
-                "Join a clan using /clan join [ClanName] if you are invited :)",
-                "Create a clan using /clan create [ClanName]"
-        };
-
-        player.sendMessage(msg);
+        player.sendMessage(plugin.getPluginConfig().notInClan());
     }
 
     public void sendPlayerClanMsg(Server server, Player player, Clan clan, String prefix, String msg) {
@@ -170,6 +167,16 @@ public class PluginHelper {
 
     public Component replaceText(Component component, String target, String replacement) {
         return component.replaceText(builder -> builder.matchLiteral(target).replacement(replacement));
+    }
+
+    public Component replaceText(Component component, Map<String, String> replacements) {
+        for (Map.Entry<String, String> replacement : replacements.entrySet()) {
+            component = component.replaceText(builder ->
+                    builder.matchLiteral(replacement.getKey())
+                            .replacement(replacement.getValue()));
+        }
+
+        return component;
     }
 
     public CentralisedFuture<Player> getPlayerBy(Server server, int id) {

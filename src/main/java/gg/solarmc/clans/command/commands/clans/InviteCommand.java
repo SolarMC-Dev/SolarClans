@@ -2,7 +2,8 @@ package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.config.MessageConfig;
+import gg.solarmc.clans.config.configs.ClanInviteConfig;
+import gg.solarmc.clans.config.configs.MessageConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
@@ -13,10 +14,11 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Map;
 
 public class InviteCommand implements SubCommand {
     private final SolarClans plugin;
@@ -28,8 +30,11 @@ public class InviteCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         if (helper.invalidateCommandSender(sender)) return;
-        if (helper.invalidateArgs(sender, args,
-                ChatColor.RED + "You need to specify the Name of the Player you want to Invite!!")) return;
+
+        MessageConfig pluginConfig = plugin.getPluginConfig();
+        ClanInviteConfig commandConfig = pluginConfig.clanInvite();
+
+        if (helper.invalidateArgs(sender, args, commandConfig.invalidArgs())) return;
         Player player = (Player) sender;
 
         Clan clan = player.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
@@ -39,10 +44,8 @@ public class InviteCommand implements SubCommand {
             return;
         }
 
-        MessageConfig config = plugin.getPluginConfig();
-
         if (!helper.isLeader(clan, player)) {
-            player.sendMessage(config.leaderCommand());
+            player.sendMessage(pluginConfig.leaderCommand());
             return;
         }
 
@@ -52,26 +55,29 @@ public class InviteCommand implements SubCommand {
 
         dataCenter.runTransact(transaction -> {
             if (clan.getClanSize(transaction) == 5) {
-                sender.sendMessage(ChatColor.RED + "There are already 5 players in the Clan!! You cannot invite more people! You can kick players by /clan kick command");
+                sender.sendMessage(commandConfig.maxPlayersReached());
                 return;
             }
 
             if (playerInvited != null && clan.currentMembers().contains(new ClanMember(playerInvited.getSolarPlayer().getUserId()))) {
-                sender.sendMessage(ChatColor.YELLOW + "Player is already in your Clan!");
+                sender.sendMessage(commandConfig.playerPresent());
                 return;
             }
 
             if (playerInvited == null) {
-                player.sendMessage(ChatColor.RED + "The player is offline!");
+                player.sendMessage(pluginConfig.playerOffline());
                 return;
             }
 
             if (playerInvited.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().isPresent()) {
-                sender.sendMessage(ChatColor.RED + "Player is already in other Clan!");
+                sender.sendMessage(commandConfig.playerPresentInClan());
                 return;
             }
 
-            helper.sendClanMsg(server, clan, Component.text(player.getName() + " invited " + playerInvited.getName() + " to the clan", NamedTextColor.YELLOW));
+            helper.sendClanMsg(server, clan,
+                    helper.replaceText(commandConfig.playerInvited(),
+                            Map.of("{player}", player.getName(),
+                                    "{playerInvited}", playerInvited.getName())));
 
             TextComponent inviteMsg = Component.text(player.getName() + " invited you to " + clan.currentClanName() + " Clan", NamedTextColor.GREEN)
                     .append(Component.newline())
@@ -81,7 +87,8 @@ public class InviteCommand implements SubCommand {
             playerInvited.sendMessage(inviteMsg);
             helper.addInvite(clan, playerInvited);
         }).exceptionally(ex -> {
-            player.sendMessage("Something went wrong, Please try again Later!");
+            player.sendMessage(pluginConfig.error());
+            helper.getLogger().error("Couldn't get the size of a Clan", ex);
             return null;
         });
     }

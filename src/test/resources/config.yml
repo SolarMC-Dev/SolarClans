@@ -1,1 +1,3 @@
-component: '&6HELLO &cBYE'
+component: |-
+  &6HELLO
+  &cBYE

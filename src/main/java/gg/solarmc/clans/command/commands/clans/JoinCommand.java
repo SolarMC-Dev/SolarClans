@@ -1,24 +1,33 @@
 package gg.solarmc.clans.command.commands.clans;
 
+import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
+import gg.solarmc.clans.config.configs.ClanJoinConfig;
+import gg.solarmc.clans.config.configs.MessageConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class JoinCommand implements SubCommand {
 
+    private final SolarClans plugin;
+
+    public JoinCommand(SolarClans plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         if (helper.invalidateCommandSender(sender)) return;
-        if (helper.invalidateArgs(sender, args,
-                ChatColor.RED + "You need to specify the Name of the Clan you want to Join!!")) return;
+
+        MessageConfig pluginConfig = plugin.getPluginConfig();
+        ClanJoinConfig commandConfig = pluginConfig.clanJoin();
+
+        if (helper.invalidateArgs(sender, args, commandConfig.invalidArgs())) return;
         Player player = (Player) sender;
 
         Server server = player.getServer();
@@ -27,24 +36,22 @@ public class JoinCommand implements SubCommand {
         dataCenter.runTransact(transaction -> {
             Clan clan = dataCenter.getDataManager(ClansKey.INSTANCE).getClanByName(transaction, args[0]).orElse(null);
 
-            if(clan == null){
-                sender.sendMessage("Clan does not exist!");
+            if (clan == null) {
+                sender.sendMessage(pluginConfig.clanNotExist());
                 return;
             }
 
             if (!helper.hasInvited(clan, player)) {
-                player.sendMessage("You are not invited to this clan!!");
+                player.sendMessage(commandConfig.notInvited());
                 return;
             }
 
             clan.addClanMember(transaction, player.getSolarPlayer());
-
-            clan = dataCenter.getDataManager(ClansKey.INSTANCE).getClanByName(transaction, args[0]).orElse(null);
-
-            helper.sendClanMsg(server, clan, Component.text(player.getName() + " joined the clan", NamedTextColor.YELLOW));
+            helper.sendClanMsg(server, clan,
+                    helper.replaceText(commandConfig.joined(), "{player}", player.getName()));
             helper.removeInvite(clan, player);
         }).exceptionally((ex) -> {
-            player.sendMessage(ChatColor.RED + "Something went wrong! Please try again Later");
+            player.sendMessage(pluginConfig.error());
             return null;
         });
 

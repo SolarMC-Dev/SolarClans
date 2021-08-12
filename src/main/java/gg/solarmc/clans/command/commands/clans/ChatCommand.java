@@ -3,6 +3,7 @@ package gg.solarmc.clans.command.commands.clans;
 import gg.solarmc.clans.ChatMode;
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
+import gg.solarmc.clans.config.configs.MessageConfig;
 import gg.solarmc.clans.helper.ChatHelper;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.clans.Clan;
@@ -27,6 +28,9 @@ public class ChatCommand implements SubCommand {
 
         Player player = (Player) sender;
         Clan clan = player.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
+
+        MessageConfig pluginConfig = plugin.getPluginConfig();
+
         if (clan == null) {
             helper.sendNotInClanMsg(player);
             return;
@@ -37,7 +41,7 @@ public class ChatCommand implements SubCommand {
         else
             chatHelper.setChatMode(player, ChatMode.NORMAL);
 
-        player.sendMessage(helper.replaceText(plugin.getPluginConfig().chatToggled(), "{chatmode}", chatHelper.getChatMode(player).name()));
+        player.sendMessage(helper.replaceText(pluginConfig.chatToggled(), "{chatmode}", chatHelper.getChatMode(player).name()));
     }
 
     @Override
