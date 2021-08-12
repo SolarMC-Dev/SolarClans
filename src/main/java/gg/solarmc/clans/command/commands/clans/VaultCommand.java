@@ -28,7 +28,7 @@ public class VaultCommand implements SubCommand {
 
         String vaultName = "clan_vault:" + clan.getClanId();
 
-        if (VaultOperations.openOtherVault(player, vaultName, String.valueOf(1), false)) {
+        if (VaultOperations.openOtherVault(player, vaultName, String.valueOf(1))) {
             // Success
             PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(),
                     new VaultViewInfo(vaultName, 1));
