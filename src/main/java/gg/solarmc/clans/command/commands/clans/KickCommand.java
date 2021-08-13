@@ -52,7 +52,7 @@ public class KickCommand implements SubCommand {
         Logger logger = helper.getLogger();
 
         dataCenter.lookupPlayer(args[0])
-                .thenApplyAsync(o -> o.orElse(null))
+                .thenApply(o -> o.orElse(null))
                 .thenApplySync(solarPlayerKicked -> {
                     if (solarPlayerKicked == null) {
                         player.sendMessage(pluginConfig.playerNotFound());
@@ -67,7 +67,7 @@ public class KickCommand implements SubCommand {
                     dataCenter.runTransact(transaction -> {
                         helper.sendClanMsg(server, clan,
                                 helper.replaceText(commandConfig.kicked(),
-                                        Map.of("{player}", player.getName(),
+                                        Map.of("{player}", player.getSolarPlayer().getMcUsername(),
                                                 "{playerKicked}", solarPlayerKicked.getMcUsername())));
                         clan.removeClanMember(transaction, solarPlayerKicked);
                     }).exceptionally(ex -> {

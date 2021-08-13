@@ -55,7 +55,7 @@ public class LeaveCommand implements SubCommand {
 
         Server server = player.getServer();
         server.getDataCenter().runTransact(transaction -> {
-            helper.sendClanMsg(server, clan, helper.replaceText(pluginConfig.clanLeave(), "{player}", player.getName()));
+            helper.sendClanMsg(server, clan, helper.replaceText(pluginConfig.clanLeave(), "{player}", player.getSolarPlayer().getMcUsername()));
             clan.removeClanMember(transaction, solarPlayer);
         }).exceptionally(e -> {
             player.sendMessage(pluginConfig.error());
