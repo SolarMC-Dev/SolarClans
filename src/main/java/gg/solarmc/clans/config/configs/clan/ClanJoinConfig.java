@@ -1,4 +1,4 @@
-package gg.solarmc.clans.config.configs;
+package gg.solarmc.clans.config.configs.clan;
 
 import net.kyori.adventure.text.TextComponent;
 import org.checkerframework.common.value.qual.StringVal;

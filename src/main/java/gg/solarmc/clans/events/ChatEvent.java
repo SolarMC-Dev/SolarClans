@@ -45,7 +45,7 @@ public class ChatEvent implements Listener {
         Server server = player.getServer();
         switch (chatMode) {
             case CLAN -> {
-                Component msg = pluginHelper.replaceText(plugin.getPluginConfig().clanChatFormat(),
+                Component msg = pluginHelper.replaceText(plugin.getPluginConfig().chatFormat().clan(),
                         Map.of("{player}", player.getName(),
                                 "{message}", message));
                 pluginHelper.sendClanMsg(server, clan, msg);
@@ -60,7 +60,7 @@ public class ChatEvent implements Listener {
                     return;
                 }
 
-                Component msg = pluginHelper.replaceText(plugin.getPluginConfig().clanChatFormat(),
+                Component msg = pluginHelper.replaceText(plugin.getPluginConfig().chatFormat().ally(),
                         Map.of("{clan}", clan.currentClanName(),
                                 "{player}", player.getName(),
                                 "{message}", message));

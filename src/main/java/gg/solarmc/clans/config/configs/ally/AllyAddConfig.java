@@ -1,4 +1,4 @@
-package gg.solarmc.clans.config.configs;
+package gg.solarmc.clans.config.configs.ally;
 
 import net.kyori.adventure.text.TextComponent;
 import space.arim.dazzleconf.annote.ConfComments;

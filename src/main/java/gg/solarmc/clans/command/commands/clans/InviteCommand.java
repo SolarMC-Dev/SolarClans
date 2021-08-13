@@ -2,7 +2,7 @@ package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.config.configs.ClanInviteConfig;
+import gg.solarmc.clans.config.configs.clan.ClanInviteConfig;
 import gg.solarmc.clans.config.configs.MessageConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
@@ -32,7 +32,7 @@ public class InviteCommand implements SubCommand {
         if (helper.invalidateCommandSender(sender)) return;
 
         MessageConfig pluginConfig = plugin.getPluginConfig();
-        ClanInviteConfig commandConfig = pluginConfig.clanInvite();
+        ClanInviteConfig commandConfig = pluginConfig.clan().invite();
 
         if (helper.invalidateArgs(sender, args, commandConfig.invalidArgs())) return;
         Player player = (Player) sender;

@@ -2,7 +2,7 @@ package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.config.configs.ClanSetLeaderConfig;
+import gg.solarmc.clans.config.configs.clan.ClanSetLeaderConfig;
 import gg.solarmc.clans.config.configs.MessageConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
@@ -12,8 +12,6 @@ import gg.solarmc.loader.clans.ClanMember;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -33,7 +31,7 @@ public class SetLeaderCommand implements SubCommand {
         Player player = (Player) sender;
 
         MessageConfig pluginConfig = plugin.getPluginConfig();
-        ClanSetLeaderConfig commandConfig = pluginConfig.clanSetLeader();
+        ClanSetLeaderConfig commandConfig = pluginConfig.clan().setLeader();
 
         if (helper.invalidateArgs(sender, args, commandConfig.invalidArgs())) return;
 

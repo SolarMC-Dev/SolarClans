@@ -77,7 +77,7 @@ public class InfoCommand implements SubCommand {
                 getPlayerNameById(player.getServer(), it.userId())
                         .thenAccept(members::append));
 
-        Component info = helper.replaceText(plugin.getPluginConfig().clanInfo(),
+        Component info = helper.replaceText(plugin.getPluginConfig().clan().info(),
                 Map.of("{clan}", clanName,
                         "{kills}", String.valueOf(kills),
                         "{assists}", String.valueOf(assists),

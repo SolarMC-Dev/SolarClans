@@ -2,7 +2,7 @@ package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.config.configs.ClanKickConfig;
+import gg.solarmc.clans.config.configs.clan.ClanKickConfig;
 import gg.solarmc.clans.config.configs.MessageConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
@@ -29,7 +29,7 @@ public class KickCommand implements SubCommand {
         Player player = (Player) sender;
 
         MessageConfig pluginConfig = plugin.getPluginConfig();
-        ClanKickConfig commandConfig = pluginConfig.clanKick();
+        ClanKickConfig commandConfig = pluginConfig.clan().kick();
 
 
         if (helper.invalidateArgs(sender, args, commandConfig.invalidArgs())) return;

@@ -2,7 +2,7 @@ package gg.solarmc.clans.command.commands.ally;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.config.configs.AllyRemoveConfig;
+import gg.solarmc.clans.config.configs.ally.AllyRemoveConfig;
 import gg.solarmc.clans.config.configs.MessageConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.clans.Clan;
@@ -29,7 +29,7 @@ public class RemoveCommand implements SubCommand {
         Clan clan = player.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
 
         MessageConfig pluginConfig = plugin.getPluginConfig();
-        AllyRemoveConfig commandConfig = pluginConfig.allyRemove();
+        AllyRemoveConfig commandConfig = pluginConfig.ally().remove();
 
         if (clan == null) {
             helper.sendNotInClanMsg(player);

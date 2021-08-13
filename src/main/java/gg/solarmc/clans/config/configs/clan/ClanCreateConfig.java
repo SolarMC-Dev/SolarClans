@@ -1,4 +1,4 @@
-package gg.solarmc.clans.config.configs;
+package gg.solarmc.clans.config.configs.clan;
 
 import com.drtshock.playervaults.config.annotation.Comment;
 import net.kyori.adventure.text.TextComponent;

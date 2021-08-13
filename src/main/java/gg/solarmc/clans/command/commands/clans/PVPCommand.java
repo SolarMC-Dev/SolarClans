@@ -45,7 +45,7 @@ public class PVPCommand implements SubCommand {
 
         if (args.length == 0) {
             pvpHelper.setPvp(clan, !pvpHelper.isPvpOn(clan));
-            helper.sendClanMsg(server, clan, helper.replaceText(config.clanPVP(), "{mode}", getOnOrOff(pvpHelper.isPvpOn(clan))));
+            helper.sendClanMsg(server, clan, helper.replaceText(config.clan().pvp(), "{mode}", getOnOrOff(pvpHelper.isPvpOn(clan))));
             return;
         }
 
@@ -53,7 +53,7 @@ public class PVPCommand implements SubCommand {
             case "on", "true", "enable" -> pvpHelper.setPvp(clan, true);
             case "off", "false", "disable" -> pvpHelper.setPvp(clan, false);
         }
-        helper.sendClanMsg(server, clan, helper.replaceText(config.clanPVP(), "{mode}", getOnOrOff(pvpHelper.isPvpOn(clan))));
+        helper.sendClanMsg(server, clan, helper.replaceText(config.clan().pvp(), "{mode}", getOnOrOff(pvpHelper.isPvpOn(clan))));
     }
 
     private String getOnOrOff(boolean b) {

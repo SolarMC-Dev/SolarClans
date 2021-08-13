@@ -2,7 +2,7 @@ package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.config.configs.ClanCreateConfig;
+import gg.solarmc.clans.config.configs.clan.ClanCreateConfig;
 import gg.solarmc.clans.config.configs.MessageConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
@@ -30,7 +30,7 @@ public class CreateCommand implements SubCommand {
         Player player = (Player) sender;
 
         MessageConfig pluginConfig = plugin.getPluginConfig();
-        ClanCreateConfig commandConfig = pluginConfig.clanCreate();
+        ClanCreateConfig commandConfig = pluginConfig.clan().create();
 
         OnlineSolarPlayer solarPlayer = player.getSolarPlayer();
         if (solarPlayer.getData(ClansKey.INSTANCE).currentClan().isPresent()) {

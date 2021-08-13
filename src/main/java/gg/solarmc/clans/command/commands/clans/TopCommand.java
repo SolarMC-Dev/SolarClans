@@ -2,7 +2,7 @@ package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.config.configs.ClanTopConfig;
+import gg.solarmc.clans.config.configs.clan.ClanTopConfig;
 import gg.solarmc.clans.config.configs.MessageConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
@@ -27,7 +27,7 @@ public class TopCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args, PluginHelper helper) {
         MessageConfig pluginConfig = plugin.getPluginConfig();
-        ClanTopConfig commandConfig = pluginConfig.clanTop();
+        ClanTopConfig commandConfig = pluginConfig.clan().top();
 
         if (helper.invalidateArgs(sender, args, commandConfig.invalidArgs())) return;
 

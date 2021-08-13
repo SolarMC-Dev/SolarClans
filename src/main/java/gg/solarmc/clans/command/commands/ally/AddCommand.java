@@ -3,7 +3,7 @@ package gg.solarmc.clans.command.commands.ally;
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
 import gg.solarmc.clans.config.configs.MessageConfig;
-import gg.solarmc.clans.config.configs.AllyAddConfig;
+import gg.solarmc.clans.config.configs.ally.AllyAddConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
@@ -33,7 +33,7 @@ public class AddCommand implements SubCommand {
         if (helper.invalidateCommandSender(sender)) return;
         Player player = (Player) sender;
         MessageConfig pluginConfig = plugin.getPluginConfig();
-        AllyAddConfig commandConfig = pluginConfig.allyAdd();
+        AllyAddConfig commandConfig = pluginConfig.ally().add();
 
         if (helper.invalidateArgs(sender, args, commandConfig.invalidArgs())) return;
 
