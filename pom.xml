@@ -18,7 +18,7 @@
         <maven.compiler.target>16</maven.compiler.target>
         <junit.version>5.7.1</junit.version>
         <solarapi.version>1.2.1-SNAPSHOT</solarapi.version>
-        <loader.version>0.5.2</loader.version>
+        <loader.version>0.6.0</loader.version>
         <dazzleconf.version>1.2.1</dazzleconf.version>
     </properties>
 

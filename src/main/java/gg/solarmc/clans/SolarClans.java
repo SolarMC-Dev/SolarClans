@@ -12,6 +12,7 @@ import gg.solarmc.clans.helper.ChatHelper;
 import gg.solarmc.clans.helper.PVPHelper;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.clans.placeholder.ClansRelationColor;
+import gg.solarmc.clans.placeholder.HDPlaceholders;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;

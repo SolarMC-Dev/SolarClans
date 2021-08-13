@@ -1,6 +1,7 @@
-package gg.solarmc.clans;
+package gg.solarmc.clans.placeholder;
 
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import gg.solarmc.clans.SolarClans;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.ClanManager;
 import gg.solarmc.loader.clans.ClansKey;
@@ -32,9 +33,9 @@ public class HDPlaceholders {
         dataCenter.runTransact(transaction -> {
             List<ClanManager.TopClanResult> results = dataCenter.getDataManager(ClansKey.INSTANCE).getTopClanKills(transaction, 10);
 
-            if (results.size() <= i) value.set("???");
+            if (results.size() < i) value.set("???");
 
-            final ClanManager.TopClanResult clan = results.get(i);
+            ClanManager.TopClanResult clan = results.get(i);
             value.set(clan.clanName() + " - " + clan.statisticValue());
         }).exceptionally(e -> {
             LOGGER.error("Failed to get Top clan kills", e);
