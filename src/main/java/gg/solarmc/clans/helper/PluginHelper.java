@@ -146,13 +146,6 @@ public class PluginHelper {
         player.sendMessage(plugin.getPluginConfig().notInClan());
     }
 
-    public void sendPlayerClanMsg(Server server, Player player, Clan clan, String prefix, String msg) {
-        sendClanMsg(server, clan,
-                Component.text(prefix + "> ", prefix.equalsIgnoreCase("clan") ? NamedTextColor.GOLD : NamedTextColor.LIGHT_PURPLE)
-                        .append(player.displayName())
-                        .append(Component.text(" " + msg)));
-    }
-
     public void sendClanMsg(Server server, Clan clan, Component msg) {
         clan.currentMembers().forEach(it -> {
             getPlayerBy(server, it.userId()).thenAccept(player -> {

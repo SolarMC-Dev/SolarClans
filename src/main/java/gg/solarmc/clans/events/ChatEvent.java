@@ -8,11 +8,14 @@ import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+
+import java.util.Map;
 
 import static gg.solarmc.clans.ChatMode.NORMAL;
 
@@ -39,8 +42,14 @@ public class ChatEvent implements Listener {
         event.setCancelled(true);
 
         String message = event.getMessage();
+        Server server = player.getServer();
         switch (chatMode) {
-            case CLAN -> pluginHelper.sendPlayerClanMsg(player.getServer(), player, clan, "Clan", message);
+            case CLAN -> {
+                Component msg = pluginHelper.replaceText(plugin.getPluginConfig().clanChatFormat(),
+                        Map.of("{player}", player.getName(),
+                                "{message}", message));
+                pluginHelper.sendClanMsg(server, clan, msg);
+            }
             case ALLY -> {
                 Clan allyClan = clan.currentAllyClan().orElse(null);
                 if (allyClan == null) {
@@ -51,8 +60,12 @@ public class ChatEvent implements Listener {
                     return;
                 }
 
-                pluginHelper.sendPlayerClanMsg(player.getServer(), player, clan, "Ally", message);
-                pluginHelper.sendPlayerClanMsg(player.getServer(), player, allyClan, "Ally", message);
+                Component msg = pluginHelper.replaceText(plugin.getPluginConfig().clanChatFormat(),
+                        Map.of("{clan}", clan.currentClanName(),
+                                "{player}", player.getName(),
+                                "{message}", message));
+                pluginHelper.sendClanMsg(server, clan, msg);
+                pluginHelper.sendClanMsg(server, allyClan, msg);
             }
         }
     }

@@ -7,42 +7,6 @@ import space.arim.dazzleconf.annote.ConfKey;
 import space.arim.dazzleconf.annote.SubSection;
 
 public interface MessageConfig {
-    static @SubSection AllyAddConfig defaultConfig(AllyAddConfig config) {
-        return config;
-    }
-
-    static @SubSection AllyRemoveConfig defaultConfig(AllyRemoveConfig config) {
-        return config;
-    }
-
-    static @SubSection ClanCreateConfig defaultConfig(ClanCreateConfig config) {
-        return config;
-    }
-
-    static @SubSection ClanInviteConfig defaultConfig(ClanInviteConfig config) {
-        return config;
-    }
-
-    static @SubSection ClanJoinConfig defaultConfig(ClanJoinConfig config) {
-        return config;
-    }
-
-    static @SubSection ClanKickConfig defaultConfig(ClanKickConfig config) {
-        return config;
-    }
-
-    static @SubSection ClanRenameConfig defaultConfig(ClanRenameConfig config) {
-        return config;
-    }
-
-    static @SubSection ClanSetLeaderConfig defaultConfig(ClanSetLeaderConfig config) {
-        return config;
-    }
-
-    static @SubSection ClanTopConfig defaultConfig(ClanTopConfig config) {
-        return config;
-    }
-
     @ConfKey("error")
     @ConfComments("When some error occurs")
     @ConfDefault.DefaultString("Something went wrong, Please try again Later!!")
@@ -147,4 +111,16 @@ public interface MessageConfig {
     @ConfKey("clan.top")
     @ConfDefault.DefaultObject("defaultConfig")
     @SubSection ClanTopConfig clanTop();
+
+    @ConfKey("chatFormat.clan")
+    @ConfDefault.DefaultString("&6Clan> {player} : &f{message}")
+    @ConfComments("The Clans message format")
+    TextComponent clanChatFormat();
+
+    @ConfKey("chatFormat.ally")
+    @ConfDefault.DefaultString("&dAlly> [{clan}]{player} : &f{message}")
+    @ConfComments("The Clans message format")
+    TextComponent allyChatFormat();
+
+
 }
