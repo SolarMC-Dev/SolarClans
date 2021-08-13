@@ -7,12 +7,12 @@ import space.arim.dazzleconf.annote.ConfKey;
 
 public interface ClanKickConfig {
 
-    @ConfKey("invalidArgs")
+    @ConfKey("invalid-args")
     @ConfComments("When player doesn't specify 1st arg ie. player's name where he wants to kick ")
     @ConfDefault.DefaultString("&cYou need to specify the Name of the Player you want to Kick!!")
     TextComponent invalidArgs();
 
-    @ConfKey("playerAbsent")
+    @ConfKey("player-absent")
     @ConfComments("When the player is not in his clan")
     @ConfDefault.DefaultString("&cPlayer is not in your clan!!")
     TextComponent playerAbsent();

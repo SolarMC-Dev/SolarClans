@@ -8,12 +8,12 @@ import space.arim.dazzleconf.annote.ConfKey;
 
 public interface ClanCreateConfig {
 
-    @ConfKey("clanPresent")
+    @ConfKey("clan-present")
     @ConfComments("When the player is already in a clan")
     @ConfDefault.DefaultString("&cYou are already in a Clan!!")
     TextComponent clanPresent();
 
-    @ConfKey("invalidArgs")
+    @ConfKey("invalid-args")
     @ConfComments("When player doesn't specify 1st arg ie. Clan's Name")
     @ConfDefault.DefaultString("&cYou need to specify the Name of the Clan!!")
     TextComponent invalidArgs();
@@ -23,12 +23,12 @@ public interface ClanCreateConfig {
     @ConfDefault.DefaultString("Your clan has been Created!")
     TextComponent created();
 
-    @ConfKey("notEnoughMoney")
+    @ConfKey("not-enough-money")
     @ConfComments("When a player doesn't have enough money to create the clan")
     @ConfDefault.DefaultString("&cYou do not have enough money to Create a Clan!!")
     TextComponent notEnoughMoney();
 
-    @ConfKey("clanNamePresent")
+    @ConfKey("clan-name-present")
     @ConfComments("When a clan name is already present")
     @ConfDefault.DefaultString("&cClan already exists!!")
     TextComponent clanNamePresent();

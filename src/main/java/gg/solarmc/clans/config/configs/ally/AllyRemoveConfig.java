@@ -6,7 +6,8 @@ import space.arim.dazzleconf.annote.ConfDefault;
 import space.arim.dazzleconf.annote.ConfKey;
 
 public interface AllyRemoveConfig {
-    @ConfKey("noAlly")
+
+    @ConfKey("no-ally")
     @ConfComments("When the clan doesn't have ally")
     @ConfDefault.DefaultString("&cYou don't have a ally!!")
     TextComponent noAlly();
@@ -15,5 +16,4 @@ public interface AllyRemoveConfig {
     @ConfComments("When a Clan removes their ally")
     @ConfDefault.DefaultString("&eYou revoked your ally")
     TextComponent revoked();
-
 }

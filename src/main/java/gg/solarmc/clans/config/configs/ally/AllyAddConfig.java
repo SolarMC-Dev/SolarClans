@@ -7,23 +7,23 @@ import space.arim.dazzleconf.annote.ConfKey;
 
 public interface AllyAddConfig {
 
-    @ConfKey("invalidArgs")
+    @ConfKey("invalid-args")
     @ConfComments("When player doesn't specify 1st arg ie. Clan's Name which they want to ally")
     @ConfDefault.DefaultString("&cYou have to specify the name of the Clan you have to ally!!")
     TextComponent invalidArgs();
 
-    @ConfKey("allyPresent")
+    @ConfKey("ally-present")
     @ConfComments("When the clan is already allied to other clan")
-    @ConfDefault.DefaultString("&cYou already have a ally clan\n"+
+    @ConfDefault.DefaultString("&cYou already have a ally clan\n" +
             "&You can use /ally remove to remove your current ally")
     TextComponent allyPresent();
 
-    @ConfKey("onGoingRequest")
+    @ConfKey("on-going-request")
     @ConfComments("When a clan already has a ongoing ally request to other clan")
     @ConfDefault.DefaultString("&cYou already have ongoing request to {clan}")
     TextComponent onGoingRequest();
 
-    @ConfKey("clanHasAlly")
+    @ConfKey("clan-has-ally")
     @ConfComments("When the requested clan already has a ally ")
     @ConfDefault.DefaultString("The Clan {clan} already has an ally clan")
     TextComponent clanHasALly();
@@ -37,5 +37,4 @@ public interface AllyAddConfig {
     @ConfComments("When a clan requests ally")
     @ConfDefault.DefaultString("&a{sender} has requested a Clan Ally to {clan}")
     TextComponent request();
-
 }

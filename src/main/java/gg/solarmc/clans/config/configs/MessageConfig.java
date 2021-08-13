@@ -14,17 +14,17 @@ public interface MessageConfig {
     @ConfDefault.DefaultString("Something went wrong, Please try again Later!!")
     TextComponent error();
 
-    @ConfKey("chatToggled")
+    @ConfKey("chat-toggled")
     @ConfComments("When a Player Toggles their Chat")
     @ConfDefault.DefaultString("You chat has been Toggled to {chatmode}")
     TextComponent chatToggled();
 
-    @ConfKey("clanNotExist")
+    @ConfKey("clan-not-exist")
     @ConfComments("When a clan is not found or it doesn't exist")
     @ConfDefault.DefaultString("Clan does not exist!")
     TextComponent clanNotExist();
 
-    @ConfKey("notInCLan")
+    @ConfKey("not-in-clan")
     @ConfComments("When a player is not in a Clan")
     @ConfDefault.DefaultString("""
             &cYou are not in a Clan!
@@ -32,22 +32,22 @@ public interface MessageConfig {
             Create a clan using /clan create [ClanName]""")
     TextComponent notInClan();
 
-    @ConfKey("leaderCommand")
+    @ConfKey("leader-command")
     @ConfComments("When a normal player uses Leader Command")
     @ConfDefault.DefaultString("Only Clan Leader can use this Command")
     TextComponent leaderCommand();
 
-    @ConfKey("playerOffline")
+    @ConfKey("player-offline")
     @ConfComments("When a player is offline")
     @ConfDefault.DefaultString("&cThe player is offline")
     TextComponent playerOffline();
 
-    @ConfKey("playerNotFound")
+    @ConfKey("player-not-found")
     @ConfComments("When a player is not found")
     @ConfDefault.DefaultString("&cCannot find the player!")
     TextComponent playerNotFound();
 
-    @ConfKey("confirmMsg")
+    @ConfKey("confirm-message")
     @ConfComments("Confirm Messages for create,disband,etc")
     @ConfDefault.DefaultString("&eConfirm Message : Use &6{command} &eto {action}")
     TextComponent confirmMsg();
@@ -58,7 +58,7 @@ public interface MessageConfig {
     @ConfKey("clan")
     @SubSection ClanConfig clan();
 
-    @ConfKey("chatFormat")
+    @ConfKey("chat-format")
     @SubSection ChatConfig chatFormat();
 
 }

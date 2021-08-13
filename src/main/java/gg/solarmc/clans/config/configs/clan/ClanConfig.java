@@ -53,7 +53,7 @@ public interface ClanConfig {
     @ConfDefault.DefaultObject("defaultConfig")
     @SubSection ClanRenameConfig rename();
 
-    @ConfKey("setLeader")
+    @ConfKey("set-leader")
     @ConfDefault.DefaultObject("defaultConfig")
     @SubSection ClanSetLeaderConfig setLeader();
 

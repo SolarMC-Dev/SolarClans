@@ -5,10 +5,10 @@ import space.arim.dazzleconf.annote.SubSection;
 
 public interface AllyConfig {
 
-    @ConfKey("ally.add")
+    @ConfKey("add")
     @SubSection AllyAddConfig add();
 
-    @ConfKey("ally.remove")
+    @ConfKey("remove")
     @SubSection AllyRemoveConfig remove();
 
 }

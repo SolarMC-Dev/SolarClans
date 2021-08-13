@@ -7,7 +7,7 @@ import space.arim.dazzleconf.annote.ConfKey;
 
 public interface ClanRenameConfig {
 
-    @ConfKey("invalidArgs")
+    @ConfKey("invalid-args")
     @ConfComments("When player doesn't specify 1st arg ie. Clan's Name")
     @ConfDefault.DefaultString("&cYou need to specify the Name of the Clan!!")
     TextComponent invalidArgs();
