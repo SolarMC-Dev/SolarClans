@@ -9,17 +9,17 @@ import gg.solarmc.clans.command.commands.clans.PVPCommand;
 import gg.solarmc.clans.helper.ChatHelper;
 import gg.solarmc.clans.helper.PVPHelper;
 import gg.solarmc.clans.helper.PluginHelper;
-import org.bukkit.command.CommandSender;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class AllyCommand implements PluginCommand {
     private final List<SubCommand> subCommands;
     private final PluginHelper commandHelper;
 
-    public AllyCommand(SolarClans plugin, PluginHelper commandHelper, PVPHelper pvpHelper, ChatHelper chatHelper) {
-        this.commandHelper = commandHelper;
+    public AllyCommand(SolarClans plugin) {
+        this.commandHelper = plugin.getHelper();
+        PVPHelper pvpHelper = plugin.getAllyPvpHelper();
+        ChatHelper chatHelper = plugin.getChatHelper();
         this.subCommands = List.of(
                 new AddCommand(plugin),
                 new RemoveCommand(plugin),

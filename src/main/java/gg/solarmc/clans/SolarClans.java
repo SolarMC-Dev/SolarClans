@@ -28,6 +28,11 @@ public class SolarClans extends JavaPlugin {
     private WorldGuardPlugin worldGuard;
     private KothPlugin koth;
 
+    private PluginHelper helper = new PluginHelper(this);
+    private PVPHelper clanPvpHelper = new PVPHelper();
+    private PVPHelper allyPvpHelper = new PVPHelper();
+    private ChatHelper chatHelper = new ChatHelper();
+
     @Override
     public void onEnable() {
         if (!setupEconomy()) {
@@ -47,27 +52,27 @@ public class SolarClans extends JavaPlugin {
         this.koth = (KothPlugin) kothPlugin;
 
         HDPlaceholders placeholders = new HDPlaceholders(this);
-        //placeholders.registerPlaceHolders();
+        placeholders.registerPlaceHolders();
 
         // Placeholder
         new ClansRelationColor(this).register();
 
-        PluginHelper helper = new PluginHelper(this);
-        PVPHelper clanPvpHelper = new PVPHelper();
-        PVPHelper allyPvpHelper = new PVPHelper();
-        ChatHelper chatHelper = new ChatHelper();
+        helper = new PluginHelper(this);
+        clanPvpHelper = new PVPHelper();
+        allyPvpHelper = new PVPHelper();
+        chatHelper = new ChatHelper();
 
         config = ConfigManager.create(this.getDataFolder().toPath(), "config.yml", MessageConfig.class);
         config.reloadConfig();
 
         // Commands
-        getServer().getPluginCommand("clans").setExecutor(new ClansCommand(this, helper, clanPvpHelper, chatHelper));
-        getServer().getPluginCommand("ally").setExecutor(new AllyCommand(this, helper, allyPvpHelper, chatHelper));
+        getServer().getPluginCommand("clans").setExecutor(new ClansCommand(this));
+        getServer().getPluginCommand("ally").setExecutor(new AllyCommand(this));
 
         // Events
-        getServer().getPluginManager().registerEvents(new HitEvent(this, helper, clanPvpHelper, allyPvpHelper), this);
+        getServer().getPluginManager().registerEvents(new HitEvent(this), this);
         getServer().getPluginManager().registerEvents(new StatsEvent(), this);
-        getServer().getPluginManager().registerEvents(new ChatEvent(helper, chatHelper), this);
+        getServer().getPluginManager().registerEvents(new ChatEvent(this), this);
     }
 
     @Override
@@ -88,6 +93,8 @@ public class SolarClans extends JavaPlugin {
     public MessageConfig getPluginConfig() {
         return config.getConfigData();
     }
+
+    // Hooks
 
     private boolean setupEconomy() {
         setupPlugin("Vault");
@@ -111,4 +118,23 @@ public class SolarClans extends JavaPlugin {
     public WorldGuardPlugin getWorldGuardManager() {
         return worldGuard;
     }
+
+    // Helpers
+
+    public PluginHelper getHelper() {
+        return helper;
+    }
+
+    public PVPHelper getClanPvpHelper() {
+        return clanPvpHelper;
+    }
+
+    public PVPHelper getAllyPvpHelper() {
+        return allyPvpHelper;
+    }
+
+    public ChatHelper getChatHelper() {
+        return chatHelper;
+    }
+
 }

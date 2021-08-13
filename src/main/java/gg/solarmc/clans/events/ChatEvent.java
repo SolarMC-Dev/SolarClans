@@ -1,6 +1,7 @@
 package gg.solarmc.clans.events;
 
 import gg.solarmc.clans.ChatMode;
+import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.helper.ChatHelper;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.clans.Clan;
@@ -16,12 +17,10 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import static gg.solarmc.clans.ChatMode.NORMAL;
 
 public class ChatEvent implements Listener {
-    private final ChatHelper chatHelper;
-    private final PluginHelper pluginHelper;
+    private final SolarClans plugin;
 
-    public ChatEvent(PluginHelper pluginHelper, ChatHelper chatHelper) {
-        this.chatHelper = chatHelper;
-        this.pluginHelper = pluginHelper;
+    public ChatEvent(SolarClans plugin) {
+        this.plugin = plugin;
     }
 
     // If you use DeluxeChat , it uses HIGHEST priority :D
@@ -30,6 +29,9 @@ public class ChatEvent implements Listener {
         Player player = event.getPlayer();
         Clan clan = player.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
         if (clan == null) return;
+
+        PluginHelper pluginHelper = plugin.getHelper();
+        ChatHelper chatHelper = plugin.getChatHelper();
 
         ChatMode chatMode = chatHelper.getChatMode(player);
         if (chatMode == NORMAL) return;

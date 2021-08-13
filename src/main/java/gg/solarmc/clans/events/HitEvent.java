@@ -20,8 +20,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import subside.plugins.koth.gamemodes.RunningKoth;
 
-public record HitEvent(SolarClans plugin, PluginHelper helper,
-                       PVPHelper clanPvp, PVPHelper allyPvp) implements Listener {
+public record HitEvent(SolarClans plugin) implements Listener {
 
     @EventHandler
     public void onPlayerHitPlayer(EntityDamageByEntityEvent event) {
@@ -35,6 +34,9 @@ public record HitEvent(SolarClans plugin, PluginHelper helper,
         if (damagerRegions.queryState(r -> Association.NON_MEMBER, DefaultFlag.PVP) == StateFlag.State.DENY
                 || damagedRegions.queryState(r -> Association.NON_MEMBER, DefaultFlag.PVP) == StateFlag.State.DENY)
             return;
+
+        PVPHelper clanPvp = plugin.getClanPvpHelper();
+        PVPHelper allyPvp = plugin.getAllyPvpHelper();
 
         Clan damagerClan = damager.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
         Clan damagedPlayerClan = damagedPlayer.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
@@ -55,7 +57,7 @@ public record HitEvent(SolarClans plugin, PluginHelper helper,
         if (allyClan == null) return;
 
         if (damagedPlayerClan.equals(allyClan)) {
-            if (!allyPvp.isPvpOn(damagerClan) || !allyPvp().isPvpOn(damagedPlayerClan)) {
+            if (!allyPvp.isPvpOn(damagerClan) || !allyPvp.isPvpOn(damagedPlayerClan)) {
                 damager.sendMessage(getPvPDisabledMsg("ally"));
                 event.setCancelled(true);
             }
