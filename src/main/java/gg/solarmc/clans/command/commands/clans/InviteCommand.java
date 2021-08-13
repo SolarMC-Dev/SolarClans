@@ -2,8 +2,8 @@ package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.config.configs.clan.ClanInviteConfig;
 import gg.solarmc.clans.config.configs.MessageConfig;
+import gg.solarmc.clans.config.configs.clan.ClanInviteConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
@@ -12,8 +12,8 @@ import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -81,8 +81,9 @@ public class InviteCommand implements SubCommand {
 
             TextComponent inviteMsg = Component.text(player.getName() + " invited you to " + clan.currentClanName() + " Clan", NamedTextColor.GREEN)
                     .append(Component.newline())
-                    .append(Component.text("Click to join Clan", NamedTextColor.YELLOW, TextDecoration.ITALIC).
-                            clickEvent(ClickEvent.runCommand("/clan join " + clan.currentClanName())));
+                    .append(Component.text("Click to join Clan", NamedTextColor.YELLOW)
+                            .hoverEvent(HoverEvent.showText(Component.text("/clan join " + clan.currentClanName())))
+                            .clickEvent(ClickEvent.runCommand("/clan join " + clan.currentClanName())));
 
             playerInvited.sendMessage(inviteMsg);
             helper.addInvite(clan, playerInvited);

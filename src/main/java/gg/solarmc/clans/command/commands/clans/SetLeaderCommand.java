@@ -2,8 +2,8 @@ package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.config.configs.clan.ClanSetLeaderConfig;
 import gg.solarmc.clans.config.configs.MessageConfig;
+import gg.solarmc.clans.config.configs.clan.ClanSetLeaderConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.SolarPlayer;
@@ -12,6 +12,8 @@ import gg.solarmc.loader.clans.ClanMember;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -39,7 +41,8 @@ public class SetLeaderCommand implements SubCommand {
                 Map.of("{command}", "/clan setleader [Player Name] confirm",
                         "{action}", "transfer the Clan"))
                 .append(Component.newline())
-                .append(Component.text("Click to Confirm")
+                .append(Component.text("Click to Confirm", NamedTextColor.YELLOW)
+                        .hoverEvent(HoverEvent.showText(Component.text("/clan setleader " + args[0] + " confirm")))
                         .clickEvent(ClickEvent.runCommand("/clan setleader " + args[0] + " confirm")));
 
         if (helper.invalidateConfirm(player, args, confirmMsg, 1)) return;

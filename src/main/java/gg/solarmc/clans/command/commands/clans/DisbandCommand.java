@@ -10,6 +10,8 @@ import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -35,7 +37,8 @@ public class DisbandCommand implements SubCommand {
                 Map.of("{command}", "/clan disband confirm",
                         "{action}", "disband the Clan"))
                 .append(Component.newline())
-                .append(Component.text("Click to Confirm")
+                .append(Component.text("Click to Confirm", NamedTextColor.YELLOW)
+                        .hoverEvent(HoverEvent.showText(Component.text("/clan disband confirm")))
                         .clickEvent(ClickEvent.runCommand("/clan disband confirm")));
 
         if (helper.invalidateConfirm(player, args, confirmMsg, 0)) return;

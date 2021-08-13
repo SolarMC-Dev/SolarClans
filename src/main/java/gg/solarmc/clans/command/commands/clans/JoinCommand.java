@@ -10,6 +10,7 @@ import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
@@ -44,13 +45,16 @@ public class JoinCommand implements SubCommand {
                 return;
             }
 
+            String playerName = player.getSolarPlayer().getMcUsername();
+
             if (!helper.hasInvited(clan, player)) {
                 player.sendMessage(commandConfig.joinRequestSent());
                 helper.getPlayerBy(server, clan.currentLeader().userId()).thenAccept(leader -> {
-                    leader.sendMessage(helper.replaceText(commandConfig.joinRequest(), "{player}", player.getName())
+                    leader.sendMessage(helper.replaceText(commandConfig.joinRequest(), "{player}", playerName)
                             .append(Component.newline())
                             .append(Component.text("Click to Invite", NamedTextColor.YELLOW)
-                                    .clickEvent(ClickEvent.runCommand("/clan invite " + player.getName()))));
+                                    .hoverEvent(HoverEvent.showText(Component.text("/clan invite " + playerName)))
+                                    .clickEvent(ClickEvent.runCommand("/clan invite " + playerName))));
                 });
 
                 return;
@@ -58,7 +62,7 @@ public class JoinCommand implements SubCommand {
 
             clan.addClanMember(transaction, player.getSolarPlayer());
             helper.sendClanMsg(server, clan,
-                    helper.replaceText(commandConfig.joined(), "{player}", player.getName()));
+                    helper.replaceText(commandConfig.joined(), "{player}", playerName));
             helper.removeInvite(clan, player);
         }).exceptionally((ex) -> {
             player.sendMessage(pluginConfig.error());

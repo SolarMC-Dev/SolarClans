@@ -10,6 +10,8 @@ import gg.solarmc.loader.clans.ClansKey;
 import gg.solarmc.loader.clans.OnlineClanDataObject;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -34,7 +36,8 @@ public class LeaveCommand implements SubCommand {
                 Map.of("{command}", "/clan leave confirm",
                         "{action}", "leave the Clan"))
                 .append(Component.newline())
-                .append(Component.text("Click to Confirm")
+                .append(Component.text("Click to Confirm", NamedTextColor.YELLOW)
+                        .hoverEvent(HoverEvent.showText(Component.text("/clan leave confirm")))
                         .clickEvent(ClickEvent.runCommand("/clan leave confirm")));
 
         if (helper.invalidateConfirm(player, args, confirmMsg, 0)) return;

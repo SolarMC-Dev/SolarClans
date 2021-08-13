@@ -10,6 +10,7 @@ import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
@@ -105,8 +106,9 @@ public class AddCommand implements SubCommand {
                 Component requestMsg = helper.replaceText(commandConfig.request(),
                         Map.of("{sender}", sender.getName(),
                                 "{clan}", clanName))
-                        .append(Component.text("Click to Ally")
-                                .clickEvent(ClickEvent.runCommand("clan ally " + clanName)));
+                        .append(Component.text("Click to Ally", NamedTextColor.YELLOW)
+                                .hoverEvent(HoverEvent.showText(Component.text("/ally add " + clanName)))
+                                .clickEvent(ClickEvent.runCommand("/ally add " + clanName)));
 
                 allyLeader.sendMessage(requestMsg);
             });

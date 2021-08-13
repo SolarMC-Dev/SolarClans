@@ -2,8 +2,8 @@ package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.config.configs.clan.ClanCreateConfig;
 import gg.solarmc.clans.config.configs.MessageConfig;
+import gg.solarmc.clans.config.configs.clan.ClanCreateConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.OnlineSolarPlayer;
@@ -11,6 +11,8 @@ import gg.solarmc.loader.clans.ClanManager;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -44,7 +46,8 @@ public class CreateCommand implements SubCommand {
                 Map.of("{command}", "/clan create [Clan Name] confirm",
                         "{action}", "create a Clan"))
                 .append(Component.newline())
-                .append(Component.text("Click to Confirm")
+                .append(Component.text("Click to Confirm", NamedTextColor.YELLOW)
+                        .hoverEvent(HoverEvent.showText(Component.text("/clan create confirm")))
                         .clickEvent(ClickEvent.runCommand("/clan create " + args[0] + " confirm")));
 
         if (helper.invalidateConfirm(player, args, confirmMsg, 1)) return;

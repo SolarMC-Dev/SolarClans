@@ -2,13 +2,15 @@ package gg.solarmc.clans.command.commands.ally;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.config.configs.ally.AllyRemoveConfig;
 import gg.solarmc.clans.config.configs.MessageConfig;
+import gg.solarmc.clans.config.configs.ally.AllyRemoveConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -45,7 +47,8 @@ public class RemoveCommand implements SubCommand {
                 Map.of("{command}", "/ally remove confirm",
                         "{action}", "remove the Ally"))
                 .append(Component.newline())
-                .append(Component.text("Click to Confirm")
+                .append(Component.text("Click to Confirm", NamedTextColor.YELLOW)
+                        .hoverEvent(HoverEvent.showText(Component.text("/ally remove confirm")))
                         .clickEvent(ClickEvent.runCommand("/ally remove confirm")));
         if (helper.invalidateConfirm(player, args, confirmMsg, 0)) return;
 

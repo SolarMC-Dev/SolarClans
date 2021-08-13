@@ -7,8 +7,6 @@ import gg.solarmc.clans.helper.PVPHelper;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
