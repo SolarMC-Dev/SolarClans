@@ -2,12 +2,15 @@ package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.config.configs.clan.ClanJoinConfig;
 import gg.solarmc.clans.config.configs.MessageConfig;
+import gg.solarmc.clans.config.configs.clan.ClanJoinConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -42,7 +45,14 @@ public class JoinCommand implements SubCommand {
             }
 
             if (!helper.hasInvited(clan, player)) {
-                player.sendMessage(commandConfig.notInvited());
+                player.sendMessage(commandConfig.joinRequestSent());
+                helper.getPlayerBy(server, clan.currentLeader().userId()).thenAccept(leader -> {
+                    leader.sendMessage(helper.replaceText(commandConfig.joinRequest(), "{player}", player.getName())
+                            .append(Component.newline())
+                            .append(Component.text("Click to Invite", NamedTextColor.YELLOW)
+                                    .clickEvent(ClickEvent.runCommand("/clan invite " + player.getName()))));
+                });
+
                 return;
             }
 
