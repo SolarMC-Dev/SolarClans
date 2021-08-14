@@ -19,7 +19,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings({"ConstantConditions", "NullableProblems"})
+@SuppressWarnings("ConstantConditions")
 public class PluginHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ThisClass.get());
     private final SolarClans plugin;
