@@ -36,21 +36,21 @@ public class InfoCommand implements SubCommand {
             }
         }
 
-        if (args.length == 0) {
-            Player player = (Player) sender;
-
-            Clan clan = player.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
-            if (clan == null) {
-                helper.sendNotInClanMsg(player);
-                return;
-            }
-            sendClanInfo(player, clan, helper);
-            return;
-        }
-
         DataCenter dataCenter = sender.getServer().getDataCenter();
         MessageConfig pluginConfig = plugin.getPluginConfig();
         dataCenter.runTransact(transaction -> {
+            if (args.length == 0) {
+                Player player = (Player) sender;
+
+                Clan clan = player.getSolarPlayer().getData(ClansKey.INSTANCE).getClan(transaction).orElse(null);
+                if (clan == null) {
+                    helper.sendNotInClanMsg(player);
+                    return;
+                }
+                sendClanInfo(player, clan, helper);
+                return;
+            }
+
             Clan clan = dataCenter.getDataManager(ClansKey.INSTANCE).getClanByName(transaction, args[0]).orElse(null);
 
             if (clan == null) {
