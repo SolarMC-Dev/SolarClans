@@ -7,9 +7,9 @@ import gg.solarmc.loader.clans.ClanManager;
 import gg.solarmc.loader.clans.ClansKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import space.arim.omnibus.util.concurrent.CentralisedFuture;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 // Holographic Displays Placeholders
 public class HDPlaceholders {
@@ -23,26 +23,26 @@ public class HDPlaceholders {
     public void registerPlaceHolders() {
         for (int i = 1; i <= 10; i++) {
             int index = i - 1;
-            HologramsAPI.registerPlaceholder(plugin, "topclan_" + i, 1, () -> getPlaceHolder(index));
+            getPlaceHolder(index).thenAccept(string ->
+                    HologramsAPI.registerPlaceholder(plugin, "topclan_" + index + 1, 1, () -> string)
+            );
         }
     }
 
-    private String getPlaceHolder(int i) {
+    private CentralisedFuture<String> getPlaceHolder(int i) {
         DataCenter dataCenter = plugin.getServer().getDataCenter();
-        AtomicReference<String> value = new AtomicReference<>();
-        dataCenter.runTransact(transaction -> {
-            List<ClanManager.TopClanResult> results = dataCenter.getDataManager(ClansKey.INSTANCE).getTopClanKills(transaction, 10);
+        return dataCenter.transact(transaction -> {
+            List<ClanManager.TopClanResult> results = dataCenter.getDataManager(ClansKey.INSTANCE)
+                    .getTopClanKills(transaction, 10);
 
-            if (results.size() < i) value.set("???");
+            if (results.size() <= i) return ("???");
 
             ClanManager.TopClanResult clan = results.get(i);
-            value.set(clan.clanName() + " - " + clan.statisticValue());
+            return clan.clanName() + " - " + clan.statisticValue();
         }).exceptionally(e -> {
             LOGGER.error("Failed to get Top clan kills", e);
             return null;
         });
-
-        return value.get();
     }
 
 }
