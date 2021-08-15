@@ -27,8 +27,6 @@ public class SolarClans extends JavaPlugin {
     private static final Logger LOGGER = LoggerFactory.getLogger(SolarClans.class);
     private ConfigManager<MessageConfig> config;
 
-    private static SolarClans INSTANCE;
-
     private Economy economy;
     private WorldGuardPlugin worldGuard;
     private KothPlugin koth;
@@ -41,8 +39,6 @@ public class SolarClans extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        INSTANCE = this;
-
         if (!setupEconomy()) {
             LOGGER.error(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
             setEnabled(false);
@@ -144,10 +140,5 @@ public class SolarClans extends JavaPlugin {
 
     public ClanHelper getClanHelper() {
         return clanHelper;
-    }
-
-    // YEA
-    public static SolarClans getInstance() {
-        return INSTANCE;
     }
 }
