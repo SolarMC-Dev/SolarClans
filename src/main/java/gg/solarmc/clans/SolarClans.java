@@ -9,9 +9,11 @@ import gg.solarmc.clans.events.ChatEvent;
 import gg.solarmc.clans.events.HitEvent;
 import gg.solarmc.clans.events.StatsEvent;
 import gg.solarmc.clans.helper.ChatHelper;
+import gg.solarmc.clans.helper.ClanHelper;
 import gg.solarmc.clans.helper.PVPHelper;
 import gg.solarmc.clans.helper.PluginHelper;
-import gg.solarmc.clans.placeholder.ClansRelationColor;
+import gg.solarmc.clans.placeholder.ClanNamePlaceholder;
+import gg.solarmc.clans.placeholder.ClansRelationColorPlaceholder;
 import gg.solarmc.clans.placeholder.HDPlaceholders;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.Plugin;
@@ -29,10 +31,11 @@ public class SolarClans extends JavaPlugin {
     private WorldGuardPlugin worldGuard;
     private KothPlugin koth;
 
-    private PluginHelper helper = new PluginHelper(this);
-    private PVPHelper clanPvpHelper = new PVPHelper();
-    private PVPHelper allyPvpHelper = new PVPHelper();
-    private ChatHelper chatHelper = new ChatHelper();
+    private final PluginHelper helper = new PluginHelper(this);
+    private final PVPHelper clanPvpHelper = new PVPHelper();
+    private final PVPHelper allyPvpHelper = new PVPHelper();
+    private final ChatHelper chatHelper = new ChatHelper();
+    private final ClanHelper clanHelper = new ClanHelper();
 
     @Override
     public void onEnable() {
@@ -52,17 +55,14 @@ public class SolarClans extends JavaPlugin {
         Plugin kothPlugin = setupPlugin("KoTH");
         this.koth = (KothPlugin) kothPlugin;
 
+        // Placeholder
+        new ClansRelationColorPlaceholder(this).register();
+        new ClanNamePlaceholder(this).register();
+
         HDPlaceholders placeholders = new HDPlaceholders(this);
         placeholders.registerPlaceHolders();
 
-        // Placeholder
-        new ClansRelationColor(this).register();
-
-        helper = new PluginHelper(this);
-        clanPvpHelper = new PVPHelper();
-        allyPvpHelper = new PVPHelper();
-        chatHelper = new ChatHelper();
-
+        // Config
         config = ConfigManager.create(this.getDataFolder().toPath(), "config.yml", MessageConfig.class);
         config.reloadConfig();
 
@@ -138,4 +138,7 @@ public class SolarClans extends JavaPlugin {
         return chatHelper;
     }
 
+    public ClanHelper getClanHelper() {
+        return clanHelper;
+    }
 }
