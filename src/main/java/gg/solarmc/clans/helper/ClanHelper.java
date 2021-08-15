@@ -24,4 +24,8 @@ public class ClanHelper {
         return ClanRelation.NEUTRAL;
     }
 
+    public Clan getClan(Player player){
+        return player.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
+    }
+
 }
