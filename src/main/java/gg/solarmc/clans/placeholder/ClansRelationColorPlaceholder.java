@@ -9,10 +9,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class ClansRelationColor extends PlaceholderExpansion implements Relational {
+public class ClansRelationColorPlaceholder extends PlaceholderExpansion implements Relational {
     private final SolarClans plugin;
 
-    public ClansRelationColor(SolarClans plugin) {
+    public ClansRelationColorPlaceholder(SolarClans plugin) {
         this.plugin = plugin;
     }
 
@@ -33,7 +33,7 @@ public class ClansRelationColor extends PlaceholderExpansion implements Relation
 
     @Override
     public @NotNull String getIdentifier() {
-        return "clan_name_chat_relation";
+        return "clan_relation";
     }
 
     @Override
