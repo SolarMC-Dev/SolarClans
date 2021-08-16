@@ -5,7 +5,6 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.loader.clans.Clan;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
@@ -106,7 +105,7 @@ public class PluginHelper {
     }
 
     public boolean hasAllyInvited(Clan clan, Clan allyClan) {
-        return allyInvites.getIfPresent(clan).equals(allyClan);
+        return allyInvites.getIfPresent(clan).equals(allyClan) || allyInvites.getIfPresent(allyClan).equals(clan);
     }
 
     public Clan getAllyInvite(Clan clan) {

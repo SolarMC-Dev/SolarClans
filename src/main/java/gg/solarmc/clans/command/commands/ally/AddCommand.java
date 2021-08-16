@@ -18,7 +18,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AddCommand implements SubCommand {
@@ -63,9 +62,6 @@ public class AddCommand implements SubCommand {
         Server server = sender.getServer();
         DataCenter dataCenter = server.getDataCenter();
 
-        AtomicBoolean sendRequest = new AtomicBoolean(false);
-        AtomicInteger allyLeaderId = new AtomicInteger();
-
         dataCenter.runTransact(transaction -> {
             Clan allyClan = dataCenter.getDataManager(ClansKey.INSTANCE).getClanByName(transaction, args[0]).orElse(null);
 
@@ -90,14 +86,7 @@ public class AddCommand implements SubCommand {
             }
 
             helper.addAllyInvite(clan, allyClan);
-            sendRequest.set(true);
-            allyLeaderId.set(allyClan.currentLeader().userId());
-        });
-
-        if (allyLeaderId.get() == 0) return;
-
-        if (sendRequest.get()) {
-            helper.getPlayerBy(server, allyLeaderId.get()).thenAccept(allyLeader -> {
+            helper.getPlayerBy(server, allyClan.currentLeader().userId()).thenAccept(allyLeader -> {
                 if (allyLeader == null) {
                     player.sendMessage(ChatColor.RED + "The Clan Leader is not online!");
                     return;
@@ -112,7 +101,7 @@ public class AddCommand implements SubCommand {
 
                 allyLeader.sendMessage(requestMsg);
             });
-        }
+        });
     }
 
     @Override
