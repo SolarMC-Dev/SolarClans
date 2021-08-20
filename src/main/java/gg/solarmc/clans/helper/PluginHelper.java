@@ -105,7 +105,9 @@ public class PluginHelper {
     }
 
     public boolean hasAllyInvited(Clan clan, Clan allyClan) {
-        return allyInvites.getIfPresent(clan).equals(allyClan) || allyInvites.getIfPresent(allyClan).equals(clan);
+        Clan cacheClan = allyInvites.getIfPresent(clan);
+        if (cacheClan == null) return true;
+        return cacheClan.equals(allyClan);
     }
 
     public Clan getAllyInvite(Clan clan) {

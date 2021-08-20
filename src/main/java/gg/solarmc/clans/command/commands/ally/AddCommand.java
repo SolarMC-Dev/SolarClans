@@ -18,7 +18,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class AddCommand implements SubCommand {
 
@@ -100,7 +99,13 @@ public class AddCommand implements SubCommand {
                                 .clickEvent(ClickEvent.runCommand("/ally add " + clanName)));
 
                 allyLeader.sendMessage(requestMsg);
+            }).exceptionally(e -> {
+                helper.getLogger().error("Couldn't find the player", e);
+                return null;
             });
+        }).exceptionally(e -> {
+            helper.getLogger().error("Something went wrong adding a clan", e);
+            return null;
         });
     }
 
