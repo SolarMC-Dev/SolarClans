@@ -2,12 +2,11 @@ package gg.solarmc.clans.command.commands.clans;
 
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.command.SubCommand;
-import gg.solarmc.clans.config.configs.clan.ClanKickConfig;
 import gg.solarmc.clans.config.configs.MessageConfig;
+import gg.solarmc.clans.config.configs.clan.ClanKickConfig;
 import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.DataCenter;
 import gg.solarmc.loader.clans.Clan;
-import gg.solarmc.loader.clans.ClanMember;
 import gg.solarmc.loader.clans.ClansKey;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
@@ -52,14 +51,14 @@ public class KickCommand implements SubCommand {
         Logger logger = helper.getLogger();
 
         dataCenter.lookupPlayer(args[0])
-                .thenApply(o -> o.orElse(null))
+                .thenApplySync(o -> o.orElse(null))
                 .thenApplySync(solarPlayerKicked -> {
                     if (solarPlayerKicked == null) {
                         player.sendMessage(pluginConfig.playerNotFound());
                         return null;
                     }
 
-                    if (clan.currentMembers().contains(new ClanMember(solarPlayerKicked.getUserId()))) {
+                    if (clan.currentMembers().stream().anyMatch(it -> it.userId() == solarPlayerKicked.getUserId())) {
                         player.sendMessage(commandConfig.playerAbsent());
                         return null;
                     }
