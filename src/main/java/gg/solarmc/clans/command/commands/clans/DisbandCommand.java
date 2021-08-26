@@ -56,13 +56,11 @@ public class DisbandCommand implements SubCommand {
         }
 
         Server server = player.getServer();
-        helper.sendClanMsg(server, clan,
-                helper.replaceText(pluginConfig.clan().disband(), "{player}", player.getName()));
-
         DataCenter dataCenter = server.getDataCenter();
 
         dataCenter.runTransact(transaction -> {
-            helper.sendClanMsg(server, clan, pluginConfig.clan().disband());
+            helper.sendClanMsg(server, clan,
+                    helper.replaceText(pluginConfig.clan().disband(), "{player}", player.getName()));
             dataCenter.getDataManager(ClansKey.INSTANCE).deleteClan(transaction, clan);
         })
                 .thenRunSync(() -> VaultManager.getInstance().deleteAllVaults(("clan_vault:" + clan.getClanId())))
