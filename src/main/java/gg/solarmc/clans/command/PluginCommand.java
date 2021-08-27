@@ -43,7 +43,7 @@ public interface PluginCommand extends CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "This command can be only used by Players!");
                 return true;
             }
-            if (args[1] == null) player.performCommand("ally add");
+            if (args.length <= 1) player.performCommand("ally add");
             else player.performCommand("ally add " + args[0]);
             return true;
         }
