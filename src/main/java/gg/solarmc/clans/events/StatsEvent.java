@@ -33,16 +33,19 @@ public class StatsEvent implements Listener {
         Player killer = player.getKiller();
         Server server = player.getServer();
 
-        Player assister = server.getPlayer(assists.get(player.getUniqueId()));
+        UUID assisterUUID = assists.get(player.getUniqueId());
+        Player assister = null;
+        if (assisterUUID != null) assister = server.getPlayer(assisterUUID);
 
+        Player finalAssister = assister;
         server.getDataCenter().runTransact(transaction -> {
             Clan playerClan = getClan(player);
             Clan killerClan = getClan(killer);
-            Clan assisterClan = getClan(assister);
+            Clan assisterClan = getClan(finalAssister);
 
             if (playerClan != null) playerClan.addDeaths(transaction, 1);
             if (killerClan != null) killerClan.addKills(transaction, 1);
-            if (assisterClan != null) assisterClan.addAssists(transaction, 1);
+            if (assisterClan != null && killer.getUniqueId() != assisterUUID) assisterClan.addAssists(transaction, 1);
         }).exceptionally(e -> {
             LOGGER.error("Cannot either add death or add kills or add assist");
             return null;
