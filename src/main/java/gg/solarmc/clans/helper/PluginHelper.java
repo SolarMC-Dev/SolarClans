@@ -100,11 +100,11 @@ public class PluginHelper {
 
     // Clan Ally Invites Methods
 
-    public boolean isClanPresentInAlly(Clan clan) {
+    public boolean hasOnGoingRequest(Clan clan) {
         return allyInvites.getIfPresent(clan) != null;
     }
 
-    public boolean hasAllyInvited(Clan clan, Clan allyClan) {
+    public boolean isAllyInvited(Clan clan, Clan allyClan) {
         Clan cacheClan = allyInvites.getIfPresent(clan);
         if (cacheClan == null) return true;
         return cacheClan.equals(allyClan);

@@ -53,7 +53,7 @@ public class AddCommand implements SubCommand {
             return;
         }
 
-        if (helper.isClanPresentInAlly(clan)) {
+        if (helper.hasOnGoingRequest(clan)) {
             sender.sendMessage(helper.replaceText(commandConfig.onGoingRequest(), "{clan}", helper.getAllyInvite(clan).currentClanName()));
             return;
         }
@@ -69,7 +69,7 @@ public class AddCommand implements SubCommand {
                 return;
             }
 
-            if (helper.hasAllyInvited(allyClan, clan)) {
+            if (helper.isAllyInvited(allyClan, clan)) {
                 if (!clan.addClanAsAlly(transaction, allyClan)) {
                     sender.sendMessage(helper.replaceText(commandConfig.clanHasALly(), "{clan}", allyClan.currentClanName()));
                     return;
