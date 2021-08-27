@@ -74,10 +74,11 @@ public class AddCommand implements SubCommand {
                     sender.sendMessage(helper.replaceText(commandConfig.clanHasALly(), "{clan}", allyClan.currentClanName()));
                     return;
                 }
-                Component alliedMsg = helper.replaceText(commandConfig.allied(), "{clan}", allyClan.currentClanName());
 
-                helper.sendClanMsg(server, clan, alliedMsg.append(Component.text(allyClan.getClanName(transaction), NamedTextColor.GOLD)));
-                helper.sendClanMsg(server, allyClan, alliedMsg.append(Component.text(clan.getClanName(transaction), NamedTextColor.GOLD)));
+                helper.sendClanMsg(server, clan,
+                        helper.replaceText(commandConfig.allied(), "{clan}", allyClan.currentClanName()));
+                helper.sendClanMsg(server, allyClan,
+                        helper.replaceText(commandConfig.allied(), "{clan}", clan.currentClanName()));
 
                 helper.removeAllyInvite(clan);
                 helper.removeAllyInvite(allyClan);

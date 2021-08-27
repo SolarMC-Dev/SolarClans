@@ -1,6 +1,5 @@
 package gg.solarmc.clans.config.configs.clan;
 
-import com.drtshock.playervaults.config.annotation.Comment;
 import net.kyori.adventure.text.TextComponent;
 import space.arim.dazzleconf.annote.ConfComments;
 import space.arim.dazzleconf.annote.ConfDefault;
@@ -17,6 +16,11 @@ public interface ClanCreateConfig {
     @ConfComments("When player doesn't specify 1st arg ie. Clan's Name")
     @ConfDefault.DefaultString("&cYou need to specify the Name of the Clan!!")
     TextComponent invalidArgs();
+
+    @ConfKey("invalid-name")
+    @ConfComments("When a player makes the clan named - add, remove, pvp, chat")
+    @ConfDefault.DefaultString("&cSorry, You can't make a clan with that name!")
+    TextComponent invalidName();
 
     @ConfKey("created")
     @ConfComments("When a Player Creates a Clan")
