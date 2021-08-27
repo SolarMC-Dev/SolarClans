@@ -65,6 +65,11 @@ public class KickCommand implements SubCommand {
                         return null;
                     }
 
+                    if(solarPlayerKicked.getUserId() == player.getSolarPlayer().getUserId()){
+                        player.sendMessage(commandConfig.leaderKick());
+                        return null;
+                    }
+
                     dataCenter.runTransact(transaction -> {
                         helper.sendClanMsg(server, clan,
                                 helper.replaceText(commandConfig.kicked(),

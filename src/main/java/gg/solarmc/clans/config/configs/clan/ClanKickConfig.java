@@ -17,6 +17,11 @@ public interface ClanKickConfig {
     @ConfDefault.DefaultString("&cPlayer is not in your clan!!")
     TextComponent playerAbsent();
 
+    @ConfKey("leader-kick")
+    @ConfComments("When the leader tries to kick himself")
+    @ConfDefault.DefaultString("&cYou can't kick yourself!")
+    TextComponent leaderKick();
+
     @ConfKey("kicked")
     @ConfComments("When the player is kicked")
     @ConfDefault.DefaultString("&e{player} kick {playerKicked} from the clan")
