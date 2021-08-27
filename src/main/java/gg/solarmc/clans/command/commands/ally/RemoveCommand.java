@@ -69,7 +69,7 @@ public class RemoveCommand implements SubCommand {
 
     @Override
     public String getName() {
-        return "allyremove";
+        return "remove";
     }
 
     @Override
