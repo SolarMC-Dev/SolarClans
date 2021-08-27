@@ -52,19 +52,19 @@ public class CreateCommand implements SubCommand {
 
         if (helper.invalidateConfirm(player, args, confirmMsg, 1)) return;
 
-        EconomyResponse response = plugin.getEconomy().withdrawPlayer(player, 1000);
-
-        if (!response.transactionSuccess()) {
-            player.sendMessage(commandConfig.notEnoughMoney());
-            return;
-        }
-
         DataCenter dataCenter = player.getServer().getDataCenter();
         dataCenter.runTransact(transaction -> {
             ClanManager manager = dataCenter.getDataManager(ClansKey.INSTANCE);
 
             if (manager.getClanByName(transaction, args[0]).orElse(null) != null) {
                 sender.sendMessage(commandConfig.clanNamePresent());
+                return;
+            }
+
+            EconomyResponse response = plugin.getEconomy().withdrawPlayer(player, 1000);
+
+            if (!response.transactionSuccess()) {
+                player.sendMessage(commandConfig.notEnoughMoney());
                 return;
             }
 
