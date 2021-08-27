@@ -52,14 +52,6 @@ public class CreateCommand implements SubCommand {
 
         if (helper.invalidateConfirm(player, args, confirmMsg, 1)) return;
 
-        if (!args[0].equalsIgnoreCase("add")
-                && !args[0].equalsIgnoreCase("remove")
-                && !args[0].equalsIgnoreCase("chat")
-                && !args[0].equalsIgnoreCase("pvp")) {
-            player.sendMessage(commandConfig.invalidName());
-            return;
-        }
-
         EconomyResponse response = plugin.getEconomy().withdrawPlayer(player, 1000);
 
         if (!response.transactionSuccess()) {

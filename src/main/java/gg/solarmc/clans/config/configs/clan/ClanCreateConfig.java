@@ -17,11 +17,6 @@ public interface ClanCreateConfig {
     @ConfDefault.DefaultString("&cYou need to specify the Name of the Clan!!")
     TextComponent invalidArgs();
 
-    @ConfKey("invalid-name")
-    @ConfComments("When a player makes the clan named - add, remove, pvp, chat")
-    @ConfDefault.DefaultString("&cSorry, You can't make a clan with that name!")
-    TextComponent invalidName();
-
     @ConfKey("created")
     @ConfComments("When a Player Creates a Clan")
     @ConfDefault.DefaultString("Your clan has been Created!")
