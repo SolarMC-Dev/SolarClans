@@ -5,7 +5,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +17,10 @@ public interface PluginCommand extends CommandExecutor {
     String getName();
 
     PluginHelper getHelper();
+
+    default boolean beforeCommand(CommandSender sender, String label, String[] args) {
+        return false;
+    }
 
     @Override
     default boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -33,20 +36,9 @@ public interface PluginCommand extends CommandExecutor {
             return true;
         }
 
+        if (beforeCommand(sender, label, args)) return true;
+
         String arg = args[0];
-        if (label.equalsIgnoreCase("ally")
-                && !arg.equalsIgnoreCase("add")
-                && !arg.equalsIgnoreCase("remove")
-                && !arg.equalsIgnoreCase("chat")
-                && !arg.equalsIgnoreCase("pvp")) {
-            if (!(sender instanceof Player player)) {
-                sender.sendMessage(ChatColor.RED + "This command can be only used by Players!");
-                return true;
-            }
-            if (args.length <= 1) player.performCommand("ally add");
-            else player.performCommand("ally add " + args[0]);
-            return true;
-        }
 
         SubCommand subCommand = getCommand(arg);
 
