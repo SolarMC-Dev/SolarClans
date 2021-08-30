@@ -73,19 +73,24 @@ public class InfoCommand implements SubCommand {
         int assists = clan.currentAssists();
         int deaths = clan.currentDeaths();
         StringBuilder members = new StringBuilder();
-        clan.currentMembers().forEach(it ->
+
+
+        CentralisedFuture[] memberFutures = (CentralisedFuture[]) clan.currentMembers().stream().map(it ->
                 getPlayerNameById(player.getServer(), it.userId())
-                        .thenAccept(members::append));
+                        .thenAccept(a -> members.append(a).append(",")))
+                .toArray();
 
-        Component info = helper.replaceText(plugin.getPluginConfig().clan().info(),
-                Map.of("{clan}", clanName,
-                        "{kills}", String.valueOf(kills),
-                        "{assists}", String.valueOf(assists),
-                        "{deaths}", String.valueOf(deaths),
-                        "{ally}", allyClanName,
-                        "{members}", members.toString()));
+        helper.futuresFactory(player.getServer()).allOf(memberFutures).thenRunSync(() -> {
+            Component info = helper.replaceText(plugin.getPluginConfig().clan().info(),
+                    Map.of("{clan}", clanName,
+                            "{kills}", String.valueOf(kills),
+                            "{assists}", String.valueOf(assists),
+                            "{deaths}", String.valueOf(deaths),
+                            "{ally}", allyClanName,
+                            "{members}", members.toString()));
 
-        player.sendMessage(info);
+            player.sendMessage(info);
+        });
     }
 
     private CentralisedFuture<String> getPlayerNameById(Server server, int id) {

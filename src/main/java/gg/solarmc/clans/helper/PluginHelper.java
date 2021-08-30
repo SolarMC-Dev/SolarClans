@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import space.arim.omnibus.util.ThisClass;
 import space.arim.omnibus.util.concurrent.CentralisedFuture;
+import space.arim.omnibus.util.concurrent.FactoryOfTheFuture;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -184,6 +185,11 @@ public class PluginHelper {
                     getLogger().error("Cannot lookup player", e);
                     return null;
                 });
+    }
+
+
+    public FactoryOfTheFuture futuresFactory(Server server) {
+        return server.getOmnibus().getRegistry().getProvider(FactoryOfTheFuture.class).orElseThrow();
     }
 
 }
