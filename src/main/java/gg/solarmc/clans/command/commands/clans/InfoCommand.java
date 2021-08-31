@@ -96,8 +96,13 @@ public class InfoCommand implements SubCommand {
     }
 
     private CentralisedFuture<String> getPlayerNameById(Server server, int id) {
-        return server.getDataCenter().lookupPlayer(id).thenApplySync(o -> o.orElse(null))
-                .thenApplySync(SolarPlayer::getMcUsername)
+        return server.getDataCenter().lookupPlayer(id)
+                .thenApplySync(it -> {
+                    SolarPlayer o = it.orElse(null);
+                    if (o != null)
+                        return o.getMcUsername();
+                    return "";
+                })
                 .exceptionally(e -> {
                     LOGGER.error("Cannot lookup player by id", e);
                     return null;
