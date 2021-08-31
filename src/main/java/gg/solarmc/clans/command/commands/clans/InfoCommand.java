@@ -74,11 +74,10 @@ public class InfoCommand implements SubCommand {
         int deaths = clan.currentDeaths();
         StringBuilder members = new StringBuilder();
 
-
-        CentralisedFuture[] memberFutures = (CentralisedFuture[]) clan.currentMembers().stream().map(it ->
+        CentralisedFuture[] memberFutures = clan.currentMembers().stream().map(it ->
                 getPlayerNameById(player.getServer(), it.userId())
                         .thenAccept(a -> members.append(a).append(",")))
-                .toArray();
+                .toArray(CentralisedFuture[]::new);
 
         helper.futuresFactory(player.getServer()).allOf(memberFutures).thenRunSync(() -> {
             Component info = helper.replaceText(plugin.getPluginConfig().clan().info(),
@@ -90,6 +89,9 @@ public class InfoCommand implements SubCommand {
                             "{members}", members.toString()));
 
             player.sendMessage(info);
+        }).exceptionally(e -> {
+            LOGGER.error("Something went wrong sending clan info", e);
+            return null;
         });
     }
 
