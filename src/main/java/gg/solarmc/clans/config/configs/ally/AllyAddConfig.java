@@ -21,7 +21,7 @@ public interface AllyAddConfig {
     @ConfKey("ally-itself")
     @ConfComments("When the clan tries to ally itself")
     @ConfDefault.DefaultString("&cYou cannot ally yourself!!")
-    String allyItself();
+    TextComponent allyItself();
 
     @ConfKey("on-going-request")
     @ConfComments("When a clan already has a ongoing ally request to other clan")
