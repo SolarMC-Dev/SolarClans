@@ -60,5 +60,4 @@ public interface MessageConfig {
 
     @ConfKey("chat-format")
     @SubSection ChatConfig chatFormat();
-
 }

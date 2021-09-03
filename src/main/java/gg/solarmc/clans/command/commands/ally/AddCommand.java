@@ -69,6 +69,11 @@ public class AddCommand implements SubCommand {
                 return;
             }
 
+            if (allyClan.equals(clan)) {
+                sender.sendMessage(commandConfig.allyItself());
+                return;
+            }
+
             if (helper.isAllyInvited(allyClan, clan)) {
                 if (!clan.addClanAsAlly(transaction, allyClan)) {
                     sender.sendMessage(helper.replaceText(commandConfig.clanHasALly(), "{clan}", allyClan.currentClanName()));

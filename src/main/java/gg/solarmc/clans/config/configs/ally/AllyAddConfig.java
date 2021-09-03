@@ -18,6 +18,11 @@ public interface AllyAddConfig {
             "&You can use /ally remove to remove your current ally")
     TextComponent allyPresent();
 
+    @ConfKey("ally-itself")
+    @ConfComments("When the clan tries to ally itself")
+    @ConfDefault.DefaultString("&cYou cannot ally yourself!!")
+    String allyItself();
+
     @ConfKey("on-going-request")
     @ConfComments("When a clan already has a ongoing ally request to other clan")
     @ConfDefault.DefaultString("&cYou already have ongoing request to {clan}")
