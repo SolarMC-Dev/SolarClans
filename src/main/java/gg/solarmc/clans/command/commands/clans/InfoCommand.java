@@ -17,6 +17,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import space.arim.omnibus.util.concurrent.CentralisedFuture;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 public class InfoCommand implements SubCommand {
@@ -72,14 +75,14 @@ public class InfoCommand implements SubCommand {
         int kills = clan.currentKills();
         int assists = clan.currentAssists();
         int deaths = clan.currentDeaths();
-        StringBuilder members = new StringBuilder();
+        List<String> members = Collections.synchronizedList(new ArrayList<>());
 
         final Server server = player.getServer();
 
         server.getDataCenter().runTransact(transaction -> {
             CentralisedFuture[] memberFutures = clan.getClanMembers(transaction).stream().map(it ->
                     getPlayerNameById(server, it.userId())
-                            .thenAccept(a -> members.append(a).append(",")))
+                            .thenAccept(members::add))
                     .toArray(CentralisedFuture[]::new);
 
             helper.futuresFactory(server).allOf(memberFutures).thenRunSync(() -> {
@@ -89,7 +92,7 @@ public class InfoCommand implements SubCommand {
                                 "{assists}", String.valueOf(assists),
                                 "{deaths}", String.valueOf(deaths),
                                 "{ally}", allyClanName,
-                                "{members}", members.toString()));
+                                "{members}", String.join(", ", members)));
 
                 player.sendMessage(info);
             }).exceptionally(e -> {
