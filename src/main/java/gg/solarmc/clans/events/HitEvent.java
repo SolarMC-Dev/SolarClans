@@ -7,24 +7,39 @@ import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import gg.solarmc.clans.SolarClans;
 import gg.solarmc.clans.helper.PVPHelper;
-import gg.solarmc.clans.helper.PluginHelper;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.projectiles.ProjectileSource;
 import subside.plugins.koth.gamemodes.RunningKoth;
 
 public record HitEvent(SolarClans plugin) implements Listener {
 
     @EventHandler
     public void onPlayerHitPlayer(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof Player damagedPlayer) || !(event.getDamager() instanceof Player damager))
+        Player damager;
+        if (event.getEntity() instanceof Player damagedPlayer) {
+            Entity player = event.getDamager();
+            if (player instanceof Player) {
+                damager = (Player) player;
+            } else if (player instanceof Projectile) {
+                ProjectileSource shooter = ((Projectile) player).getShooter();
+                if (shooter instanceof Player) {
+                    damager = (Player) shooter;
+                } else
+                    return;
+            } else
+                return;
+        } else
             return;
 
         WorldGuardPlugin wgManager = plugin.getWorldGuardManager();
