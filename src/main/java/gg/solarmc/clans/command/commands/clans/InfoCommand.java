@@ -74,21 +74,28 @@ public class InfoCommand implements SubCommand {
         int deaths = clan.currentDeaths();
         StringBuilder members = new StringBuilder();
 
-        CentralisedFuture[] memberFutures = clan.currentMembers().stream().map(it ->
-                getPlayerNameById(player.getServer(), it.userId())
-                        .thenAccept(a -> members.append(a).append(",")))
-                .toArray(CentralisedFuture[]::new);
+        final Server server = player.getServer();
 
-        helper.futuresFactory(player.getServer()).allOf(memberFutures).thenRunSync(() -> {
-            Component info = helper.replaceText(plugin.getPluginConfig().clan().info(),
-                    Map.of("{clan}", clanName,
-                            "{kills}", String.valueOf(kills),
-                            "{assists}", String.valueOf(assists),
-                            "{deaths}", String.valueOf(deaths),
-                            "{ally}", allyClanName,
-                            "{members}", members.toString()));
+        server.getDataCenter().runTransact(transaction -> {
+            CentralisedFuture[] memberFutures = clan.getClanMembers(transaction).stream().map(it ->
+                    getPlayerNameById(server, it.userId())
+                            .thenAccept(a -> members.append(a).append(",")))
+                    .toArray(CentralisedFuture[]::new);
 
-            player.sendMessage(info);
+            helper.futuresFactory(server).allOf(memberFutures).thenRunSync(() -> {
+                Component info = helper.replaceText(plugin.getPluginConfig().clan().info(),
+                        Map.of("{clan}", clanName,
+                                "{kills}", String.valueOf(kills),
+                                "{assists}", String.valueOf(assists),
+                                "{deaths}", String.valueOf(deaths),
+                                "{ally}", allyClanName,
+                                "{members}", members.toString()));
+
+                player.sendMessage(info);
+            }).exceptionally(e -> {
+                LOGGER.error("Something went wrong sending clan info", e);
+                return null;
+            });
         }).exceptionally(e -> {
             LOGGER.error("Something went wrong sending clan info", e);
             return null;
@@ -101,7 +108,7 @@ public class InfoCommand implements SubCommand {
                     SolarPlayer o = it.orElse(null);
                     if (o != null)
                         return o.getMcUsername();
-                    return "";
+                    return "null";
                 })
                 .exceptionally(e -> {
                     LOGGER.error("Cannot lookup player by id", e);
