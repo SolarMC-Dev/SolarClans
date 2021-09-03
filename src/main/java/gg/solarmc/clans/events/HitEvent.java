@@ -17,6 +17,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.projectiles.ProjectileSource;
@@ -24,7 +25,7 @@ import subside.plugins.koth.gamemodes.RunningKoth;
 
 public record HitEvent(SolarClans plugin) implements Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onPlayerHitPlayer(EntityDamageByEntityEvent event) {
         Player damager;
         if (event.getEntity() instanceof Player damagedPlayer) {
@@ -41,6 +42,8 @@ public record HitEvent(SolarClans plugin) implements Listener {
                 return;
         } else
             return;
+
+        if (damager.getUniqueId().equals(damagedPlayer.getUniqueId())) return;
 
         WorldGuardPlugin wgManager = plugin.getWorldGuardManager();
         ApplicableRegionSet damagerRegions = wgManager.getRegionManager(damager.getWorld()).getApplicableRegions(damager.getLocation());
