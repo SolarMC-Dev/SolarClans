@@ -22,18 +22,13 @@ public class ClansRelationColorPlaceholder extends PlaceholderExpansion implemen
     }
 
     @Override
-    public boolean canRegister() {
-        return true;
-    }
-
-    @Override
     public @NotNull String getAuthor() {
         return plugin.getDescription().getAuthors().toString();
     }
 
     @Override
     public @NotNull String getIdentifier() {
-        return "clan_relation";
+        return "placeholderengine";
     }
 
     @Override
@@ -46,19 +41,22 @@ public class ClansRelationColorPlaceholder extends PlaceholderExpansion implemen
         if (player == null || other == null)
             return null;
 
-        Clan playerClan = player.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
-        Clan otherClan = other.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
+        if (identifier.equalsIgnoreCase("clan_relation_color")) {
+            Clan playerClan = player.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
+            Clan otherClan = other.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
 
-        if (playerClan != null && otherClan != null) {
-            if (playerClan.equals(otherClan))
-                return ChatColor.GREEN.toString();
-            else if (otherClan.equals(playerClan.currentAllyClan().orElse(null)))
-                return ChatColor.LIGHT_PURPLE.toString();
-            // TODO:
-            // else if(otherClan.equals(playerClan.currentEnemyClan().orElse(null)))
-            //  return ChatColor.RED.toString();
+            if (playerClan != null && otherClan != null) {
+                if (playerClan.equals(otherClan))
+                    return ChatColor.GREEN.toString();
+                else if (otherClan.equals(playerClan.currentAllyClan().orElse(null)))
+                    return ChatColor.LIGHT_PURPLE.toString();
+                else if (playerClan.currentEnemyClans().contains(otherClan))
+                    return ChatColor.RED.toString();
+            }
+
+            return ChatColor.WHITE.toString();
         }
 
-        return ChatColor.WHITE.toString();
+        return null;
     }
 }

@@ -4,7 +4,7 @@ import gg.solarmc.clans.SolarClans;
 import gg.solarmc.loader.clans.Clan;
 import gg.solarmc.loader.clans.ClansKey;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class ClanNamePlaceholder extends PlaceholderExpansion {
@@ -15,23 +15,13 @@ public class ClanNamePlaceholder extends PlaceholderExpansion {
     }
 
     @Override
-    public boolean persist() {
-        return true;
-    }
-
-    @Override
-    public boolean canRegister() {
-        return true;
-    }
-
-    @Override
     public @NotNull String getAuthor() {
         return plugin.getDescription().getAuthors().toString();
     }
 
     @Override
     public @NotNull String getIdentifier() {
-        return "clan_relation";
+        return "placeholderengine";
     }
 
     @Override
@@ -40,11 +30,12 @@ public class ClanNamePlaceholder extends PlaceholderExpansion {
     }
 
     @Override
-    public String onRequest(OfflinePlayer player, @NotNull String params) {
-        if (!player.isOnline())
-            return "";
-        Clan clan = player.getPlayer().getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
+    public String onPlaceholderRequest(Player player, @NotNull String params) {
+        if (params.equalsIgnoreCase("clan_name")) {
+            Clan clan = player.getSolarPlayer().getData(ClansKey.INSTANCE).currentClan().orElse(null);
+            return clan == null ? "" : clan.currentClanName();
+        }
 
-        return clan == null ? "" : clan.currentClanName();
+        return null;
     }
 }
