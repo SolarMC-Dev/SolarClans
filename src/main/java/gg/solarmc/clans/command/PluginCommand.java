@@ -1,7 +1,12 @@
 package gg.solarmc.clans.command;
 
 import gg.solarmc.clans.helper.PluginHelper;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -26,13 +31,18 @@ public interface PluginCommand extends CommandExecutor {
     default boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String name = getName();
         if (args.length == 0) {
-            String commands = name + " Commands : \n" +
-                    getSubCommands().stream()
-                            .map(it -> ChatColor.BOLD + it.getName() + ChatColor.RESET
-                                    + " " + it.getArgs()
-                                    + " : " + it.getDescription())
-                            .collect(Collectors.joining("\n"));
-            sender.sendMessage(commands.split("\n"));
+            TextComponent commands = Component.join(Component.text(", ", NamedTextColor.DARK_AQUA),
+                    getSubCommands().stream().map(it ->
+                            Component.text(it.getName(), Style.style(TextDecoration.BOLD))
+                                    .append(Component.text(" " + it.getArgs()))
+                                    .hoverEvent(HoverEvent.showText(Component.text(it.getDescription(), NamedTextColor.AQUA)))
+                    ).collect(Collectors.toList()));
+
+            TextComponent menu = Component.text(name + " Commands : ")
+                    .append(Component.newline())
+                    .append(commands);
+
+            sender.sendMessage(menu);
             return true;
         }
 
