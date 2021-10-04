@@ -1,0 +1,14 @@
+name: SolarClans
+main: gg.solarmc.clans.SolarClans
+version: ${project.version}
+authors: [ zoneinfinity ]
+commands:
+  clans:
+    aliases: [ c,clan ]
+    description: Clans Command
+    usage: /<command>
+  ally:
+    aliases: [ a ]
+    description: Ally Command
+    usage: /<command>
+depend: [ Vault, PlaceholderAPI, PlayerVaults, WorldGuard, HolographicDisplays ]

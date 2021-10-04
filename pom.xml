@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>gg.solarmc</groupId>
+        <artifactId>solar-parent</artifactId>
+        <version>0.6.2</version>
+    </parent>
+
+    <artifactId>SolarClans</artifactId>
+    <version>1.1_0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>16</maven.compiler.source>
+        <maven.compiler.target>16</maven.compiler.target>
+        <junit.version>5.7.1</junit.version>
+        <solarapi.version>1.2.1-SNAPSHOT</solarapi.version>
+        <loader.version>0.6.0</loader.version>
+        <dazzleconf.version>1.2.1</dazzleconf.version>
+    </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>solar-repo</id>
+            <url>https://mvn-repo.solarmc.gg/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>solar-repo</id>
+            <url>https://mvn-repo.solarmc.gg/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <dependencies>
+        <!-- https://github.com/SolarMC-Dev/SolarPaper-API/blob/master/pom.xml -->
+        <dependency>
+            <groupId>gg.solarmc.paper</groupId>
+            <artifactId>solarpaper-api</artifactId>
+            <version>${solarapi.version}</version>
+        </dependency>
+
+        <!-- https://github.com/SolarMC-Dev/DataLoader/tree/master/mod-credits -->
+        <dependency>
+            <groupId>gg.solarmc.loader</groupId>
+            <artifactId>loader-mod-clans</artifactId>
+            <version>${loader.version}-SNAPSHOT</version>
+        </dependency>
+
+        <!-- https://github.com/SolarMC-Dev/DataLoader/tree/master/mod-credits -->
+        <dependency>
+            <groupId>gg.solarmc.loader</groupId>
+            <artifactId>loader-core</artifactId>
+            <version>${loader.version}-SNAPSHOT</version>
+        </dependency>
+
+        <!-- https://github.com/MilkBowl/VaultAPI -->
+        <dependency>
+            <groupId>gg.solarmc.vault</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.7</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- https://github.com/PlaceholderAPI/PlaceholderAPI -->
+        <dependency>
+            <groupId>gg.solarmc.placeholder</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.10.10-DEV-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- https://github.com/A248/DazzleConf -->
+        <dependency>
+            <groupId>space.arim.dazzleconf</groupId>
+            <artifactId>dazzleconf-ext-snakeyaml</artifactId>
+            <version>${dazzleconf.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.drtshock</groupId>
+            <artifactId>PlayerVaultsX</artifactId>
+            <version>4.2.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- https://worldguard.enginehub.org/en/latest/developer/dependency/ -->
+        <dependency>
+            <groupId>gg.solarmc.worldguard</groupId>
+            <artifactId>worldguard-legacy</artifactId>
+            <version>6.2.2</version>
+            <scope>provided</scope>
+
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- https://github.com/filoghost/HolographicDisplays/wiki/Basic-tutorial -->
+        <dependency>
+            <groupId>com.gmail.filoghost.holographicdisplays</groupId>
+            <artifactId>holographicdisplays-api</artifactId>
+            <version>2.4.9-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- https://github.com/SolarMC-Dev/KOTHPlugin -->
+        <dependency>
+            <groupId>gg.solarmc.koth</groupId>
+            <artifactId>koth</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- https://github.com/ben-manes/caffeine -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>3.0.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>solar-releases</id>
+            <url>https://mvn-repo.solarmc.gg/releases</url>
+        </repository>
+        <repository>
+            <id>solar-snapshots</id>
+            <url>https://mvn-repo.solarmc.gg/snapshots</url>
+        </repository>
+        <repository>
+            <id>ess-repo</id>
+            <url>https://ci.ender.zone/plugin/repository/everything/</url>
+        </repository>
+        <repository>
+            <id>sk89q-repo</id>
+            <url>https://maven.enginehub.org/repo</url>
+        </repository>
+        <repository>
+            <id>dmulloy2-repo</id>
+            <url>https://repo.dmulloy2.net/repository/public/</url>
+        </repository>
+    </repositories>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>sources</goal>
+                            <goal>resolve</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>javadoc</classifier>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-engine</artifactId>
+                        <version>${junit.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
