@@ -8,7 +8,6 @@ import space.arim.dazzleconf.annote.SubSection;
 
 public interface ClanConfig {
     @ConfKey("create")
-    @ConfDefault.DefaultObject("defaultConfig")
     @SubSection ClanCreateConfig create();
 
     @ConfKey("disband")
@@ -28,15 +27,12 @@ public interface ClanConfig {
     TextComponent info();
 
     @ConfKey("invite")
-    @ConfDefault.DefaultObject("defaultConfig")
     @SubSection ClanInviteConfig invite();
 
     @ConfKey("join")
-    @ConfDefault.DefaultObject("defaultConfig")
     @SubSection ClanJoinConfig join();
 
     @ConfKey("kick")
-    @ConfDefault.DefaultObject("defaultConfig")
     @SubSection ClanKickConfig kick();
 
     @ConfKey("leave")
@@ -50,14 +46,11 @@ public interface ClanConfig {
     TextComponent pvp();
 
     @ConfKey("rename")
-    @ConfDefault.DefaultObject("defaultConfig")
     @SubSection ClanRenameConfig rename();
 
     @ConfKey("set-leader")
-    @ConfDefault.DefaultObject("defaultConfig")
     @SubSection ClanSetLeaderConfig setLeader();
 
     @ConfKey("top")
-    @ConfDefault.DefaultObject("defaultConfig")
     @SubSection ClanTopConfig top();
 }
